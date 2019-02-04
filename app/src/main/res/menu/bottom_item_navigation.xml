@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/mylibrary_grey"
+        android:title="My Library" />
+
+    <item
+        android:id="@+id/navigation_discourse"
+        android:icon="@drawable/discourse_grey"
+        android:title="Discourses" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/search_grey"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/account_grey"
+        android:title="My Account" />
+
+
+</menu>

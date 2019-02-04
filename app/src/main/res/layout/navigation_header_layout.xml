@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="270dp"
+    android:layout_height="@dimen/_120sdp"
+    android:background="@color/brown"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:src="@drawable/avatar"
+        app:civ_border_color="#d3d3d3"
+        app:civ_border_width="0.5dp" />
+
+    <TextView
+        android:id="@+id/menuProfileHeaderName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:fontFamily="serif"
+        android:gravity="start"
+        android:textStyle="italic"
+        android:text="Sathish Kumar"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="#fff" />
+
+    <TextView
+        android:id="@+id/menuProfilemailTextview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:fontFamily="serif"
+        android:gravity="start"
+        android:text="sathish@imaginetventures.com"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="#fff"
+        android:textStyle="italic" />
+</LinearLayout>

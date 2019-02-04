@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">Sastraprakasika</string>
+    <string name="navigation_drawer_open">Sastraprakasika</string>
+    <string name="navigation_drawer_close">Sastraprakasika</string>
+    <!--// old fb application id//-->
+    <!--<string name="facebook_app_id">212774156044896</string>-->
+    <!--<string name="fb_login_protocol_scheme">fb212774156044896</string>-->
+    <!--new fb application id-->
+    <string name="facebook_app_id">630685967332902</string>
+    <string name="fb_login_protocol_scheme">fb630685967332902</string>
+    <string name="forgotPasswdInstru">Enter your registered email address above. We will send you an OTP for resetting your password.</string>
+    <string name="image_content">image</string>
+    <string name="casting_to_device">Casting to %1$s</string>
+    <string name="title_activity_volume">VolumeActivity</string>
+    <string name="email_text">Email will be verified via OTP</string>
+    <string name="otp_text">Note: Please check the spam folder in case \n you have not received any mail.</string>
+    <string name="discourse_content"><b>The Spiritual Journey of H H Swami Paramarthananda Saraswathi</b>\n\n
+Swāmi Paramārthānandā Saraswathi has been teaching the Vedāntik scriptures for the last three decades in the form of regular classes at various centres in Chennai. All these classes are based on whatever knowledge Swāmiji has received from His Guru and also whatever He has gathered from various commentaries written by Āchāryas belonging to this holy tradition, the tradition which we still are worshipping today.</string>
+
+    <!--jana code -->
+    <string name="topics_title_text">Recently Added</string>
+    <string name="terms">Terms and Condition</string>
+    <string name="donot_disturb_content">Notification will not make sound or
+vibration"</string>
+    <string name="primary_content">Notify when new volumes are \nreleased</string>
+    <string name="primary_content2">Notify when  new purchase \nare made </string>
+    <string name="primary_content_title1">New release</string>
+    <string name="primary_content_title2">New Purchase</string>
+    <string name="sound_available_status">Sound in ON state</string>
+    <string name="mute_status">Sound in OFF state</string>
+    <string name="search_text">Search Discourse</string>
+
+    <string name="contest_giveaways">Help &amp; Support</string>
+
+
+
+    //camera related
+
+    <!--<string name="app_name">Music Player</string>-->
+    <string name="back">Back</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="player">Audio Player</string>
+    <string name="next">Next</string>
+    <string name="open_playlist">Open Playlist</string>
+    <string name="idle">Idle</string>
+    <string name="empty_text">Select song from below to play</string>
+    <string name="player_button">Album Art Screen</string>
+
+    <color name="orangen">#ff3d00</color>
+    <color name="whiten">#ffffff</color>
+    <color name="opaque">#70000000</color>
+
+    <dimen name="button_width">32dp</dimen>
+    <dimen name="small_button_width">28dp</dimen>
+    <dimen name="small_image_art_width">85dp</dimen>
+    <string name="err_internet_not_conn">Internet Not Connected</string>
+    <string name="Introduction_to_Vedanta">Intoduction To Vedanta</string>
+    <string name="song_title">Song Title</string>
+    <string name="isRTL">false</string>
+    <string name="create_new_playlist">Create New Playlist</string>
+    <string name="add">ADD</string>
+    <string name="enter_playlist_name">Enter Playlist Name</string>
+    <string name="close">Close</string>
+    <string name="err_no_playlist_found">No Playlist Found</string>
+    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="song_add_to_playlist">Song add to playlist -</string>
+    <string name="playlist_added">Playlist Added</string>
+    <string name="title">Title</string>
+    <string name="artist">Artist</string>
+    <string name="share_song">Share Song</string>
+    <string name="listening">I am listening</string>
+    <string name="err_no_songs_selected">No Song Selected</string>
+    <string name="removed_fav">Removed from favourite</string>
+    <string name="added_fav">Added to fav</string>
+    <string name="err_cannot_use_features">Can\'t use this feature</string>
+
+
+</resources>

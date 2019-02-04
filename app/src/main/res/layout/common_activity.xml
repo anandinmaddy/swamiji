@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/commonProgressBar"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/orangeRed"
+        app:indicatorName="BallTrianglePathIndicator" />
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_54sdp"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="65dp"
+        sothree:umanoShadowHeight="4dp"
+        sothree:umanoParallaxOffset="100dp"
+        sothree:umanoDragView="@+id/draggerView"
+        sothree:umanoScrollableView="@+id/autoplay_or_queue_recycler_view"
+        sothree:umanoOverlay="true">
+
+        <!--FRAGMENT PLACEHOLDER WITH TOOLBAR-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ss"
+                android:layout_width="match_parent"
+                android:layout_height="?android:actionBarSize"
+                android:background="@color/orange"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/back"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/back" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_4sdp"
+                    android:layout_weight="2.4"
+                    android:text="Sermons and Chantings"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_16sdp" />
+
+
+                <!--<ImageView-->
+                <!--android:id="@+id/notification"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginRight="@dimen/_10sdp"-->
+                <!--android:layout_weight="0.3"-->
+                <!--android:src="@drawable/bell" />-->
+
+
+            </LinearLayout>
+
+
+            <!--<ProgressBar-->
+            <!--android:id="@+id/commonProgressBar"-->
+            <!--android:layout_width="@dimen/_45sdp"-->
+            <!--android:layout_height="@dimen/_45sdp"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:visibility="gone" />-->
+            <FrameLayout
+
+                android:id="@+id/shadow"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/toolbar_drop_shadow" />
+
+            <View
+                android:id="@+id/viewId"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/ss"
+                android:background="@color/mild_grey"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:id="@+id/commonActivityFrameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/viewId" />
+
+        </LinearLayout>
+        <!--BOTTOM PLAYER CONTENT WITH PLAYLIST-->
+
+
+
+        <include
+            layout="@layout/layout_music_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
+    <!--now hide the view-->
+    <!--<View-->
+        <!--android:id="@+id/view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/light_grey"-->
+        <!--android:visibility="gone"/>-->
+
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:weightSum="4"
+        android:windowSoftInputMode="adjustPan"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/myLibraryLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/myLibrary"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/mylibrary_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Library"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/discoursesLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/discourses"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/discourse_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Discourses"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/search_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Search"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/accountLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/account"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/account_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Account"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/moreLayout"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/more"-->
+        <!--android:layout_width="@dimen/_30sdp"-->
+        <!--android:layout_height="@dimen/_20sdp"-->
+        <!--android:src="@drawable/more_grey" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:text="More"-->
+        <!--android:textColor="@color/dark_grey"-->
+        <!--android:textSize="@dimen/_8sdp" />-->
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+</RelativeLayout>
+
+

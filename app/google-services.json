@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "818410163127",
+    "firebase_url": "https://sasthraprakashika.firebaseio.com",
+    "project_id": "sasthraprakashika",
+    "storage_bucket": "sasthraprakashika.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818410163127:android:d7029ef56f1119fa",
+        "android_client_info": {
+          "package_name": "com.example.im037.sastraprakasika"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "818410163127-iiqil65vvfg4uup22bbv7giqe11uimp4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.im037.sastraprakasika",
+            "certificate_hash": "c5d946ac9f3ae9ddf3a7ef1ca2c6a66ffca46df3"
+          }
+        },
+        {
+          "client_id": "818410163127-o8ibs6dijapd9q0ssmjcnh6970esfmmv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKExd0Jn-z24guugRNCh12rsanUbW9Cgk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "818410163127-o8ibs6dijapd9q0ssmjcnh6970esfmmv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

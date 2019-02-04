@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+    android:layout_marginTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="2">
+
+
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="horizontal"
+    android:weightSum="2">
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--app:cardCornerRadius="@dimen/_5sdp"-->
+            <!--app:cardElevation="@dimen/_5sdp">-->
+            <ImageView
+
+                android:layout_marginTop="5dp"
+                android:id="@+id/ablum_image_det_list"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/tamil"
+                android:layout_weight="0.1"
+                />
+        <!--</android.support.v7.widget.CardView>-->
+    <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="12dp"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:layout_marginLeft="1dp"
+    android:id="@+id/album_title_det_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="An overview of yoga"
+    android:maxLines="1"
+    android:ellipsize="end"
+
+
+    android:textColor="@color/black"
+    />
+
+        <LinearLayout
+            android:textAlignment="textStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="0dp"
+                android:id="@+id/play_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+
+                android:src="@drawable/play_lectures"
+                android:layout_weight="0"
+                />
+
+
+            <TextView
+                android:layout_marginTop="2dp"
+
+                android:id="@+id/className"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Class - " />
+
+            <TextView
+                android:layout_marginTop="2dp"
+
+                android:layout_marginLeft="2dp"
+                android:id="@+id/song_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1" />
+            <TextView
+                android:layout_marginTop="2dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" | " />
+
+            <TextView
+                android:layout_marginTop="2dp"
+
+                android:layout_marginLeft="2dp"
+                android:id="@+id/duration_det_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_marginTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:background="@color/mild_grey" />
+
+    </LinearLayout>
+
+</LinearLayout>

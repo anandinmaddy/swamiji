@@ -1,0 +1,129 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <!--this is style audioplayeractivityscreen-->
+    <!--<style name="AppTheme_AudioPlay" parent="Theme.AppCompat.Light">-->
+        <!--<item name="colorPrimaryDark">@android:color/black</item>-->
+        <!--<item name="colorPrimary">@android:color/light_grey</item>-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+
+    <!--</style>-->
+
+    <style name="AppTheme_AudioPlay" parent="Theme.AppCompat.Light">
+        <item name="colorPrimaryDark">#060606</item>
+        <item name="colorPrimary">#aba5a5</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="MySeekBarTheme" parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">@color/orange</item>
+    </style>
+
+
+    <style name="TextLabel" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@android:color/black</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/brown</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="android:colorError">@color/lightOrange</item>
+
+    </style>
+    <style name="MyTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyTabTextAppearance</item>
+        <item name="tabBackground">@drawable/tab_background</item>
+    </style>
+    <style name="MyTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="textAllCaps">false</item>
+    </style>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">@color/orange</item>
+        <!--<item name="android:windowFullscreen">true</item>-->
+    </style>
+
+    <style name="SeekBarColor" parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">@color/seekBarColor</item>
+    </style>
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/orange</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/light_grey
+        </item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/orange
+        </item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="Theme.MyCustomTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name = "android:windowActionBar">false</item>
+        <item name = "android:windowNoTitle">true</item>
+        // more custom...
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_dialog</item>
+    </style>
+
+
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/orange</item>
+    </style>
+
+    <style name="RatingBar_black" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/orange</item>
+    </style>
+
+    <style name="RatingBar_normal" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/orange</item>
+    </style>
+
+
+    <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="spinnerItemStyleZoftino" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:capitalize">words</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textColor">#421a85</item>
+    </style>
+
+    <style name="spinnerDropDownItemStyleZoftino" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textSize">25dp</item>
+        <item name="android:textColor">#d43003</item>
+        <item name="android:background">#a1c8bb</item>
+    </style>
+
+
+</resources>

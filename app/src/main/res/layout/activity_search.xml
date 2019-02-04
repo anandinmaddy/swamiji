@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mainSearch"
+    android:orientation="vertical"
+    tools:context=".Activity.SearchActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:weightSum="4">
+
+        <Spinner
+            android:id="@+id/search_spin"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:layout_width="20dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:minHeight="@dimen/_25sdp"
+
+            android:background="@drawable/spinner_corner"
+            android:popupBackground="@drawable/editicon"
+                       />
+
+        <EditText
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:id="@+id/search_bar"
+            android:layout_width="60dp"
+            android:layout_height="46dp"
+            android:background="@drawable/search_editcorner"
+            android:drawableLeft="@drawable/search_grey"
+            android:drawableRight="@drawable/ic_search_close"
+            android:ems="10"
+            android:layout_weight="3"
+            android:hint="@string/search_text"
+            android:inputType="textPersonName"
+            android:minHeight="@dimen/_25sdp"
+            android:padding="@dimen/_1sdp" />
+
+
+    </LinearLayout>
+    <View
+        android:id="@+id/view_primary1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/primary_noti_content_layout"
+        android:background="@color/mild_grey" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/searchRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <!--<SearchView-->
+    <!--android:layout_marginLeft="40dp"-->
+    <!--android:layout_marginTop="12dp"-->
+    <!--android:id="@+id/search_bar"-->
+    <!--android:layout_width="240dp"-->
+    <!--android:layout_height="46dp"-->
+    <!--android:iconifiedByDefault="false"-->
+    <!--android:queryHint="Search Here" />&lt;!&ndash; set query string of an search view &ndash;&gt;-->
+
+</LinearLayout>

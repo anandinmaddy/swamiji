@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ss"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/orange"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_weight="2.4"
+            android:text="Sermons and Chantings"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_12sdp" />
+
+
+        <!--<ImageView-->
+        <!--android:id="@+id/notification"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginRight="@dimen/_10sdp"-->
+        <!--android:layout_weight="0.3"-->
+        <!--android:src="@drawable/bell" />-->
+
+
+    </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/commonProgressBar"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/viewId"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ss"
+        android:background="@color/mild_grey" />
+
+    <FrameLayout
+        android:id="@+id/commonActivityFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/playerLayout"
+        android:layout_below="@+id/viewId" />
+
+
+</RelativeLayout>
