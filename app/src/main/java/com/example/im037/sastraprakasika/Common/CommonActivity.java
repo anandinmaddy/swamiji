@@ -57,6 +57,7 @@ import com.example.im037.sastraprakasika.utils.Selected;
 import com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar;
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.orm.SugarContext;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -119,7 +120,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         commonProgressBar = (AVLoadingIndicatorView) findViewById(R.id.commonProgressBar);
         seekbar_min = (SeekBar) findViewById(R.id.seekbar_min);
         songtitle = (TextView) findViewById(R.id.tv_min_title);
-
+        SugarContext.init(this);
         Constant.isAppOpen = true;
         //checkSlidingPanelLayout(false);
         viewpager = findViewById(R.id.viewPager_song);
@@ -327,7 +328,6 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-
     }
 
     public void checkSlidingPanelLayout(boolean visibile) {
@@ -405,11 +405,6 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
-
-
-
-
-
 
     private void updateUI() {
         MediaItem data = PlayerConstants.SONGS_LIST.get(PlayerConstants.SONG_NUMBER);
@@ -664,6 +659,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     public void onStop() {
         GlobalBus.getBus().unregister(this);
         super.onStop();
+        SugarContext.terminate();
     }
 
     @Override

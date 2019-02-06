@@ -26,6 +26,7 @@ public class LecturesFragment extends Fragment {
 
     @BindView(R.id.lectures_recyclerview)
     RecyclerView lecturesRecyclerview;
+    private FragmentListener homeScreenListener;
 
 
     ArrayList<ListOfLecturesModels> listOfLecturesModels = new ArrayList<>();

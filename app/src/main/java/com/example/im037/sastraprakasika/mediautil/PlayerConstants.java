@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class PlayerConstants {
 
-//	//list of sngs add me
+    public static final String SETTINGS = "SETTINGS";
+    //	//list of sngs add me
 //	public static ArrayList<ListOfLecturesListDetails> lect_det = new ArrayList<ListOfLecturesListDetails>();
 	//List of Songs
 	public static ArrayList<MediaItem> SONGS_LIST = new ArrayList<MediaItem>();

@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Downloads_audio_list_adapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Entity.Lecturers;
 import com.example.im037.sastraprakasika.Model.ListOfLecturesListDetails;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
@@ -47,7 +48,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class DownloadsFragmentNew extends Fragment {
+public class DownloadsFragmentNew extends Fragment  {
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
@@ -266,9 +267,12 @@ public class DownloadsFragmentNew extends Fragment {
                                         JSONObject dataConten = contentArray.getJSONObject(i);
                                         JSONArray trackArray = dataConten.optJSONArray("track");
                                         String image_url = dataConten.optString("image_url");
+                                        String post_id = dataConten.optString("postid");
+
                                         String volume_name = dataConten.optString("volume_name");
 
                                         for (int j = 0; j < trackArray.length(); j++) {
+                                            Lecturers lecturers = new Lecturers();
                                             JSONObject jsonObject = trackArray.optJSONObject(j);
                                /* MediaItem mediaItem = new MediaItem();
                                 mediaItem.setTitle(jsonObject.optString("title"));
@@ -276,7 +280,17 @@ public class DownloadsFragmentNew extends Fragment {
                                 mediaItem.setDuration(jsonObject.optString("time"));
                                 mediaItem.setAlbum_img(image_url);
                                 mediaItem.setAlbum(volume_name);*/
+                                            lecturers.setMp3(jsonObject.optString("mp3"));
+                                            lecturers.setTitle(jsonObject.optString("title"));
+                                            lecturers.setTime(jsonObject.optString("time"));
+                                            lecturers.setClassname(jsonObject.optString("classname"));
+                                            lecturers.setImage_url(image_url);
+                                            lecturers.setPost_id(post_id);
+                                            lecturers.save();
+
                                             ItemSong itemSong = new ItemSong();
+
+                                       //     ItemSong itemSong = new ItemSong();
                                             itemSong.setId("01");
                                             itemSong.setUrl(jsonObject.optString("mp3"));
                                             itemSong.setTitle(jsonObject.optString("title"));

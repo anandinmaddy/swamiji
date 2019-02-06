@@ -20,7 +20,7 @@ import com.example.im037.sastraprakasika.utils.Selected;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyLibraryActivity extends CommonActivity {
+public class MyLibraryActivity extends CommonActivity  {
     ImageView back;
     LinearLayout commonactivity_linearlayout;
     TextView commonactivity_titleText;

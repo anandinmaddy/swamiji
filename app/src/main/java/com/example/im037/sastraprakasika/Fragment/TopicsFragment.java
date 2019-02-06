@@ -153,13 +153,5 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
     }
 
 
-//    @Override
-//    public void onClickview(View view, int position) {
-//        //startt activity for detail page
-//       // listOfTopicsModels.get(position);
-//        Toast.makeText(getContext(),"position" +listOfTopicsModels.get(position), Toast.LENGTH_SHORT).show();
-//    }
-
-
 
 }

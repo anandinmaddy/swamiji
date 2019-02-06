@@ -179,7 +179,10 @@
             android:name="com.example.im037.sastraprakasika.mediaservice.SongService"
             android:exported="true"
             android:enabled="true"/>
-
+        <meta-data android:name="DATABASE" android:value="sugar_example.db" />
+        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example.im037.sastraprakasika" />
 
         <activity android:name=".Activity.Topics_detailed_items"
             android:theme="@style/AppTheme_AudioPlay"/>
@@ -201,7 +204,7 @@
         <activity android:name=".Activity.MyLecture" />
         <activity android:name=".Adapter.createPlaylistAdapter"></activity>
         <activity
-            android:name=".Activity.HelpSupportActivity"
+            android:name=".Activity.HelpSu1pportActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

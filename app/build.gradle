@@ -16,6 +16,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    configurations.all {exclude group: 'com.android.support', module: 'support-v13'}
+
 }
 
 dependencies {
@@ -48,17 +50,20 @@ dependencies {
 
 //    musicplayer dependencies
     implementation 'com.google.android.exoplayer:exoplayer:2.8.1'
-    implementation 'com.sothree.slidinguppanel:library:3.3.1'
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     //add  me
     implementation "com.android.support:recyclerview-v7:27.1.1"
 
-    implementation 'com.github.bumptech.glide:glide:3.5.2'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.labo.kaji:relativepopupwindow:0.3.1'
     implementation 'com.h6ah4i.android.widget.verticalseekbar:verticalseekbar:0.7.2'
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+
+    implementation 'com.github.satyan:sugar:1.5'
+
 
 
 }

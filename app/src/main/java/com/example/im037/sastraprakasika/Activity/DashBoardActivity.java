@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -17,11 +20,14 @@ import android.widget.Toast;
 import com.example.im037.sastraprakasika.Adapter.CategoryRecyclerviewAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.LecturesFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.facebook.stetho.Stetho;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,13 +46,15 @@ public class DashBoardActivity extends CommonActivity {
     ArrayList<DiscoursesModel> discoursesModels = new ArrayList<>();
     RelativeLayout common_dragview;
     public static final String TAG = DashBoardActivity.class.getSimpleName();
-
+    Handler mHandler = new Handler();
+    private boolean isHomeActivityRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setView(R.layout.activity_dash_board, "Discourses");
         setSelected(Selected.DISCOURSES);
+        isHomeActivityRunning = true;
 
         discourses = findViewById(R.id.discourses);
         back = findViewById(R.id.back);
@@ -54,6 +62,7 @@ public class DashBoardActivity extends CommonActivity {
         content = findViewById(R.id.discoursesContent);
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
         discourseView = (RecyclerView) findViewById(R.id.discoursesRecyclerview);
+        Stetho.initializeWithDefaults(this);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
 
@@ -118,6 +127,33 @@ public class DashBoardActivity extends CommonActivity {
 
     }
 
+    public void onFragmentInteraction(String id) {
+        Fragment newfrag;
+        if (id.equals(PlayerConstants.SETTINGS)) {
+            newfrag = new LecturesFragment();
+            DashBoardActivity.this.startNewFragment(newfrag, PlayerConstants.SETTINGS);
+        }
+    }
+
+
+    @Override
+    public void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        isHomeActivityRunning = false;
+
+    }
+
+    @Override
+    public void onStart() {
+        try{
+            super.onStart();
+            isHomeActivityRunning = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -140,7 +176,19 @@ public class DashBoardActivity extends CommonActivity {
             }
         }, 2000);
     }
-
+    public void startNewFragment(final Fragment frag, final String tag) {
+        if (isHomeActivityRunning && frag != null && !frag.isAdded()) {
+            String backStateName = frag.getClass().getName();
+            FragmentManager manager = getSupportFragmentManager();
+            // boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+            // if (!fragmentPopped || isFromNotification){ //fragment not in back stack, create it.
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.replace(R.id.container, frag, tag);
+            ft.addToBackStack(backStateName);
+            ft.commitAllowingStateLoss();
+            // }
+        }
+    }
     public void SetAboutDetail() {
         new WebServices(DashBoardActivity.this, TAG).getAboutPageDetails("1872", new VolleyResponseListerner() {
             @Override
