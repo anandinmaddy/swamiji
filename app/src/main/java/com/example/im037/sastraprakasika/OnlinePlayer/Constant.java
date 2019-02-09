@@ -1,10 +1,13 @@
 package com.example.im037.sastraprakasika.OnlinePlayer;
 
 import android.content.Context;
+
+import com.example.im037.sastraprakasika.Entity.Lecturers;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Constant implements Serializable {
+public class Constant  {
 
     private static final long serialVersionUID = 1L;
 

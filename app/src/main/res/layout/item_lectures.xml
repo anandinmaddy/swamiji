@@ -94,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_20sdp"
                 android:src="@drawable/ic_download_icon"/>
         </LinearLayout>
         <View

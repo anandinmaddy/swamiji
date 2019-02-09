@@ -20,9 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:ellipsize="end"
             android:maxLines="6"
             android:text="@string/discourse_content"
             android:textSize="@dimen/_12sdp" />
@@ -37,8 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/_5sdp"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:orientation="horizontal">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/discoursesRecyclerview"

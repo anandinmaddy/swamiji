@@ -479,7 +479,7 @@ public class Methods {
 
         if (songCursor != null && songCursor.moveToFirst()) {
             do {
-                String id = String.valueOf(songCursor.getLong(songCursor.getColumnIndex(MediaStore.Audio.Media._ID)));
+                int id = (int)songCursor.getLong(songCursor.getColumnIndex(MediaStore.Audio.Media._ID));
                 long duration_long = songCursor.getLong(songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                 String title = songCursor.getString(songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                 String artist = songCursor.getString(songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));

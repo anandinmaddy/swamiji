@@ -13,6 +13,7 @@ import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Model.VolumeDetailsModel;
 import com.example.im037.sastraprakasika.R;
+import com.example.im037.sastraprakasika.Readmore.ReadMoreTextView;
 import com.example.im037.sastraprakasika.SingletonClass.GetData;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
@@ -38,7 +39,7 @@ public class VolumeDetailsActivity extends CommonActivity {
     ExpandableListView expandableList;
     ArrayList<VolumeDetailsModel.FileDetailsModel> fileDetailsModels = new ArrayList<>();
     @BindView(R.id.description)
-    TextView description;
+    ReadMoreTextView description;
     private int lastExpandedPosition = -1;
 
     @Override
@@ -53,7 +54,7 @@ public class VolumeDetailsActivity extends CommonActivity {
 //
         setCatergory();
 
-
+        description.setTrimLines(5);
         Picasso.get().load(getIntent().getStringExtra("data3")).into(image);
         description.setText(getIntent().getStringExtra("data4"));
 

@@ -137,7 +137,7 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             table = TABLE_OFFLINE_RECENT;
         }
-        if(checkRecent(itemSong.getId(), isOnline)) {
+        if(checkRecent(Integer.toString(itemSong.getId()), isOnline)) {
             dml("delete from "+table+" where sid = '"+itemSong.getId()+"'");
         }
         String a = DatabaseUtils.sqlEscapeString(itemSong.getDescription());
@@ -252,7 +252,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor != null && cursor.getCount() > 0;
     }
 
-    private Boolean checkPlaylist(String id, Boolean isOnline) {
+    private Boolean checkPlaylist(int id, Boolean isOnline) {
         String table = "";
         if(isOnline) {
             table = TABLE_PLAYLIST_SONG;
@@ -339,7 +339,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String downloads = cursor.getString(cursor.getColumnIndex("downloads"));
                 String classname = cursor.getString(cursor.getColumnIndex("classname"));
 
-                ItemSong objItem = new ItemSong(id,cid,cname,artist,url,imagebig,imagesmall,name,duration,desc,total_rate, avg_rate, views, downloads,classname);
+                ItemSong objItem = new ItemSong(Integer.parseInt(id),cid,cname,artist,url,imagebig,imagesmall,name,duration,desc,total_rate, avg_rate, views, downloads,classname);
                 arrayList.add(objItem);
 
                 cursor.moveToNext();
@@ -378,7 +378,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String downloads = cursor.getString(cursor.getColumnIndex("downloads"));
                 String classname = cursor.getString(cursor.getColumnIndex("classname"));
 
-                ItemSong objItem = new ItemSong(id,cid,cname,artist,url,imagebig,imagesmall,name,duration,desc,total_rate,avg_rate,views,downloads,classname);
+                ItemSong objItem = new ItemSong(Integer.parseInt(id),cid,cname,artist,url,imagebig,imagesmall,name,duration,desc,total_rate,avg_rate,views,downloads,classname);
                 arrayList.add(objItem);
 
                 cursor.moveToNext();
@@ -418,7 +418,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String downloads = cursor.getString(cursor.getColumnIndex(TAG_DOWNLOADS));
                 String classname = cursor.getString(cursor.getColumnIndex(TAG_CLASSNAME));
 
-                ItemSong objItem = new ItemSong(id,cid,cname,artist,url,imagebig,imagesmall,name,duration,desc, total_rate, avg_rate, views, downloads,classname);
+                ItemSong objItem = new ItemSong(Integer.parseInt(id),cid,cname,artist,url,imagebig,imagesmall,name,duration,desc, total_rate, avg_rate, views, downloads,classname);
                 arrayList.add(objItem);
 
                 cursor.moveToNext();

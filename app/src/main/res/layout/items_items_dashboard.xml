@@ -9,9 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_marginLeft="@dimen/_5sdp"
-        android:layout_marginRight="@dimen/_5sdp"
         android:orientation="vertical">
 
         <!--<android.support.v7.widget.CardView-->
@@ -49,22 +46,22 @@
             android:minHeight="@dimen/_20sdp"
             android:textSize="@dimen/_12sdp"
             android:maxWidth="@dimen/_140sdp"
+            android:textStyle="bold"
             android:text="Introduce to vedanta"
             android:textColor="@color/black"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
                 android:orientation="horizontal">
-
-
                 <TextView
                     android:textSize="@dimen/_10sdp"
-                    android:layout_marginLeft="2dp"
                     android:id="@+id/classvalues"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" Topics - " />
+
                 <TextView
                     android:textSize="@dimen/_10sdp"
 
@@ -73,13 +70,16 @@
                     android:layout_height="wrap_content"
                     android:text="88" />
 
+
+
                 <TextView
-                    android:layout_marginLeft="@dimen/_2sdp"
                     android:id="@+id/slash"
                     android:textSize="@dimen/_10sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" | " />
+
+
 
                 <TextView
                     android:textSize="@dimen/_10sdp"
@@ -88,7 +88,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" Volumes - " />
-
                 <TextView
                     android:textSize="@dimen/_10sdp"
 
@@ -96,6 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10" />
+
 
 
 

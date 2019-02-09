@@ -14,10 +14,11 @@
         android:layout_height="@dimen/_40sdp"
         app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
         android:background="@android:color/transparent"
-        app:tabGravity="center"
+
         app:tabIndicatorColor="@color/orange"
+
         app:tabIndicatorHeight="@dimen/_2sdp"
-        app:tabMode="fixed"
+
         app:tabSelectedTextColor="@color/orange"
         app:tabTextColor="@color/orange">
 

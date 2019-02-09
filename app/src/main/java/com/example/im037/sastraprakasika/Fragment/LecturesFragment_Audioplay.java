@@ -202,7 +202,12 @@ public class LecturesFragment_Audioplay extends Fragment {
         if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
             if (PlayerConstants.SONGS_LIST.size() <= 0) {
 
-                callWebservice();
+                if (Constant.arrayListOfflineSongs.size() > 0){
+                    //
+                }else{
+                    callWebservice();
+
+                }
                 //loadUrlData();
 
             }
@@ -522,7 +527,7 @@ public class LecturesFragment_Audioplay extends Fragment {
                                 mediaItem.setAlbum_img(image_url);
                                 mediaItem.setAlbum(volume_name);*/
                                         ItemSong itemSong = new ItemSong();
-                                        itemSong.setId("01");
+                                        itemSong.setId(01);
                                         itemSong.setUrl(jsonObject.optString("mp3"));
                                         itemSong.setTitle(jsonObject.optString("title"));
                                         itemSong.setDuration(jsonObject.optString("time"));

@@ -1,20 +1,74 @@
 package com.example.im037.sastraprakasika.OnlinePlayer;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class ItemSong implements Serializable{
+@Entity
+public class ItemSong {
 
-	private String id, catId, catName="", artist="", url="", imageBig="", imageSmall="", title="", duration="",
-			description="", totalRate="", averageRating="0", views="", downloads="", userRating="",className="";
-	private Bitmap image;
-	private Boolean isSelected = false;
+	@PrimaryKey(autoGenerate = true)
+	@NonNull
+	int id;
+	@ColumnInfo(name = "catId")
+
+	String catId;
+
+	@ColumnInfo(name = "catName")
+	String catName="";
+
+	@ColumnInfo(name = "artist")
+	String artist="";
+
+	@ColumnInfo(name = "url")
+	String url="";
+
+	@ColumnInfo(name = "imageBig")
+	String imageBig="";
+
+	@ColumnInfo(name = "imageSmall")
+	String imageSmall="";
+
+	@ColumnInfo(name = "title")
+	String title="";
+
+	@ColumnInfo(name = "duration")
+	String duration="";
+
+	@ColumnInfo(name = "description")
+	String description="";
+
+	@ColumnInfo(name = "totalRate")
+	String totalRate="";
+
+	@ColumnInfo(name = "averageRating")
+	String averageRating="0";
+
+	@ColumnInfo(name = "views")
+	String views="";
+
+	@ColumnInfo(name = "downloads")
+	String downloads="";
+
+	@ColumnInfo(name = "userRating")
+	String userRating="";
+	@ColumnInfo(name = "className")
+	String className="";
+
+	@ColumnInfo(name = "image")
+	public String image;
+
+	@ColumnInfo(name = "isSelected")
+	Boolean isSelected = false;
 
 	public ItemSong() {
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -62,11 +116,11 @@ public class ItemSong implements Serializable{
 		this.downloads = downloads;
 	}
 
-	public void setImage(Bitmap image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
-	public ItemSong(String id, String catId, String catName, String artist, String url, String imageBig, String imageSmall, String title, String Duration, String Description, String totalRate, String averageRating, String views, String downloads,String cname) {
+	public ItemSong(int id, String catId, String catName, String artist, String url, String imageBig, String imageSmall, String title, String Duration, String Description, String totalRate, String averageRating, String views, String downloads,String cname) {
 		this.id = id;
 		this.catId = catId;
 		this.catName = catName;
@@ -84,7 +138,7 @@ public class ItemSong implements Serializable{
 		this.className = cname;
 	}
 
-	public ItemSong(String id, String artist, String url, Bitmap image, String title, String Duration, String Description) {
+	public ItemSong(int id, String artist, String url, String image, String title, String Duration, String Description) {
 		this.id = id;
 		this.artist = artist;
 		this.url = url;
@@ -102,7 +156,7 @@ public class ItemSong implements Serializable{
 		this.className = className;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 	
@@ -142,7 +196,7 @@ public class ItemSong implements Serializable{
 		return description;
 	}
 
-	public Bitmap getBitmap() {
+	public String getBitmap() {
 		return image;
 	}
 

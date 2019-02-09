@@ -75,6 +75,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         // hypen code static
         String volume = arrayList.get(groupPosition).getTitle().replace( " ","-" );
+        //commented below anand
         title.setText(volume);
 
 //

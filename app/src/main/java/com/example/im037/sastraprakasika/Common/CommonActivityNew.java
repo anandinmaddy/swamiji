@@ -703,8 +703,8 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
     }
 
     public void fav() {
-        if (dbHelper.checkFav(Constant.arrayList_play.get(Constant.playPos).getId())) {
-            dbHelper.removeFromFav(Constant.arrayList_play.get(Constant.playPos).getId());
+        if (dbHelper.checkFav(String.valueOf(Constant.arrayList_play.get(Constant.playPos).getId()))) {
+            dbHelper.removeFromFav(String.valueOf(Constant.arrayList_play.get(Constant.playPos).getId()));
             Toast.makeText(CommonActivityNew.this, getResources().getString(R.string.removed_fav), Toast.LENGTH_SHORT).show();
             changeFav(false);
         } else {
@@ -986,7 +986,7 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
         tv_song_count.setText(Constant.playPos + 1 + "/" + Constant.arrayList_play.size());
         tv_total_time.setText(itemSong.getDuration());
 
-        changeFav(dbHelper.checkFav(itemSong.getId()));
+        changeFav(dbHelper.checkFav(String.valueOf(itemSong.getId())));
 
         if (Constant.isOnline) {
             Picasso.get()

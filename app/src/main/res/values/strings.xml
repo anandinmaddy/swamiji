@@ -20,9 +20,13 @@ Swāmi Paramārthānandā Saraswathi has been teaching the Vedāntik scriptures 
     <!--jana code -->
     <string name="topics_title_text">Recently Added</string>
     <string name="terms">Terms and Condition</string>
-    <string name="donot_disturb_content">Notification will not make sound or
-vibration"</string>
+    <string name="donot_disturb_content">Notification will not make sound or\n
+Vibrate"</string>
     <string name="primary_content">Notify when new volumes are \nreleased</string>
+    <string name="primary_purchase_title">New Purchase</string>
+
+    <string name="primary_purchase">Notify when new purchases are \nmade</string>
+
     <string name="primary_content2">Notify when  new purchase \nare made </string>
     <string name="primary_content_title1">New release</string>
     <string name="primary_content_title2">New Purchase</string>
@@ -74,6 +78,8 @@ vibration"</string>
     <string name="removed_fav">Removed from favourite</string>
     <string name="added_fav">Added to fav</string>
     <string name="err_cannot_use_features">Can\'t use this feature</string>
+    <string name="show">show</string>
+    <string name="less">less</string>
 
 
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -69,10 +70,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class CommonActivity extends AppCompatActivity implements View.OnClickListener {
     private static String TAG = "CommonActivity";
-    private FrameLayout frameLayout;
+    private static FrameLayout frameLayout;
+    private LinearLayout backgroundLinear;
+
     private ActionBarDrawerToggle toggle;
     private ImageView back, notification;
-    private AVLoadingIndicatorView commonProgressBar;
+    private static AVLoadingIndicatorView commonProgressBar;
     private SlidingUpPanelLayout playerLayout;
 
     SlidingUpPanelLayout sliding_layout;
@@ -200,6 +203,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
+        include_sliding_panel_childtwo.setVisibility(View.GONE);
 
 
 
@@ -362,21 +366,28 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     public void setView(int viewLayout, String title) {
         this.title = findViewById(R.id.title);
         this.title.setText(title);
-
         frameLayout = (FrameLayout) findViewById(R.id.commonActivityFrameLayout);
+        backgroundLinear = (LinearLayout) findViewById(R.id.ss);
+        if(title.equals("My Library")){
+            this.title.setTextColor(Color.parseColor("#000000"));
+            this.title.setTypeface(null, Typeface.BOLD);
+            backgroundLinear.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
+
+
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View activityView = layoutInflater.inflate(viewLayout, null, false);
         frameLayout.addView(activityView);
 
     }
 
-    public void setCommonProgressBar(int frameVisible) {
+    public static void setCommonProgressBar(int frameVisible) {
         commonProgressBar.setVisibility(View.VISIBLE);
         commonProgressBar.show();
         frameLayout.setVisibility(frameVisible);
     }
 
-    public void hideCommonProgressBar() {
+    public static void hideCommonProgressBar() {
         commonProgressBar.setVisibility(View.GONE);
         commonProgressBar.hide();
         frameLayout.setVisibility(View.VISIBLE);
@@ -706,8 +717,8 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void fav() {
-        if (dbHelper.checkFav(Constant.arrayList_play.get(Constant.playPos).getId())) {
-            dbHelper.removeFromFav(Constant.arrayList_play.get(Constant.playPos).getId());
+        if (dbHelper.checkFav(String.valueOf(Constant.arrayList_play.get(Constant.playPos).getId()))) {
+            dbHelper.removeFromFav(String.valueOf(Constant.arrayList_play.get(Constant.playPos).getId()));
             Toast.makeText(CommonActivity.this, getResources().getString(R.string.removed_fav), Toast.LENGTH_SHORT).show();
             changeFav(false);
         } else {
@@ -989,7 +1000,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         tv_song_count.setText(Constant.playPos + 1 + "/" + Constant.arrayList_play.size());
         tv_total_time.setText(itemSong.getDuration());
 
-        changeFav(dbHelper.checkFav(itemSong.getId()));
+        changeFav(dbHelper.checkFav(String.valueOf(itemSong.getId())));
 
         if (Constant.isOnline) {
             Picasso.get()

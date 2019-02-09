@@ -64,6 +64,8 @@ public class MyAccountActivity extends CommonActivity {
     FrameLayout common_shadow;
     @BindView(R.id.name_edit)
     ImageView nameEdit;
+    @BindView(R.id.email_edit)
+    ImageView emailEdit;
     @BindView(R.id.mobile_edit)
     ImageView mobileEdit;
     String namechangedValue, mobileNumUpdated;
@@ -103,6 +105,15 @@ public class MyAccountActivity extends CommonActivity {
                 Show();
             }
         } );
+
+        emailEdit.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Show();
+            }
+        } );
+
+
         mobileEdit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {

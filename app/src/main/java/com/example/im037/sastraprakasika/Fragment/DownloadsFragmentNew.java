@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Downloads_audio_list_adapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Entity.ItemSongDatabase;
 import com.example.im037.sastraprakasika.Entity.Lecturers;
 import com.example.im037.sastraprakasika.Model.ListOfLecturesListDetails;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
@@ -47,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadsFragmentNew extends Fragment  {
 
@@ -184,8 +187,15 @@ public class DownloadsFragmentNew extends Fragment  {
 
             if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
                 if (PlayerConstants.SONGS_LIST.size() <= 0) {
+                    ItemSongDatabase db = Room.databaseBuilder(getActivity(),
+                            ItemSongDatabase.class, "Lecturers").allowMainThreadQueries().build();
+                    ItemSong[] lecturersList =  db.userDao().loadAllUsers();
+                    if(Constant.arrayListOfflineSongs.size() > 0){
+                     //   Constant.arrayListOfflineSongs.add(lecturersList[0]);
+                    }else{
+                        callWebservice();
+                    }
 
-                    callWebservice();
                     //loadUrlData();
 
                 }
@@ -241,7 +251,6 @@ public class DownloadsFragmentNew extends Fragment  {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage("Loading ..., Please wait");
             progressDialog.show();
-
             new WebServices(getActivity(), TAG).getlibrary(Session.getInstance(getContext(), TAG).getUserId(), "lectures", new VolleyResponseListerner() {
 
 
@@ -254,9 +263,18 @@ public class DownloadsFragmentNew extends Fragment  {
                         @Override
                         public void run() {
                             Constant.arrayListOfflineSongs.clear();
+                            ItemSongDatabase db = null;
+
                             System.out.println("library respon:::: " + response);
                             if (response.optString("resultcode").equalsIgnoreCase("200")) {
 
+                                try{
+                                     db = Room.databaseBuilder(getActivity(),
+                                             ItemSongDatabase.class, "ItemSong").allowMainThreadQueries().build();
+                                    db.clearAllTables();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
                                 try {
 
@@ -286,19 +304,25 @@ public class DownloadsFragmentNew extends Fragment  {
                                             lecturers.setClassname(jsonObject.optString("classname"));
                                             lecturers.setImage_url(image_url);
                                             lecturers.setPost_id(post_id);
-                                            lecturers.save();
+
+
 
                                             ItemSong itemSong = new ItemSong();
 
                                        //     ItemSong itemSong = new ItemSong();
-                                            itemSong.setId("01");
+                                           // itemSong.setId(01);
                                             itemSong.setUrl(jsonObject.optString("mp3"));
                                             itemSong.setTitle(jsonObject.optString("title"));
                                             itemSong.setDuration(jsonObject.optString("time"));
                                             itemSong.setClassName(jsonObject.optString("classname"));
                                             itemSong.setImageBig(image_url);
                                             itemSong.setImageSmall(image_url);
+                                            try{
 
+                                                db.userDao().insertAll(itemSong);
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }
                                             Constant.arrayListOfflineSongs.add(itemSong);
 
 

@@ -12,6 +12,7 @@ import com.example.im037.sastraprakasika.Adapter.VolumeAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Model.VolumeModel;
 import com.example.im037.sastraprakasika.R;
+import com.example.im037.sastraprakasika.Readmore.ReadMoreTextView;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.utils.Selected;
@@ -48,7 +49,8 @@ public class VolumeActivity extends CommonActivity {
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
         //common_dragview.setVisibility(View.GONE);
         setSelected(Selected.DISCOURSES);
-
+        ReadMoreTextView description1 = (ReadMoreTextView) findViewById(R.id.description1);
+        description1.setTrimLines(3);
         Picasso.get().load(getIntent().getStringExtra("data3")).into(img_view);
         desc.setText(getIntent().getStringExtra("data4"));
         ParentID = getIntent().getStringExtra("data");

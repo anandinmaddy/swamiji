@@ -90,7 +90,7 @@ public class VolleyClass {
                         pDialog.dismiss();
                     } catch (Exception e) {
                         Log.d(TAG, e.getMessage());
-                     }
+                    }
                     if (error instanceof TimeoutError) {
                         listerner.onError(timeout, timeoutTitle);
                     } else if (error instanceof NoConnectionError) {

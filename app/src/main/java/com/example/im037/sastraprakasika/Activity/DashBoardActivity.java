@@ -79,7 +79,7 @@ public class DashBoardActivity extends CommonActivity {
             @Override
             public void onClick(View v) {
                 if (isTextViewClicked) {
-                    content.setMaxLines(6);
+                   // content.setMaxLines(6);
                     isTextViewClicked = false;
                 } else {
                     content.setMaxLines(Integer.MAX_VALUE);
@@ -196,7 +196,7 @@ public class DashBoardActivity extends CommonActivity {
                 if (response.optString("status").equalsIgnoreCase("1")) {
 //                    content.setText(response.getJSONObject("data").optString("title"));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        content.setText(Html.fromHtml(response.getJSONObject("data").optString("content"), 0));
+                       // content.setText(Html.fromHtml(response.getJSONObject("data").optString("content"), 0));
                     }
 
                 }
