@@ -82,7 +82,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     private TextView title, songtitle;
     TextView time;
     LinearLayout discourses, myLibrary, search, myAccount;
-    ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg;
+    static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg;
     boolean doubleBackToExitPressedOnce = false;
     Selected select;
     private MediaPlayer mediaPlayer;
@@ -397,8 +397,8 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        public void setSelected(Selected select) {
-        this.select = select;
+        public static void setSelected(Selected select) {
+
         int textColor;
         switch (select) {
             case MYLIBRARY:

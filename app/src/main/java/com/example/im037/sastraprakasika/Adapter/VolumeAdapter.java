@@ -1,7 +1,10 @@
+/*
 package com.example.im037.sastraprakasika.Adapter;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +30,8 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
 
 
 
-    public VolumeAdapter(Context context,String parentId, ArrayList<VolumeModel> arrayList) {
+    public VolumeAdapter(FragmentManager fm, String parentId, ArrayList<VolumeModel> arrayList) {
+        super(fm);
         this.context = context;
         this.arrayList = arrayList;
         this.parentID = parentId;
@@ -61,11 +65,8 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.image)
         ImageView image;
-        @BindView(R.id.title)
         TextView title;
-        @BindView(R.id.noOfVolcount)
         TextView noOfVolcount;
 //        @BindView(R.id.trackcount)
 //        TextView trackcount;
@@ -73,6 +74,10 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
         public CustomViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            image = (ImageView) itemView.findViewById(R.id.image);
+            title = (TextView) itemView.findViewById(R.id.title);
+            noOfVolcount = (TextView) itemView.findViewById(R.id.noOfVolcount);
         }
     }
 }
+*/

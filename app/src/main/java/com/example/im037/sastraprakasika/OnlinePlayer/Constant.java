@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class Constant  {
 
+    public static final String LAST_SYNC = "LAST_SYNC";
     private static final long serialVersionUID = 1L;
 
     private static String SERVER_URL = "";

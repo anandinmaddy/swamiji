@@ -1,14 +1,16 @@
+/*
 package com.example.im037.sastraprakasika.Activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.im037.sastraprakasika.Adapter.VolumeAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Model.VolumeModel;
 import com.example.im037.sastraprakasika.R;
@@ -90,4 +92,25 @@ public class VolumeActivity extends CommonActivity {
 
     }
 
+    private class VolumeAdapter extends RecyclerView.Adapter {
+        public VolumeAdapter(VolumeActivity volumeActivity, String parentID, ArrayList<VolumeModel> arrayList) {
+        }
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+    }
 }
+*/

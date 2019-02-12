@@ -1,5 +1,6 @@
 package com.example.im037.sastraprakasika.Activity;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,11 +10,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,20 +22,29 @@ import com.example.im037.sastraprakasika.Adapter.CategoryRecyclerviewAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Fragment.LecturesFragment;
+import com.example.im037.sastraprakasika.Fragment.TopicsFragment;
+import com.example.im037.sastraprakasika.Fragment.VolumeFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
+import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
+import com.example.im037.sastraprakasika.utils.AppPreference;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.example.im037.sastraprakasika.utils.TypeConvertor;
 import com.facebook.stetho.Stetho;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-public class DashBoardActivity extends CommonActivity {
+public class DashBoardActivity extends CommonActivity implements VolumeFragment.onVolumeFragmentListener, FragmentInteractionListener {
 
     String parentID;
     ImageView vedanta, discourses, back;
@@ -48,14 +58,17 @@ public class DashBoardActivity extends CommonActivity {
     public static final String TAG = DashBoardActivity.class.getSimpleName();
     Handler mHandler = new Handler();
     private boolean isHomeActivityRunning;
-
+    List<DiscoursesModel> discoursesModelsList;
+    DiscousesAppDatabase db;
+    LinearLayout homeView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setView(R.layout.activity_dash_board, "Discourses");
         setSelected(Selected.DISCOURSES);
         isHomeActivityRunning = true;
-
+        db = Room.databaseBuilder(getApplicationContext(),
+                DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
         discourses = findViewById(R.id.discourses);
         back = findViewById(R.id.back);
 //        vedanta = findViewById(R.id.vedanta);
@@ -63,6 +76,7 @@ public class DashBoardActivity extends CommonActivity {
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
         discourseView = (RecyclerView) findViewById(R.id.discoursesRecyclerview);
         Stetho.initializeWithDefaults(this);
+        homeView = (LinearLayout) findViewById(R.id.homeView);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
 
@@ -88,31 +102,53 @@ public class DashBoardActivity extends CommonActivity {
             }
         });
 
+
+        if(db != null){
+            discoursesModelsList = db.userDao().getAll();
+        }
+
         back.setVisibility(View.GONE);
         setCommonProgressBar(View.VISIBLE);
+
+        if(discoursesModelsList != null && discoursesModelsList.size() > 0){
+            discoursesModels.addAll(discoursesModelsList);
+            discourseView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
+            discourseView.setAdapter(new CategoryRecyclerviewAdapter(getApplicationContext(), discoursesModels,parentID,DashBoardActivity.this));
+
+        }else{
+            callWebservice();
+
+        }
+
+         SetAboutDetail();
+
+    }
+
+    private void callWebservice() {
         new WebServices(DashBoardActivity.this, TAG).getCategory_list("", "", new VolleyResponseListerner() {
 
             @Override
             public void onResponse(JSONObject response) throws JSONException {
                 hideCommonProgressBar();
+
+                ArrayList<DiscoursesModel> test = new ArrayList<>();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     SpaceItemdecoration decoration = new SpaceItemdecoration(16);
                     discourseView.addItemDecoration(decoration);
-                    for (int i = 0; i < response.optJSONArray("data").length(); i++) {
-                        discoursesModels.add(new DiscoursesModel(
-                                response.optJSONArray("data").optJSONObject(i).optString("parentname"),
-                                response.optJSONArray("data").optJSONObject(i).optString("slug"),
-                                response.optJSONArray("data").optJSONObject(i).optString("parentid"),
-                                response.optJSONArray("data").optJSONObject(i).optString("image_url"),
-                                response.optJSONArray("data").optJSONObject(i).optString("description"),
-                                response.optJSONArray( "data").optJSONObject(i).optString( "topiccount" ),
-                                response.optJSONArray( "data").optJSONObject( i ).optString( "trackcount" )
-
-                        ));
+                    db.userDao().getAll();
+                    String  jsonString =response.toString(); //http request
+                    DiscoursesModel data =new DiscoursesModel();
+                    Gson gson = new Gson();
+                    data= gson.fromJson(jsonString,DiscoursesModel.class);
+                    List<DiscoursesModel> discoursesModelsNew = TypeConvertor.stringToNestedData(response.optJSONArray("data").toString());
+                    for (DiscoursesModel discoursesModel : discoursesModelsNew){
+                        db.userDao().insertAll(discoursesModel);
                     }
-                    discourseView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
-                    discourseView.setAdapter(new CategoryRecyclerviewAdapter(getApplicationContext(), discoursesModels,parentID));
 
+                    discoursesModels.addAll(discoursesModelsNew);
+                    discourseView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
+                    discourseView.setAdapter(new CategoryRecyclerviewAdapter(getApplicationContext(), discoursesModels,parentID,DashBoardActivity.this));
+                    AppPreference.putLong(Constant.LAST_SYNC,new Date().getTime(),getApplicationContext());
                 } else if (response.getString("resultcode").equalsIgnoreCase("400")) {
                     CommonMethod.showSnackbar(discourseView, response, DashBoardActivity.this);
                 }
@@ -123,15 +159,30 @@ public class DashBoardActivity extends CommonActivity {
 
             }
         });
-        SetAboutDetail();
-
     }
 
+    @Override
+    public void onFragmentInteraction(String id, Object data) {
+         Fragment newfrag;
+         Bundle bundle;
+        if (id.equals(PlayerConstants.VOLUME_FRAGMENT)) {
+            newfrag = new VolumeFragment();
+            if(data != null){
+                bundle = (Bundle) data;
+                newfrag = new TopicsFragment();
+                newfrag.setArguments(bundle);
+            }
+
+            startNewFragment(newfrag, PlayerConstants.VOLUME_FRAGMENT);
+        }
+    }
+
+    @Override
     public void onFragmentInteraction(String id) {
         Fragment newfrag;
-        if (id.equals(PlayerConstants.SETTINGS)) {
-            newfrag = new LecturesFragment();
-            DashBoardActivity.this.startNewFragment(newfrag, PlayerConstants.SETTINGS);
+        if (id.equals(PlayerConstants.VOLUME_FRAGMENT)) {
+              newfrag = new VolumeFragment();
+            startNewFragment(newfrag, PlayerConstants.VOLUME_FRAGMENT);
         }
     }
 
@@ -153,7 +204,6 @@ public class DashBoardActivity extends CommonActivity {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -183,7 +233,7 @@ public class DashBoardActivity extends CommonActivity {
             // boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
             // if (!fragmentPopped || isFromNotification){ //fragment not in back stack, create it.
             FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(R.id.container, frag, tag);
+            ft.replace(R.id.homeView, frag, tag);
             ft.addToBackStack(backStateName);
             ft.commitAllowingStateLoss();
             // }
