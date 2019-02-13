@@ -59,10 +59,10 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ListOfTopicsModels model = listOfTopicsModels.get( position );
+            /*    ListOfTopicsModels model = listOfTopicsModels.get( position );
                 Intent intent = new Intent(context, Topics_detailed_items.class);
                 intent.putExtra("Data",model);
-                context.startActivity( intent );
+                context.startActivity( intent );*/
 
 
             }

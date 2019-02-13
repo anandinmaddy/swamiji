@@ -74,7 +74,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final ImageView arrow = convertView.findViewById(R.id.arrow);
 
         // hypen code static
-        String volume = arrayList.get(groupPosition).getTitle().replace( " ","-" );
+        String volume = arrayList.get(groupPosition).getTitle();
         //commented below anand
         title.setText(volume);
 

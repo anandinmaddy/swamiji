@@ -63,6 +63,7 @@ public class DashBoardActivity extends CommonActivity {
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
         discourseView = (RecyclerView) findViewById(R.id.discoursesRecyclerview);
         Stetho.initializeWithDefaults(this);
+        content.setMaxLines(Integer.MAX_VALUE);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
 

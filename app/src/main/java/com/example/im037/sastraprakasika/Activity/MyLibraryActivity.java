@@ -65,7 +65,9 @@ public class MyLibraryActivity extends CommonActivity  {
         //commonactivity_linearlayout.setBackgroundColor(getResources().getColor(R.color.white));
        // commonactivity_titleText.setTextColor(getResources().getColor(R.color.black));
 //        adapter=new FragmentAdapter(getSupportFragmentManager(),title,activity);
+        viewpager.setOffscreenPageLimit(4);
         adapter=new FragmentAdapter(getSupportFragmentManager(),title);
+
         viewpager.setAdapter(adapter);
         if("player".equalsIgnoreCase( passvalue) ){
             viewpager.setCurrentItem( 2 );

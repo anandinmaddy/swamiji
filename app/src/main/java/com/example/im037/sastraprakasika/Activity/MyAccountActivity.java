@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -157,16 +158,16 @@ public class MyAccountActivity extends CommonActivity {
 // Set up the input
         final EditText input = new EditText( this );
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME );
-        builder.setView( input );
+
 
 // Set up the buttons
         builder.setPositiveButton( "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 name.setText( input.getText().toString() );
                 namechangedValue = name.getText().toString();
-                new WebServices( MyAccountActivity.this, TAG ).setprofileUpdate( Session.getInstance( MyAccountActivity.this, TAG ).getUserId(), namechangedValue, Session.getInstance( MyAccountActivity.this, TAG ).getProfile_UpdateMobileNumber(), new VolleyResponseListerner() {
+              /*  new WebServices( MyAccountActivity.this, TAG ).setprofileUpdate( Session.getInstance( MyAccountActivity.this, TAG ).getUserId(), namechangedValue, Session.getInstance( MyAccountActivity.this, TAG ).getProfile_UpdateMobileNumber(), new VolleyResponseListerner() {
                     @Override
                     public void onResponse(JSONObject response) throws JSONException {
                         if (response.optString( "resultcode" ).equalsIgnoreCase( "200" )) {
@@ -180,7 +181,7 @@ public class MyAccountActivity extends CommonActivity {
                     public void onError(String message, String title) {
 
                     }
-                } );
+                } );*/
             }
         } );
         builder.setNegativeButton( "Cancel", new DialogInterface.OnClickListener() {
@@ -206,8 +207,9 @@ public class MyAccountActivity extends CommonActivity {
 // Set up the buttons
         builder.setPositiveButton( "OK", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, int which) {
                 mobile.setText( input.getText().toString() );
+                dialog.cancel();
                 mobileNumUpdated = mobile.getText().toString();
                 new WebServices( MyAccountActivity.this, TAG ).setprofileUpdate( Session.getInstance( MyAccountActivity.this, TAG ).getUserId(), Session.getInstance( MyAccountActivity.this, TAG ).getName(), mobileNumUpdated, new VolleyResponseListerner() {
                     @Override
@@ -215,7 +217,7 @@ public class MyAccountActivity extends CommonActivity {
                         if (response.optString( "resultcode" ).equalsIgnoreCase( "200" )) {
                             Session.getInstance( MyAccountActivity.this, TAG ).createSession(
                                     response.optJSONObject( "data" ).optString( "first_name" ), Session.getInstance( MyAccountActivity.this, TAG ).getEmail(), Session.getInstance( MyAccountActivity.this, TAG ).getToken(), Session.getInstance( MyAccountActivity.this, TAG ).getUserId(), response.optJSONObject( "data" ).optString( "mobile" ) );
-                            CommonMethod.showSnackbar( name, response.optString( "resultmessage" ), MyAccountActivity.this );
+
                         }
                     }
 

@@ -22,7 +22,7 @@ public class Playlist_detailed_Activity extends AppCompatActivity{
     ImageView imageView;
     TextView txtview;
     RecyclerView recyclerView;
-    ImageView back;
+   // ImageView back;
     TextView edit_text;
 
 
@@ -39,15 +39,15 @@ public class Playlist_detailed_Activity extends AppCompatActivity{
         txtview = (TextView)findViewById(R.id.album_image_title_next);
         edit_text = (TextView)findViewById(R.id.edittext);
 
-        back = findViewById(R.id.back11);
+//        back = findViewById(R.id.back11);
 
-        back.setOnClickListener(new View.OnClickListener() {
+      /*  back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                          finish();
             }
         });
-
+*/
 
 
         edit_text.setOnClickListener(new View.OnClickListener() {

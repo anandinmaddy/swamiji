@@ -203,7 +203,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        include_sliding_panel_childtwo.setVisibility(View.GONE);
+        include_sliding_panel_childtwo.setVisibility(View.VISIBLE);
 
 
 
