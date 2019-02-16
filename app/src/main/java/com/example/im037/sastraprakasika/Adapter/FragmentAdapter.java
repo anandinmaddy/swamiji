@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.example.im037.sastraprakasika.Fragment.DownloadsFragment;
 import com.example.im037.sastraprakasika.Fragment.DownloadsFragmentNew;
 import com.example.im037.sastraprakasika.Fragment.LecturesFragment_Audioplay;
 import com.example.im037.sastraprakasika.Fragment.PlaylistsFragment;
@@ -33,6 +34,7 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+
         switch (title[position]) {
             case "Topics":
                 return new TopicsFragment();
@@ -46,14 +48,19 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
 
 //                return new LecturesFragmentNew();
 //
+                //return new LecturesFragment_Audioplay();
                 return new LecturesFragment_Audioplay();
 //                return new LecturesFragment_new();
 
             case "Downloads":
+              //  return new LecturesFragment_Audioplay();
+            return new DownloadsFragment();
+
 //                return new DownloadsFragment();
-                return new DownloadsFragmentNew();
+               // return new DownloadsFragmentNew();
             case "Playlists":
-                return new PlaylistsFragment();
+
+              return new PlaylistsFragment();
         }
         return null;
     }

@@ -70,11 +70,12 @@
 
                 <ImageView
                     android:id="@+id/arrowicon"
-                    android:layout_marginLeft="60dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20sp"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:textAlignment="viewEnd"
-                    android:src="@drawable/ic_rgtarrow"/>
+                    android:src="@drawable/rightarrow"/>
 
 
                     <!--<TextView-->

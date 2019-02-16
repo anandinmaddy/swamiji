@@ -165,9 +165,9 @@ public class LecturesFragment_Audioplay extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0) {
-            if (PlayerConstants.SONGS_LIST.size() <= 0) {
+          //  if (PlayerConstants.SONGS_LIST.size() <= 0) {
                 callWebservice();
-            }
+           // }
             setListItems();
         }
     }
@@ -202,9 +202,8 @@ public class LecturesFragment_Audioplay extends Fragment {
         if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
             if (PlayerConstants.SONGS_LIST.size() <= 0) {
 
-                if (Constant.arrayListOfflineSongs.size() > 0){
-                    //
-                }else{
+                if (Constant.arrayListOfflineSongs.size() <= 0){
+
                     callWebservice();
 
                 }

@@ -36,7 +36,6 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
     @Override
     public Adapter_Playlist_Next.Custom_view onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new Adapter_Playlist_Next.Custom_view(LayoutInflater.from(context).inflate(R.layout.playlist_detailed_listitems_nexts, parent, false));
-
     }
 
     @Override

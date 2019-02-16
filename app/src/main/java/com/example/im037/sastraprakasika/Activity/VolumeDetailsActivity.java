@@ -1,5 +1,7 @@
 package com.example.im037.sastraprakasika.Activity;
 
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -86,10 +88,11 @@ public class VolumeDetailsActivity extends CommonActivity {
                                 response.optJSONObject("data").optJSONArray("datacontent").optJSONObject(i).optString("songsamount"),
                                 subCatergory));
                     }
+
                     expandableList.setAdapter(new ExpandableListAdapter(VolumeDetailsActivity.this, GetData.getInstance().getCategorylist()));
                     lastExpandedPosition = 0;
-                    expandableList.setFocusable(false);
 
+                    expandableList.setFocusable(false);
                     expandableList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
                         @Override

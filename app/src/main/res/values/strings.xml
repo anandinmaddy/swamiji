@@ -14,8 +14,8 @@
     <string name="title_activity_volume">VolumeActivity</string>
     <string name="email_text">Email will be verified via OTP</string>
     <string name="otp_text">Note: Please check the spam folder in case \n you have not received any mail.</string>
-    <string name="discourse_content"><b>The Spiritual Journey of H H Swami Paramarthananda Saraswathi</b>\n\n
-Swāmi Paramārthānandā Saraswathi has been teaching the Vedāntik scriptures for the last three decades in the form of regular classes at various centres in Chennai. All these classes are based on whatever knowledge Swāmiji has received from His Guru and also whatever He has gathered from various commentaries written by Āchāryas belonging to this holy tradition, the tradition which we still are worshipping today.</string>
+    <string name="discourse_title"><b>The Spiritual Journey of H H Swami Paramarthananda Saraswathi</b></string>
+    <string name="discourse_content">Swāmi Paramārthānandā Saraswathi has been teaching the Vedāntik scriptures for the last three decades in the form of regular classes at various centres in Chennai. All these classes are based on whatever knowledge Swāmiji has received from His Guru and also whatever He has gathered from various commentaries written by Āchāryas belonging to this holy tradition, the tradition which we still are worshipping today.</string>
 
     <!--jana code -->
     <string name="topics_title_text">Recently Added</string>

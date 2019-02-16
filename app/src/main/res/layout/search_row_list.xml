@@ -19,7 +19,7 @@
         android:layout_weight="7"
       android:layout_marginTop="10dp"
     android:id="@+id/search_title"
-    android:layout_width="0dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="An overview of yoga"
     android:maxLines="1"
@@ -29,7 +29,7 @@
     android:textColor="@color/black"/>
 
         <ImageView
-            android:background="@drawable/righticonsearch"
+            android:background="@drawable/rightarrow"
             android:id="@+id/img1"
             android:layout_marginLeft="200dp"
             android:layout_marginTop="10dp"

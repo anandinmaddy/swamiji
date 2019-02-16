@@ -50,7 +50,7 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
         holder.title.setText(arrayList.get(position).getName());
         holder.noOfVolcount.setText(arrayList.get(position).getTitlecount());
         //holder.trackcount.setText(arrayList.get(position).getTrackcount());
-
+        holder.image.setAdjustViewBounds(true);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

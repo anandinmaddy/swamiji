@@ -22,12 +22,6 @@
         android:layout_marginRight="@dimen/_10sdp"
         android:src="@drawable/right" />
 
-    <View
-        android:id="@+id/viewId"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/name"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:background="@color/white_smoke" />
+
 
 </RelativeLayout>
