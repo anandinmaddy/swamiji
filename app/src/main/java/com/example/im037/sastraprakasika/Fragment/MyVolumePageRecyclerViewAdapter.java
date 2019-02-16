@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment.OnListFragmentInteractionListener;
 import com.example.im037.sastraprakasika.Fragment.dummy.DummyContent.DummyItem;
+import com.example.im037.sastraprakasika.R;
 
 import java.util.List;
 
@@ -19,9 +20,9 @@ import java.util.List;
 public class MyVolumePageRecyclerViewAdapter extends RecyclerView.Adapter<MyVolumePageRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final View.OnClickListener mListener;
 
-    public MyVolumePageRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyVolumePageRecyclerViewAdapter(List<DummyItem> items, View.OnClickListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -45,7 +46,7 @@ public class MyVolumePageRecyclerViewAdapter extends RecyclerView.Adapter<MyVolu
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+            //        mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });

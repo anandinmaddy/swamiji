@@ -29,6 +29,10 @@ public class DiscoursesModel {
     @ColumnInfo(name = "trackcount")
     String trackcount;
 
+
+    @ColumnInfo(name = "volumecount")
+    String volumecount;
+
     public DiscoursesModel(){
         return;
     }
@@ -105,5 +109,22 @@ public class DiscoursesModel {
     public void setTrackcount(String trackcount) {
         this.trackcount = trackcount;
     }
+
+    public String getParentname() {
+        return parentname;
+    }
+
+    public void setParentname(String parentname) {
+        this.parentname = parentname;
+    }
+
+    public String getVolumecount() {
+        return volumecount;
+    }
+
+    public void setVolumecount(String volumecount) {
+        this.volumecount = volumecount;
+    }
+
 
 }

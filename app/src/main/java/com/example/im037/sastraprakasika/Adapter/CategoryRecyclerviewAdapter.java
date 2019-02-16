@@ -1,5 +1,7 @@
+/*
 package com.example.im037.sastraprakasika.Adapter;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,9 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.DashBoardActivity;
 import com.example.im037.sastraprakasika.Activity.FragmentInteractionListener;
+import com.example.im037.sastraprakasika.Activity.VolumeActivity;
+import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
@@ -67,7 +72,9 @@ public class CategoryRecyclerviewAdapter extends RecyclerView.Adapter<CategoryRe
                     profileData.putString("data1",discoursesModels.get(position).getName());
                     profileData.putString("data3",discoursesModels.get(position).getImage_url());
                     profileData.putString("data4",discoursesModels.get(position).getDescription());
-                    mListener.onFragmentInteraction(PlayerConstants.VOLUME_FRAGMENT, profileData);
+                     mListener.onFragmentInteraction(PlayerConstants.VOLUME_FRAGMENT, profileData);
+
+                  // CommonMethod.changeActivityData5(context, VolumeActivity.class, discoursesModels.get(position).getParentid(), discoursesModels.get(position).getName(),"",discoursesModels.get(position).getImage_url(),discoursesModels.get(position).getDescription());
                 }
 
                // CommonMethod.changeActivityData5(context, VolumeActivity.class, discoursesModels.get(position).getParentid(), discoursesModels.get(position).getName(),"",discoursesModels.get(position).getImage_url(),discoursesModels.get(position).getDescription());
@@ -100,3 +107,4 @@ public class CategoryRecyclerviewAdapter extends RecyclerView.Adapter<CategoryRe
         }
     }
 }
+*/

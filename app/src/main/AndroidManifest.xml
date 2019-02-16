@@ -78,6 +78,11 @@
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Common.CommonActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- <activity -->
         <!-- android:name=".Common.BackActivity" -->
         <!-- android:screenOrientation="portrait" -->

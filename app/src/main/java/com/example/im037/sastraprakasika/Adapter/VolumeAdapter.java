@@ -1,4 +1,4 @@
-/*
+
 package com.example.im037.sastraprakasika.Adapter;
 
 import android.app.Fragment;
@@ -31,7 +31,7 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
 
 
     public VolumeAdapter(FragmentManager fm, String parentId, ArrayList<VolumeModel> arrayList) {
-        super(fm);
+     //   super(fm);
         this.context = context;
         this.arrayList = arrayList;
         this.parentID = parentId;
@@ -54,7 +54,7 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonMethod.changeActivityData5(context, VolumeDetailsActivity.class, parentID,arrayList.get(position).getSubid(), arrayList.get(position).getName(),arrayList.get(position).getImage_url(),arrayList.get(position).getDescription());
+                CommonMethod.changeActivityData5(context, VolumeDetailsActivity.class, parentID,"", arrayList.get(position).getName(),arrayList.get(position).getImage_url(),arrayList.get(position).getDescription());
             }
         });
     }
@@ -80,4 +80,4 @@ public class VolumeAdapter extends RecyclerView.Adapter<VolumeAdapter.CustomView
         }
     }
 }
-*/
+

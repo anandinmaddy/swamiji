@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
@@ -241,7 +242,7 @@ public class LoginActivity extends AppCompatActivity {
                             response.getJSONObject("data").optString("token"),
                             response.getJSONObject("data").optString("ID"),"");
 //                    startService(new Intent(LoginActivity.this, RegistrationIntentService.class));
-                    CommonMethod.changeActivity(LoginActivity.this, DashBoardActivity.class);
+                    CommonMethod.changeActivity(LoginActivity.this, CommonActivity.class);
                     finish();
 
                 } else if (response.getString("resultcode").equalsIgnoreCase("400")) {

@@ -1,4 +1,4 @@
-/*
+
 package com.example.im037.sastraprakasika.Activity;
 
 import android.content.Context;
@@ -31,12 +31,12 @@ import butterknife.ButterKnife;
 public class VolumeActivity extends CommonActivity {
     public static final String TAG=VolumeActivity.class.getSimpleName();
 
-    @BindView(R.id.image1)
+   // @BindView(R.id.image1)
     ImageView img_view;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    //@BindView(R.id.recyclerView)
+     RecyclerView recyclerView;
 
-    @BindView(R.id.description1)
+   // @BindView(R.id.description1)
     TextView desc;
     ArrayList<VolumeModel> arrayList = new ArrayList<>();
     RelativeLayout common_dragview;
@@ -56,7 +56,7 @@ public class VolumeActivity extends CommonActivity {
         Picasso.get().load(getIntent().getStringExtra("data3")).into(img_view);
         desc.setText(getIntent().getStringExtra("data4"));
         ParentID = getIntent().getStringExtra("data");
-        new WebServices(VolumeActivity.this, TAG).getCategory_list(getIntent().getStringExtra("data"), "", new VolleyResponseListerner() {
+       /* new WebServices(VolumeActivity.this, TAG).getCategory_list(getIntent().getStringExtra("data"), "", new VolleyResponseListerner() {
             @Override
             public void onResponse(JSONObject response) throws JSONException {
                 if(response.optString("resultcode").equalsIgnoreCase("200")){
@@ -71,8 +71,8 @@ public class VolumeActivity extends CommonActivity {
                                 response.optJSONArray("data").optJSONObject(i).optString("description")));
 
                     }
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    recyclerView.setAdapter(new VolumeAdapter(VolumeActivity.this,ParentID, arrayList));
+                    //   recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    //  recyclerView.setAdapter(new VolumeAdapter(VolumeActivity.this,ParentID, arrayList));
                 }
 
             }
@@ -81,7 +81,7 @@ public class VolumeActivity extends CommonActivity {
             public void onError(String message, String title) {
 
             }
-        });
+        });*/
 
 //        arrayList.add(new VolumeModel(R.drawable.intro_vedanta, "Introduction to Vedanta", "Volumes - 2"));
 //        arrayList.add(new VolumeModel(R.drawable.vedanta, "Bhagavad-gita", "Volumes - 24"));
@@ -113,4 +113,4 @@ public class VolumeActivity extends CommonActivity {
         }
     }
 }
-*/
+

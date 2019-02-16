@@ -32,6 +32,6 @@
     <color name="black80">#80000000</color>
     <color name="grey">#6F6F6F</color>
     <color name="white80">#FFFFFF</color>
-
+    <color name="background">#dddddd</color>
 
 </resources>

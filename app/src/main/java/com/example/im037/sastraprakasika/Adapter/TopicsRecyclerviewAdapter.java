@@ -2,7 +2,12 @@ package com.example.im037.sastraprakasika.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.Itopice_listener;
 import com.example.im037.sastraprakasika.Activity.Topics_detailed_items;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
 import com.example.im037.sastraprakasika.Model.ListOfTopicsModels;
 import com.example.im037.sastraprakasika.R;
 import com.squareup.picasso.Picasso;
@@ -25,15 +31,16 @@ import butterknife.ButterKnife;
 public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecyclerviewAdapter.Customview> {
 
     // interface class declare then add conctructor
-    private Itopice_listener itopice_listener;
+    FragmentManager fragmentManager;
     Context context;
     ArrayList<ListOfTopicsModels> listOfTopicsModels;
 
-    public TopicsRecyclerviewAdapter(Context context, ArrayList<ListOfTopicsModels> listOfTopicsModels,Itopice_listener listener) {
+
+
+    public TopicsRecyclerviewAdapter(Context context, ArrayList<ListOfTopicsModels> listOfTopicsModels, FragmentManager fragmentManager) {
         this.context = context;
         this.listOfTopicsModels = listOfTopicsModels;
-        this.itopice_listener = listener;
-
+        this.fragmentManager = fragmentManager;
     }
 
 
@@ -59,10 +66,27 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ListOfTopicsModels model = listOfTopicsModels.get( position );
+
+
+                Bundle profileData = new Bundle();
+                profileData.putString("data",listOfTopicsModels.get(position).getSong_title());
+                profileData.putString("data1",listOfTopicsModels.get(position).getSong_image());
+                profileData.putString("data2",listOfTopicsModels.get(position).getSong_post_id());
+
+
+                TopicsDetailsFragment fragment2 = new TopicsDetailsFragment();
+                fragment2.setArguments(profileData);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.commit();
+/*
+
+ */
+  /*              ListOfTopicsModels model = listOfTopicsModels.get( position );
                 Intent intent = new Intent(context, Topics_detailed_items.class);
                 intent.putExtra("Data",model);
-                context.startActivity( intent );
+                context.startActivity( intent );*/
 
 
             }
@@ -91,8 +115,8 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
 
 
 
-        holder.songTitle.setText(value);
-        holder.volumeNo.setText(listOfTopicsModels.get(position).getSong_volume());
+        holder.song_title.setText(value);
+        holder.volume_no.setText(listOfTopicsModels.get(position).getSong_volume());
 
 
 
@@ -125,15 +149,17 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
 
 
     public class Customview extends RecyclerView.ViewHolder {
-        @BindView(R.id.topics_image)
         ImageView topics_image;
-        @BindView(R.id.song_title)
-        TextView songTitle;
-        @BindView(R.id.volume_no)
-        TextView volumeNo;
+        TextView song_title;
+        TextView volume_no;
+
         public Customview(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            topics_image = (ImageView) itemView.findViewById(R.id.topics_image);
+            song_title = (TextView) itemView.findViewById(R.id.song_title);
+            volume_no = (TextView) itemView.findViewById(R.id.volume_no);
+
+           ButterKnife.bind(this,itemView);
 
         }
     }

@@ -81,7 +81,7 @@ public class DownloadsFragmentNew extends Fragment  {
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
     public static final String TAG = LecturesFragment_Audioplay.class.getSimpleName();
 
-    ProgressDialog progressDialog;
+    //ProgressDialog progressDialog;
 
 
     //added me
@@ -248,16 +248,16 @@ public class DownloadsFragmentNew extends Fragment  {
 
         private void callWebservice() {
 
-            progressDialog = new ProgressDialog(getActivity());
+           /* progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage("Loading ..., Please wait");
-            progressDialog.show();
+            progressDialog.show();*/
             new WebServices(getActivity(), TAG).getlibrary(Session.getInstance(getContext(), TAG).getUserId(), "lectures", new VolleyResponseListerner() {
 
 
                 @Override
                 public void onResponse(final JSONObject response) throws JSONException {
                     // hideCommonProgressBar();
-                    progressDialog.hide();
+                  //  progressDialog.hide();
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -359,7 +359,7 @@ public class DownloadsFragmentNew extends Fragment  {
                 @Override
                 public void onError(String message, String title) {
                     System.out.println("library error:::: " + message);
-                    progressDialog.hide();
+                   // progressDialog.hide();
                 }
             });
 

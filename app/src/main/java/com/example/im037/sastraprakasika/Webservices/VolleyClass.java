@@ -53,15 +53,15 @@ public class VolleyClass {
     }
 
     public void volleyPostData(final String url, JSONObject jsonObject, final VolleyResponseListerner listerner) {
-        final ProgressDialog pDialog = new ProgressDialog(context);
+     /*   final ProgressDialog pDialog = new ProgressDialog(context);
         pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(false);*/
 
         Log.d(TAG, "volleyPostData  url - " + url);
         Log.d(TAG, "volleyPostData  data - " + jsonObject.toString());
         if (isOnLline()) {
             try {
-                pDialog.show();
+             //   pDialog.show();
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
@@ -77,7 +77,7 @@ public class VolleyClass {
                                 e.printStackTrace();
                             }
                             try {
-                                pDialog.dismiss();
+                               // pDialog.dismiss();
                             } catch (Exception e) {
                                 Log.d(TAG, e.getMessage());
                             }
@@ -87,7 +87,7 @@ public class VolleyClass {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     try {
-                        pDialog.dismiss();
+                      //  pDialog.dismiss();
                     } catch (Exception e) {
                         Log.d(TAG, e.getMessage());
                     }

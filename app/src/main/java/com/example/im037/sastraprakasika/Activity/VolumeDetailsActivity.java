@@ -63,7 +63,7 @@ public class VolumeDetailsActivity extends CommonActivity {
     }
 
     private void setCatergory() {
-        new WebServices(VolumeDetailsActivity.this, TAG).getCategory_list(getIntent().getStringExtra("data"), getIntent().getStringExtra("data1"), new VolleyResponseListerner() {
+        new WebServices(VolumeDetailsActivity.this, TAG).getCategory_list(getIntent().getStringExtra("data"), getIntent().getStringExtra("data1"),"", new VolleyResponseListerner() {
             @Override
             public void onResponse(JSONObject response) throws JSONException {
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {

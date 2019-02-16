@@ -37,7 +37,6 @@ Vibrate"</string>
     <string name="contest_giveaways">Help &amp; Support</string>
 
 
-
     //camera related
 
     <!--<string name="app_name">Music Player</string>-->
@@ -80,6 +79,10 @@ Vibrate"</string>
     <string name="err_cannot_use_features">Can\'t use this feature</string>
     <string name="show">more</string>
     <string name="less">less</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="myaccount">My Account</string>
 
 
 </resources>

@@ -15,5 +15,13 @@ public interface DiscoursesModelDao {
     @Insert
     void insertAll(DiscoursesModel... discoursesModels);
 
+    @Query("SELECT * FROM VolumeModel")
+    List<VolumeModel> getVolumeAll();
+
+    @Insert
+    void insertVolumeAll(VolumeModel... volumeModels);
+
+
+
 
 }

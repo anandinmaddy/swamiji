@@ -1,14 +1,29 @@
 package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.example.im037.sastraprakasika.Adapter.FragmentAdapter;
+import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.R;
+import com.example.im037.sastraprakasika.utils.Selected;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
+import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +33,7 @@ import com.example.im037.sastraprakasika.R;
  * Use the {@link MyLibraryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyLibraryFragment extends Fragment {
+public class MyLibraryFragment extends Fragment  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,7 +42,25 @@ public class MyLibraryFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ImageView back;
+    LinearLayout commonactivity_linearlayout;
+    TextView commonactivity_titleText;
+    private TabLayout tablayout;
+    private ViewPager viewpager;
+    private  String title[]={"Topics","Lectures","Download","Playlists"};
+    private TextView titleView;
+    private FragmentAdapter adapter;
+    private String TAG="";
+    RelativeLayout common_dragview;
+    View common_view;
+    FrameLayout common_shadow;
+    ShimmerFrameLayout shimmerFrameLayout;
 
+    Activity activity;
+    Context context;
+    String passvalue = "";
+    //add me0
+    protected View mView;
     private OnFragmentInteractionListener mListener;
 
     public MyLibraryFragment() {
@@ -55,17 +88,63 @@ public class MyLibraryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_mylibrary, container, false);
+        this.mView = view;
+        CommonActivity.setSelected(Selected.MYLIBRARY);
+
+        back=(ImageView)getActivity().findViewById(R.id.back);
+        titleView = (TextView) getActivity().findViewById(R.id.title);
+        titleView.setText("My Library");
+       // titleView.setTextColor(getResources().getColor(R.color.black));
+
+        common_view=(View)getActivity().findViewById(R.id.viewId);
+         common_shadow=(FrameLayout)getActivity().findViewById(R.id.shadow);
+        //common_shadow.setVisibility(View.GONE);
+//        common_view.setVisibility(View.VISIBLE);
+         viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+         tablayout = (TabLayout) view.findViewById(R.id.tablayout);
+         commonactivity_titleText=(TextView)getActivity().findViewById(R.id.title) ;
+         commonactivity_linearlayout=(LinearLayout)getActivity().findViewById(R.id.ss);
+       // back.setVisibility(View.GONE);
+        viewpager.setOffscreenPageLimit(4);
+        adapter=new FragmentAdapter(getFragmentManager(),title);
+
+        viewpager.setAdapter(adapter);
+        if("player".equalsIgnoreCase( passvalue) ){
+            viewpager.setCurrentItem( 2 );
+        }else if("playlist".equalsIgnoreCase( passvalue ))
+        {
+            viewpager.setCurrentItem( 3 );
+        }else {
+            viewpager.setCurrentItem( 0 );
+        }
+        tablayout.setupWithViewPager(viewpager);
+        viewpager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
+
+        adapter=new FragmentAdapter(getFragmentManager(),title);
+
+        viewpager.setAdapter(adapter);
+        if("player".equalsIgnoreCase( passvalue) ){
+            viewpager.setCurrentItem( 2 );
+        }else if("playlist".equalsIgnoreCase( passvalue ))
+        {
+            viewpager.setCurrentItem( 3 );
+        }else {
+            viewpager.setCurrentItem( 0 );
+        }
+        tablayout.setupWithViewPager(viewpager);
+        viewpager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_library, container, false);
+        return view;
+    }
+
+    public void setPosition(int position) {
+        viewpager.setCurrentItem(position);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -75,15 +154,12 @@ public class MyLibraryFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override

@@ -15,12 +15,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +47,11 @@ import com.example.im037.sastraprakasika.Activity.DashBoardActivity;
 import com.example.im037.sastraprakasika.Activity.MyAccountActivity;
 import com.example.im037.sastraprakasika.Activity.MyLibraryActivity;
 import com.example.im037.sastraprakasika.Activity.SearchActivity;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyAccountFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.SearchPageFragment;
+import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemMyPlayList;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
@@ -68,7 +78,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 
-public class CommonActivity extends AppCompatActivity implements View.OnClickListener {
+public class CommonActivity extends AppCompatActivity implements MyLibraryFragment.OnFragmentInteractionListener {
     private static String TAG = "CommonActivity";
     private static FrameLayout frameLayout;
     private LinearLayout backgroundLinear;
@@ -77,12 +87,14 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView back, notification;
     private static AVLoadingIndicatorView commonProgressBar;
     private SlidingUpPanelLayout playerLayout;
-
+    static boolean isHomeActivityRunning = false;
     SlidingUpPanelLayout sliding_layout;
     private TextView title, songtitle;
     TextView time;
     LinearLayout discourses, myLibrary, search, myAccount;
     static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg;
+    LinearLayout layoutBackground;
+    TextView titleView;
     boolean doubleBackToExitPressedOnce = false;
     Selected select;
     private MediaPlayer mediaPlayer;
@@ -113,10 +125,14 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     PausableRotateAnimation rotateAnimation;
     ImagePagerAdapter adapter;
     RelativeLayout include_sliding_panel_childtwo;
+    Toolbar toolbarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.common_activity);
+
+
         mediaPlayer = new MediaPlayer();
         back = findViewById(R.id.back);
         include_sliding_panel_childtwo = findViewById( R.id.include_sliding_panel_childtwo);
@@ -153,8 +169,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
         methods = new Methods(this);
         dbHelper = new DBHelper(this);
-
-
+        layoutBackground = findViewById(R.id.ss);
 
         iv_music_bg = findViewById(R.id.iv_music_bg);
         iv_music_play = findViewById(R.id.iv_music_play);
@@ -187,7 +202,9 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
         iv_max_option.setColorFilter(Color.BLACK);
 
-        iv_max_fav.setOnClickListener(this);
+
+
+     /*   iv_max_fav.setOnClickListener(this.getApplicationContext());
         iv_max_option.setOnClickListener(this);
 
         iv_min_play.setOnClickListener(this);
@@ -201,9 +218,9 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         iv_music_downloads.setOnClickListener(this);
         sliding_layout.setOnClickListener(this);
 
+*/
 
-
-        include_sliding_panel_childtwo.setVisibility(View.GONE);
+        include_sliding_panel_childtwo.setVisibility(View.VISIBLE);
 
 
 
@@ -227,7 +244,6 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity( intent );
             }
         });
-
 
 
 
@@ -299,11 +315,19 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-
         myLibrary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonMethod.changeActivity(CommonActivity.this, MyLibraryActivity.class);
+                layoutBackground.setBackgroundColor(getResources().getColor(R.color.white));
+                discoursesImg.setImageResource(R.drawable.discourse_grey);
+                searchImg.setImageResource(R.drawable.search_grey);
+                myAccountImg.setImageResource(R.drawable.account_grey);
+
+                MyLibraryFragment myLibraryFragment = new MyLibraryFragment();
+              //  volumePageFragment.setArguments(profileData);
+                startNewFragment(myLibraryFragment,"library");
+
+            //    CommonMethod.changeActivity(CommonActivity.this, MyLibraryActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -311,7 +335,16 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         discourses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonMethod.changeActivity(CommonActivity.this, DashBoardActivity.class);
+                layoutBackground.setBackgroundColor(getResources().getColor(R.color.orange));
+                myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
+                discoursesImg.setImageResource(R.drawable.discourse_orange);
+                searchImg.setImageResource(R.drawable.search_grey);
+                myAccountImg.setImageResource(R.drawable.account_grey);
+                DashBoardNewFragment dashBoardNewFragment = new DashBoardNewFragment();
+                //  volumePageFragment.setArguments(profileData);
+                startNewFragment(dashBoardNewFragment,"home");
+
+               // CommonMethod.changeActivity(CommonActivity.this, DashBoardActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -319,7 +352,17 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonMethod.changeActivity(CommonActivity.this, SearchActivity.class);
+                layoutBackground.setBackgroundColor(getResources().getColor(R.color.orange));
+                myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
+                discoursesImg.setImageResource(R.drawable.discourse_grey);
+                searchImg.setImageResource(R.drawable.search_orange);
+                myAccountImg.setImageResource(R.drawable.account_grey);
+
+                SearchPageFragment searchPageFragment = new SearchPageFragment();
+                //  volumePageFragment.setArguments(profileData);
+                startNewFragment(searchPageFragment,"search");
+
+             //   CommonMethod.changeActivity(CommonActivity.this, SearchActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -327,8 +370,19 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         myAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonMethod.changeActivity(CommonActivity.this, MyAccountActivity.class);
-                //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+                layoutBackground.setBackgroundColor(getResources().getColor(R.color.orange));
+                myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
+                discoursesImg.setImageResource(R.drawable.discourse_grey);
+                searchImg.setImageResource(R.drawable.search_grey);
+                myAccountImg.setImageResource(R.drawable.account_orange);
+
+                MyAccountFragment myAccountActivityFragment = new MyAccountFragment();
+                //  volumePageFragment.setArguments(profileData);
+                startNewFragment(myAccountActivityFragment,"account");
+
+
+             //   CommonMethod.changeActivity(CommonActivity.this, MyAccountActivity.class);
+               // //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
 
@@ -347,6 +401,7 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onResume() {
+        isHomeActivityRunning = true;
         super.onResume();
 
     }
@@ -403,14 +458,27 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         switch (select) {
             case MYLIBRARY:
                 myLibraryImg.setImageResource(R.drawable.mylibrary_orange);
+                discoursesImg.setImageResource(R.drawable.discourse_grey);
+                searchImg.setImageResource(R.drawable.search_grey);
+                myAccountImg.setImageResource(R.drawable.account_grey);
+
                 break;
             case DISCOURSES:
+                myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
                 discoursesImg.setImageResource(R.drawable.discourse_orange);
+                searchImg.setImageResource(R.drawable.search_grey);
+                myAccountImg.setImageResource(R.drawable.account_grey);
                 break;
             case SEARCH:
+                myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
+                discoursesImg.setImageResource(R.drawable.discourse_grey);
                 searchImg.setImageResource(R.drawable.search_orange);
+                myAccountImg.setImageResource(R.drawable.account_grey);
                 break;
             case MYACCOUNT:
+                myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
+                discoursesImg.setImageResource(R.drawable.discourse_grey);
+                searchImg.setImageResource(R.drawable.search_grey);
                 myAccountImg.setImageResource(R.drawable.account_orange);
                 break;
 
@@ -428,7 +496,6 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_min_play:
@@ -663,12 +730,15 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
+        isHomeActivityRunning = true;
+
         GlobalBus.getBus().register(this);
     }
 
     @Override
     public void onStop() {
         GlobalBus.getBus().unregister(this);
+        isHomeActivityRunning = false;
         super.onStop();
         SugarContext.terminate();
     }
@@ -1070,6 +1140,55 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
         seekUpdation();
     }
 
+
+
+    public static void startNewFragmenoldt(Context context, final Fragment frag, final String tag) {
+        String backStateName = frag.getClass().getName();
+        final FragmentTransaction ftr = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+        if (((FragmentActivity) context).getSupportFragmentManager().findFragmentById(R.id.main_layout) != null) {
+            ftr.replace(R.id.main_layout, frag, tag);
+            ftr.addToBackStack(null);
+
+        } else
+            ftr.add(R.id.main_layout, frag, tag);
+        //ftr.commit();
+        ftr.commitAllowingStateLoss();
+
+    }
+
+
+    public void startNewFragment(final Fragment frag, final String tag) {
+        if ( frag != null && !frag.isAdded()) {
+            ((FrameLayout)findViewById(R.id.commonActivityFrameLayout)).removeAllViews();
+            String backStateName = frag.getClass().getName();
+            FragmentManager manager = getSupportFragmentManager();
+            // boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+            // if (!fragmentPopped || isFromNotification){ //fragment not in back stack, create it.
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.replace(R.id.commonActivityFrameLayout, frag, tag);
+            ft.addToBackStack(backStateName);
+            ft.commit();
+            // }
+        }
+
+
+
+    }
+
+
+    public void popBackStack() {
+        final FragmentManager fm = this.getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
+            try {
+                fm.popBackStack();
+            } catch (IllegalStateException ignored) {
+                ignored.printStackTrace();
+                // There's no way to avoid getting this if saveInstanceState has already been called.
+            }
+        }
+    }
+
+
     public void isBuffering(Boolean isBuffer) {
         Constant.isPlaying = !isBuffer;
         if (isBuffer) {
@@ -1088,6 +1207,16 @@ public class CommonActivity extends AppCompatActivity implements View.OnClickLis
        // iv_music_download.setEnabled(!isBuffer);
         iv_min_play.setEnabled(!isBuffer);
         seekBar_music.setEnabled(!isBuffer);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
     private class ImagePagerAdapter extends PagerAdapter {

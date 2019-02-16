@@ -3,41 +3,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white_smoke"
-    android:layout_marginTop="@dimen/_45sdp"
     android:orientation="vertical"
-    android:id="@+id/homeView"
-    tools:context=".Activity.DashBoardActivity">
+    android:id="@+id/homeView">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:visibility="visible"
+        android:orientation="vertical"
+        app:shimmer_duration="800"
+        >
+
+        <!-- Adding 7 rows of placeholders -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include layout="@layout/data_placeholder_layout" />
+            <include layout="@layout/data_placeholder_layout" />
+            <include layout="@layout/data_placeholder_layout" />
+            <include layout="@layout/data_placeholder_layout" />
+            <include layout="@layout/data_placeholder_layout" />
+            <include layout="@layout/data_placeholder_layout" />
+            <include layout="@layout/data_placeholder_layout" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/itemViewlayout"
+        android:visibility="visible"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical">
-
         <TextView
             android:id="@+id/discoursesTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:maxLines="2"
+            android:fontFamily="Helvetica Neue"
             android:text="@string/discourse_title"
-            android:textSize="@dimen/_14sdp" />
-
+            android:textSize="@dimen/_15sdp" />
         <com.example.im037.sastraprakasika.Readmore.ReadMoreTextView
             android:id="@+id/discoursesContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:maxLines="2"
+            app:trimLines="3"
             android:text="@string/discourse_content"
             android:textSize="@dimen/_12sdp" />
 
@@ -45,13 +70,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white_smoke"
+            android:gravity="center"
+            android:layout_marginTop="5sp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/_5sdp"
-                android:orientation="horizontal">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/discoursesRecyclerview"
@@ -62,7 +84,6 @@
                 </android.support.v7.widget.RecyclerView>
 
 
-            </LinearLayout>
 
 
         </LinearLayout>

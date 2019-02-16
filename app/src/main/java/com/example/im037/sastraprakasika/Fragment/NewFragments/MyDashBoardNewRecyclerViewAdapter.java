@@ -6,22 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment.OnListFragmentInteractionListener;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.DummyContent.DummyItem;
+import com.example.im037.sastraprakasika.R;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyDashBoardNewRecyclerViewAdapter extends RecyclerView.Adapter<MyDashBoardNewRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final View.OnClickListener mListener;
 
-    public MyDashBoardNewRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyDashBoardNewRecyclerViewAdapter(List<DummyItem> items, View.OnClickListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -45,7 +44,7 @@ public class MyDashBoardNewRecyclerViewAdapter extends RecyclerView.Adapter<MyDa
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                   // mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });

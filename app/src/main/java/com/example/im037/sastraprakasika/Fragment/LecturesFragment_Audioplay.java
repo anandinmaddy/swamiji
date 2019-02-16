@@ -79,12 +79,12 @@ public class LecturesFragment_Audioplay extends Fragment {
     RecyclerView recyclerView;
     Lectures_audio_list_adapter lectures_audio_list_adapter = null;
     View view;
-
+    TextView title;
     // add new
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
     public static final String TAG = LecturesFragment_Audioplay.class.getSimpleName();
 
-    ProgressDialog progressDialog;
+   // ProgressDialog progressDialog;
 
 
     //added me
@@ -107,10 +107,12 @@ public class LecturesFragment_Audioplay extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_audioplay_main, container, false);
 
+
         context = getContext();
         init();
-
-
+        title = getActivity().findViewById(R.id.title);
+        title.setText("My Library");
+     //   title.setTextColor(getResources().getColor(R.color.black));
         //lect_det = new ArrayList<ListOfLecturesListDetails>();
 //        for (int i = 0; i < img_url.length; i++) {
 //            ListOfLecturesListDetails listOfLecturesListDetails = new ListOfLecturesListDetails();
@@ -200,16 +202,14 @@ public class LecturesFragment_Audioplay extends Fragment {
         //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 
         if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
+            callWebservice();
+            /*
             if (PlayerConstants.SONGS_LIST.size() <= 0) {
+                callWebservice();
 
-                if (Constant.arrayListOfflineSongs.size() <= 0){
-
-                    callWebservice();
-
-                }
                 //loadUrlData();
 
-            }
+            }*/
 
         }
     }
@@ -486,18 +486,18 @@ public class LecturesFragment_Audioplay extends Fragment {
 
     private void callWebservice() {
 
-        progressDialog = new ProgressDialog(getActivity());
+      /*  progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading ..., Please wait");
         progressDialog.show();
-
+*/
         new WebServices(getActivity(), TAG).getlibrary(Session.getInstance(getContext(), TAG).getUserId(), "lectures", new VolleyResponseListerner() {
 
 
             @Override
             public void onResponse(final JSONObject response) throws JSONException {
                 // hideCommonProgressBar();
-                progressDialog.hide();
-
+             //   progressDialog.hide();
+//
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -570,7 +570,7 @@ public class LecturesFragment_Audioplay extends Fragment {
             @Override
             public void onError(String message, String title) {
                 System.out.println("library error:::: " + message);
-                progressDialog.hide();
+                //progressDialog.hide();
             }
         });
 

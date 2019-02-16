@@ -22,7 +22,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (Session.getInstance(SplashActivity.this, TAG).getIsLogin()) {
-                    startActivity(new Intent(SplashActivity.this, DashBoardActivity.class));
+                    startActivity(new Intent(SplashActivity.this, DashBoardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 }
@@ -32,4 +33,11 @@ public class SplashActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
+    }
+
 }

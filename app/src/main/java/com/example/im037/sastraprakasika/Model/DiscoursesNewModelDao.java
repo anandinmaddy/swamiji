@@ -9,17 +9,18 @@ import java.util.List;
 @Dao
 public interface DiscoursesNewModelDao {
 
-    @Query("SELECT * FROM DiscoursesModel")
-    List<DiscoursesModel> getAll();
+    @Query("SELECT * FROM DiscoursesNewModel")
+    List<DiscoursesNewModel> getAll();
 
     @Insert
-    void insertAll(DiscoursesModel... discoursesModels);
+    void insertAll(DiscoursesNewModel... discoursesNewModels);
 
-    @Query("SELECT * FROM VolumeModel")
-    List<VolumeModel> getVolumeAll();
+    @Query("SELECT * FROM DiscoursesNewModel")
+    List<DiscoursesNewModel> getVolumeAll();
 
-    @Insert
-    void insertVolumeAll(VolumeModel... volumeModels);
+    @Query("DELETE FROM DiscoursesNewModel")
+    void deleteAll();
+
 
 
 

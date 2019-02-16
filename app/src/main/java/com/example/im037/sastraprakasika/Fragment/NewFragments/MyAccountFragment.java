@@ -3,12 +3,19 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +25,9 @@ import com.example.im037.sastraprakasika.Activity.NotificationSettingActivity;
 import com.example.im037.sastraprakasika.Activity.PrivacyPolicyActivity;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.HelpSupportFragment;
+import com.example.im037.sastraprakasika.Fragment.NotificationSettingFragment;
+import com.example.im037.sastraprakasika.Fragment.PrivacyPolicyFragment;
 import com.example.im037.sastraprakasika.Model.ProfileModel;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
@@ -27,103 +37,120 @@ import com.example.im037.sastraprakasika.utils.Selected;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyAccountFragment extends CommonActivity {
+public class MyAccountFragment extends Fragment {
     ArrayList<ProfileModel> profilelist = new ArrayList<>();
     ArrayList<ProfileModel.ProfileDetailsModel> profileDetaillist = new ArrayList<>();
     String TAG = MyAccountFragment.class.getSimpleName();
     ImageView account, back;
     RelativeLayout common_dragview;
-    @BindView(R.id.profile_heading)
     TextView profileHeading;
-    @BindView(R.id.viewId)
+
     View viewId;
-    @BindView(R.id.name_title)
-    TextView nameTitle;
-    @BindView(R.id.name)
     TextView name;
-    @BindView(R.id.email_title)
-    TextView emailTitle;
-    @BindView(R.id.email)
-    TextView email;
-    @BindView(R.id.mobile_title)
-    TextView mobileTitle;
-    @BindView(R.id.mobile)
     TextView mobile;
-    @BindView(R.id.Setting)
     TextView Setting;
-    @BindView(R.id.notification_setting)
     TextView notificationSetting;
-    @BindView(R.id.help_support)
     TextView helpSupport;
-    @BindView(R.id.privacy_policy)
     TextView privacyPolicy;
-    @BindView(R.id.logout)
     TextView logout;
+    TextView title;
+    TextView email;
     FrameLayout common_shadow;
-    @BindView(R.id.name_edit)
     ImageView nameEdit;
-    @BindView(R.id.email_edit)
     ImageView emailEdit;
-    @BindView(R.id.mobile_edit)
     ImageView mobileEdit;
     String namechangedValue, mobileNumUpdated;
     public static boolean namechanged = false;
     EditText input, input1;
-
+    LinearLayout notificationLayout,helpSupportLayout,privacypolicyLayout;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        setView( R.layout.activity_account, "My Account" );
-        ButterKnife.bind( this );
 
-        setSelected( Selected.MYACCOUNT );
+    }
 
-        account = findViewById( R.id.account );
-        back = findViewById( R.id.back );
-        back.setVisibility( View.GONE );
-        common_shadow = findViewById( R.id.shadow );
-        common_shadow.setVisibility( View.VISIBLE );
-        helpSupport.setText( Html.fromHtml( getResources().getString( R.string.contest_giveaways ) ) );
-        //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
-        //common_dragview.setVisibility(View.VISIBLE);
-        name.setText( Session.getInstance( MyAccountFragment.this, TAG ).getName() );
-        email.setText( Session.getInstance( MyAccountFragment.this, TAG ).getEmail() );
-        mobile.setText( Session.getInstance( MyAccountFragment.this, TAG ).getProfile_UpdateMobileNumber() );
-        logout.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Session.getInstance( getApplicationContext(), TAG ).logout();
-                CommonMethod.clearAllPreviousActivity( MyAccountFragment.this, LoginActivity.class );
-                finish();
-            }
-        } );
-        nameEdit.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Show();
-            }
-        } );
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        emailEdit.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Show();
-            }
-        } );
+            View view = inflater.inflate(R.layout.activity_account, container, false);
+         //   ButterKnife.bind( getActivity() );
+
+        CommonActivity.setSelected( Selected.MYACCOUNT );
 
 
-        mobileEdit.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Mobileshow();
-            }
-        } );
+        profileHeading = (TextView) view.findViewById(R.id.profile_heading);
+        title = (TextView) getActivity().findViewById(R.id.title);
+        viewId = (View) view.findViewById(R.id.viewId);
+        name = (TextView) view.findViewById(R.id.name);
+        email = (TextView) view.findViewById(R.id.email);
+        mobile = (TextView) view.findViewById(R.id.mobile);
+        Setting = (TextView) view.findViewById(R.id.Setting);
+        helpSupport = (TextView) view.findViewById(R.id.notification_setting);
+        privacyPolicy = (TextView) view.findViewById(R.id.privacy_policy);
+        logout = (TextView) view.findViewById(R.id.logout);
+        profileHeading.setVisibility(View.VISIBLE);
+        notificationLayout = view.findViewById(R.id.notificationLayout);
+
+        helpSupportLayout = view.findViewById(R.id.helpSupportLayout);
+        privacypolicyLayout = view.findViewById(R.id.privacypolicyLayout);
+
+        notificationLayout = view.findViewById(R.id.notificationLayout);
+            account = getActivity().findViewById( R.id.account );
+            back = getActivity().findViewById( R.id.back );
+            back.setVisibility( View.GONE );
+            common_shadow = getActivity().findViewById( R.id.shadow );
+            common_shadow.setVisibility( View.VISIBLE );
+            nameEdit = view.findViewById(R.id.name_edit);
+            emailEdit = view.findViewById(R.id.email_edit);
+            mobileEdit = view.findViewById(R.id.mobile_edit);
+            notificationSetting = view.findViewById(R.id.notification_setting);
+            privacyPolicy= view.findViewById(R.id.privacy_policy);
+            helpSupport= view.findViewById(R.id.help_support);
+
+             title.setText( Html.fromHtml( getResources().getString( R.string.myaccount ) ) );
+            helpSupport.setText( Html.fromHtml( getResources().getString( R.string.contest_giveaways ) ) );
+            //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
+            //common_dragview.setVisibility(View.VISIBLE);
+            name.setText( Session.getInstance( getActivity().getApplicationContext(), TAG ).getName() );
+            email.setText( Session.getInstance( getActivity().getApplicationContext(), TAG ).getEmail() );
+            mobile.setText( Session.getInstance( getActivity().getApplicationContext(), TAG ).getProfile_UpdateMobileNumber() );
+            logout.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Session.getInstance( getActivity().getApplicationContext(), TAG ).logout();
+                    CommonMethod.clearAllPreviousActivity( getActivity().getApplicationContext(), LoginActivity.class );
+                   // finish();
+                }
+            } );
+            nameEdit.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Show();
+                }
+            } );
+
+            emailEdit.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Show();
+                }
+            } );
+
+
+            mobileEdit.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Mobileshow();
+                }
+            } );
 //        if(namechanged!=false){
 //            name.setText(Session.getInstance(MyAccountActivity.this, TAG).getProfile_UpdateName());
 //            mobile.setText(Session.getInstance(MyAccountActivity.this, TAG).getProfile_UpdateMobileNumber());
@@ -133,35 +160,62 @@ public class MyAccountFragment extends CommonActivity {
 //            mobile.setText("");
 //
 //        }
-        notificationSetting.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonMethod.changeActivity( MyAccountFragment.this, NotificationSettingActivity.class );
-            }
-        } );
-        privacyPolicy.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonMethod.changeActivity( MyAccountFragment.this, PrivacyPolicyActivity.class );
-            }
-        } );
+        notificationLayout.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        helpSupport.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonMethod.changeActivity( MyAccountFragment.this, HelpSupportActivity.class );
-            }
-        } );
-    }
+                    NotificationSettingFragment fragment2 = new NotificationSettingFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    back.setVisibility(View.GONE);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
+
+                  //  CommonMethod.changeActivity( getActivity(), NotificationSettingActivity.class );
+                }
+            } );
+            privacypolicyLayout.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PrivacyPolicyFragment fragment2 = new PrivacyPolicyFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    back.setVisibility(View.GONE);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
+
+
+               //     CommonMethod.changeActivity( getActivity(), PrivacyPolicyActivity.class );
+                }
+            } );
+
+            helpSupportLayout.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelpSupportFragment fragment2 = new HelpSupportFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    back.setVisibility(View.GONE);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
+
+                  //  CommonMethod.changeActivity(  getActivity(), HelpSupportActivity.class );
+                }
+            } );
+
+        return view;
+        }
+
 
     public void Show() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( this );
+        AlertDialog.Builder builder = new AlertDialog.Builder( this.getActivity() );
         builder.setTitle( "Change Name" );
 
 // Set up the input
-        final EditText input = new EditText( this );
+        final EditText input = new EditText( this.getActivity() );
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-
+        input.setInputType( InputType.TYPE_CLASS_TEXT  );
+        builder.setView( input );
 
 // Set up the buttons
         builder.setPositiveButton( "OK", new DialogInterface.OnClickListener() {
@@ -170,13 +224,13 @@ public class MyAccountFragment extends CommonActivity {
 
                 name.setText( input.getText().toString() );
                 namechangedValue = name.getText().toString();
-              /*  new WebServices( MyAccountActivity.this, TAG ).setprofileUpdate( Session.getInstance( MyAccountActivity.this, TAG ).getUserId(), namechangedValue, Session.getInstance( MyAccountActivity.this, TAG ).getProfile_UpdateMobileNumber(), new VolleyResponseListerner() {
+                new WebServices( getContext(), TAG ).setprofileUpdate( Session.getInstance( getContext(), TAG ).getUserId(), namechangedValue, Session.getInstance( getContext(), TAG ).getProfile_UpdateMobileNumber(), new VolleyResponseListerner() {
                     @Override
                     public void onResponse(JSONObject response) throws JSONException {
                         if (response.optString( "resultcode" ).equalsIgnoreCase( "200" )) {
-                            Session.getInstance( MyAccountActivity.this, TAG ).createSession(
-                                    response.optJSONObject( "data" ).optString( "first_name" ), Session.getInstance( MyAccountActivity.this, TAG ).getEmail(), Session.getInstance( MyAccountActivity.this, TAG ).getToken(), Session.getInstance( MyAccountActivity.this, TAG ).getUserId(), response.optJSONObject( "data" ).optString( "mobile" ) );
-                            CommonMethod.showSnackbar( name, response.optString( "resultmessage" ), MyAccountActivity.this );
+                            Session.getInstance( getContext(), TAG ).createSession(
+                                    response.optJSONObject( "data" ).optString( "first_name" ), Session.getInstance( getContext(), TAG ).getEmail(), Session.getInstance( getContext(), TAG ).getToken(), Session.getInstance( getContext(), TAG ).getUserId(), response.optJSONObject( "data" ).optString( "mobile" ) );
+                            CommonMethod.showSnackbar( name, response.optString( "resultmessage" ), getActivity() );
                         }
                     }
 
@@ -184,7 +238,7 @@ public class MyAccountFragment extends CommonActivity {
                     public void onError(String message, String title) {
 
                     }
-                } );*/
+                } );
             }
         } );
         builder.setNegativeButton( "Cancel", new DialogInterface.OnClickListener() {
@@ -198,13 +252,13 @@ public class MyAccountFragment extends CommonActivity {
     }
 
     public void Mobileshow() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( this );
+        AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
         builder.setTitle( "Change Mobile Number" );
 
 // Set up the input
-        final EditText input = new EditText( this );
+        final EditText input = new EditText( getActivity() );
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PHONETIC );
+        input.setInputType( InputType.TYPE_CLASS_NUMBER  );
         builder.setView( input );
 
 // Set up the buttons
@@ -214,12 +268,12 @@ public class MyAccountFragment extends CommonActivity {
                 mobile.setText( input.getText().toString() );
                 dialog.cancel();
                 mobileNumUpdated = mobile.getText().toString();
-                new WebServices( MyAccountFragment.this, TAG ).setprofileUpdate( Session.getInstance( MyAccountFragment.this, TAG ).getUserId(), Session.getInstance( MyAccountFragment.this, TAG ).getName(), mobileNumUpdated, new VolleyResponseListerner() {
+                new WebServices(  getActivity(), TAG ).setprofileUpdate( Session.getInstance( getActivity(), TAG ).getUserId(), Session.getInstance( getActivity(), TAG ).getName(), mobileNumUpdated, new VolleyResponseListerner() {
                     @Override
                     public void onResponse(JSONObject response) throws JSONException {
                         if (response.optString( "resultcode" ).equalsIgnoreCase( "200" )) {
-                            Session.getInstance( MyAccountFragment.this, TAG ).createSession(
-                                    response.optJSONObject( "data" ).optString( "first_name" ), Session.getInstance( MyAccountFragment.this, TAG ).getEmail(), Session.getInstance( MyAccountFragment.this, TAG ).getToken(), Session.getInstance( MyAccountFragment.this, TAG ).getUserId(), response.optJSONObject( "data" ).optString( "mobile" ) );
+                            Session.getInstance(  getActivity(), TAG ).createSession(
+                                    response.optJSONObject( "data" ).optString( "first_name" ), Session.getInstance( getActivity(), TAG ).getEmail(), Session.getInstance( getActivity(), TAG ).getToken(), Session.getInstance( getActivity(), TAG ).getUserId(), response.optJSONObject( "data" ).optString( "mobile" ) );
 
                         }
                     }

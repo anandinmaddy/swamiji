@@ -109,11 +109,12 @@ public class WebServices {
         volleyClass.volleyPostData(ConstantValues.SET_PASSWD, jsonObject, listerner);
     }
 
-    public void getCategory_list(String parentid, String subid, VolleyResponseListerner listerner) {
+    public void getCategory_list(String parentid, String subid, String catId,VolleyResponseListerner listerner) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("parentid", parentid);
             jsonObject.put("subid", subid);
+            jsonObject.put("catid", catId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -16,6 +16,7 @@ import com.example.im037.sastraprakasika.Adapter.FragmentAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +35,7 @@ public class MyLibraryActivity extends CommonActivity  {
     RelativeLayout common_dragview;
     View common_view;
     FrameLayout common_shadow;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     Activity activity;
     Context context;
