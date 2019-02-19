@@ -61,6 +61,7 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
         System.out.println("Image url:::: "+imgUrl);
         Picasso.get()
                 .load(model.getSong_image())
+                .placeholder(R.drawable.placeholder_song)
                 .into(holder.topics_image);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +73,7 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
                 profileData.putString("data",listOfTopicsModels.get(position).getSong_title());
                 profileData.putString("data1",listOfTopicsModels.get(position).getSong_image());
                 profileData.putString("data2",listOfTopicsModels.get(position).getSong_post_id());
+                profileData.putString("data4",listOfTopicsModels.get(position).getSong_image());
 
 
                 TopicsDetailsFragment fragment2 = new TopicsDetailsFragment();

@@ -37,16 +37,16 @@ public class PlaylistsFragment extends Fragment {
 
         linearLayout = (LinearLayout)view.findViewById(R.id.playlist_layout_main);
         titleView = getActivity().findViewById(R.id.title);
-        titleView.setVisibility(View.GONE);
+       // titleView.setVisibility(View.GONE);
 
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewPlaylistFragment fragment2 = new NewPlaylistFragment();
+           /*     NewPlaylistFragment fragment2 = new NewPlaylistFragment();
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
 
             }
         });

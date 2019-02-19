@@ -2,6 +2,7 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -126,6 +127,8 @@ public class DashBoardNewFragment extends Fragment  {
         mShimmerViewContainer.startShimmer();
 //        playerLayout.setVisibility(View.GONE);
 //
+        titleView.setVisibility(View.VISIBLE);
+        titleView.setTypeface(null, Typeface.BOLD);
         titleView.setText("Discourses");
 
         content.setOnClickListener(new View.OnClickListener() {

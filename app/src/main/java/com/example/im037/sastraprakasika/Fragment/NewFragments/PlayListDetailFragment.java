@@ -28,7 +28,7 @@ import java.util.Arrays;
  * A simple {@link Fragment} subclass.
  */
 public class PlayListDetailFragment extends Fragment {
-    ImageView imageView,back;
+    ImageView imageView;
     TextView txtview;
     RecyclerView recyclerView;
     // ImageView back;
@@ -55,6 +55,23 @@ public class PlayListDetailFragment extends Fragment {
         txtview = (TextView)view.findViewById(R.id.album_image_title_next);
         edit_text = (TextView)view.findViewById(R.id.edittext);
 
+     /*   back = getActivity().findViewById(R.id.back);
+
+
+        back.setVisibility(View.VISIBLE);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                back.setVisibility(View.GONE);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.commit();
+            }
+        });
+*/
         if (getArguments()!= null && getArguments().getString("data") != null){
             txtview.setText(getArguments().getString("data"));
 
@@ -75,7 +92,7 @@ public class PlayListDetailFragment extends Fragment {
         });
 
         titleView = getActivity().findViewById(R.id.title);
-        back = getActivity().findViewById(R.id.back);
+       // back = getActivity().findViewById(R.id.back);
 
 
         titleView.setText("Playlist");

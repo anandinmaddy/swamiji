@@ -44,6 +44,7 @@ import com.example.im037.sastraprakasika.mediacontrols.Controls;
 import com.example.im037.sastraprakasika.mediautil.MediaItem;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
 import com.example.im037.sastraprakasika.mediautil.UtilFunctions;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -82,6 +83,7 @@ public class LecturesFragment_Audioplay extends Fragment {
     TextView title;
     // add new
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
+    ShimmerFrameLayout shimmerFrameLayout;
     public static final String TAG = LecturesFragment_Audioplay.class.getSimpleName();
 
    // ProgressDialog progressDialog;
@@ -107,11 +109,13 @@ public class LecturesFragment_Audioplay extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_audioplay_main, container, false);
 
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
 
         context = getContext();
         init();
-        title = getActivity().findViewById(R.id.title);
-        title.setText("My Library");
+        shimmerFrameLayout.startShimmer();
+/*        title = getActivity().findViewById(R.id.title);
+        title.setText("My Library");*/
      //   title.setTextColor(getResources().getColor(R.color.black));
         //lect_det = new ArrayList<ListOfLecturesListDetails>();
 //        for (int i = 0; i < img_url.length; i++) {
@@ -459,6 +463,7 @@ public class LecturesFragment_Audioplay extends Fragment {
                 // img_imageViewAlbumArt.setImageResource( data.getAlbum_img() );
                 Picasso.get()
                         .load(data.getAlbum_img())
+                        .placeholder(R.drawable.placeholder_song)
                         .into(img_imageViewAlbumArt);
             } else {
                 img_imageViewAlbumArt.setBackgroundDrawable(new BitmapDrawable(UtilFunctions.getDefaultAlbumArt(context)));
@@ -501,6 +506,8 @@ public class LecturesFragment_Audioplay extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.setVisibility(View.GONE);
                         Constant.arrayListOfflineSongs.clear();
                         System.out.println("library respon:::: " + response);
                         if (response.optString("resultcode").equalsIgnoreCase("200")) {

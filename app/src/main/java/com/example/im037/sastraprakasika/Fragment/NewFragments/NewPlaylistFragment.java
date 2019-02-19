@@ -29,8 +29,8 @@ public class NewPlaylistFragment extends Fragment {
     EditText playListTitle;
     LinearLayout addLayout;
     String title;
-    TextView titleView;
-    ImageView back;
+    //TextView titleView;
+   // ImageView back;
 
 
     public NewPlaylistFragment() {
@@ -48,11 +48,11 @@ public class NewPlaylistFragment extends Fragment {
         newplaylist_txt = (TextView) view.findViewById(R.id.new_playlist);
         done_txt = (TextView) view.findViewById(R.id.done_playlist);
         addLayout = view.findViewById(R.id.addPlaylist);
-        titleView = getActivity().findViewById(R.id.title);
-        back = getActivity().findViewById(R.id.back);
+       // titleView = getActivity().findViewById(R.id.title);
+     //   back = getActivity().findViewById(R.id.back);
 
 
-        back.setVisibility(View.VISIBLE);
+       /* back.setVisibility(View.GONE);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +64,7 @@ public class NewPlaylistFragment extends Fragment {
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.commit();
             }
-        });
+        });*/
 
 
         done_txt.setOnClickListener(new View.OnClickListener() {

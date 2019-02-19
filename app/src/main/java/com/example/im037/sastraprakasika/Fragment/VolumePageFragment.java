@@ -92,7 +92,8 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
         back = (ImageView) getActivity().findViewById(R.id.back);
         db1= Room.databaseBuilder(context,
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
-        Picasso.get().load(getArguments().getString("data3")).into(img_view);
+        Picasso.get().load(getArguments().getString("data3")).placeholder(R.drawable.placeholder_default)
+                .into(img_view);
         desc.setText(getArguments().getString("data4"));
         ParentID = getArguments().getString("parentid");
         catid = getArguments().getString("data");
@@ -115,10 +116,8 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
                 Bundle profileData = new Bundle();
                 profileData.putString("data",ParentID);
-                profileData.putString("data1",getArguments().getString("title"));
-                profileData.putString("data3",getArguments().getString("backImag"));
+                profileData.putString("data3",getArguments().getString("data3"));
                 profileData.putString("data4",getArguments().getString("backCount"));
-
 
                 DiscoursesNewFragment fragment2 = new DiscoursesNewFragment();
                 FragmentManager fragmentManager = getFragmentManager();

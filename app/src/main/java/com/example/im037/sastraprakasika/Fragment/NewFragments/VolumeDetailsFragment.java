@@ -93,8 +93,9 @@ public class VolumeDetailsFragment extends Fragment {
             }
         });
 
-        description.setTrimLines(5);
-        Picasso.get().load(getArguments().getString("data3")).into(image);
+        description.setTrimLines(6);
+        Picasso.get().load(getArguments().getString("data3")).placeholder(R.drawable.placeholder_default)
+                .into(image);
         description.setText(getArguments().getString("data4"));
 
 
@@ -107,6 +108,7 @@ public class VolumeDetailsFragment extends Fragment {
             public void onResponse(JSONObject response) throws JSONException {
                 mShimmerViewContainer.stopShimmer();
                 mShimmerViewContainer.setVisibility(View.GONE);
+                GetData.getInstance().clearData();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     for (int i = 0; i < response.optJSONObject("data").optJSONArray("datacontent").length(); i++) {
                         ArrayList<VolumeDetailsModel.FileDetailsModel> subCatergory = new ArrayList<>();
@@ -133,7 +135,6 @@ public class VolumeDetailsFragment extends Fragment {
                     expandableList.setAdapter(new ExpandableListAdapter(context, GetData.getInstance().getCategorylist()));
                     lastExpandedPosition = 0;
 
-                    expandableList.setFocusable(false);
                     expandableList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
                         @Override

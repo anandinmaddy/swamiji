@@ -41,7 +41,11 @@
             <include layout="@layout/data_placeholder_layout" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,21 +78,15 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/expandable_list"
             android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_toRightOf="@+id/image"
-            android:maxLines="6"
-            android:padding="@dimen/_5sdp"
+            app:trimLines="6"
             android:text=""
             android:textSize="@dimen/_12sdp" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/shadow"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/image"
-        android:background="@drawable/toolbar_drop_shadow" />
-
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

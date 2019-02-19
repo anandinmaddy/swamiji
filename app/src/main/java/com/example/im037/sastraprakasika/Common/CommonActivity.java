@@ -47,10 +47,12 @@ import com.example.im037.sastraprakasika.Activity.DashBoardActivity;
 import com.example.im037.sastraprakasika.Activity.MyAccountActivity;
 import com.example.im037.sastraprakasika.Activity.MyLibraryActivity;
 import com.example.im037.sastraprakasika.Activity.SearchActivity;
+import com.example.im037.sastraprakasika.Fragment.LecturesFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyAccountFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.SearchPageFragment;
+import com.example.im037.sastraprakasika.Fragment.TopicsFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemMyPlayList;
@@ -78,7 +80,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 
-public class CommonActivity extends AppCompatActivity implements MyLibraryFragment.OnFragmentInteractionListener {
+public class CommonActivity extends AppCompatActivity  {
     private static String TAG = "CommonActivity";
     private static FrameLayout frameLayout;
     private LinearLayout backgroundLinear;
@@ -318,7 +320,7 @@ public class CommonActivity extends AppCompatActivity implements MyLibraryFragme
         myLibrary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutBackground.setBackgroundColor(getResources().getColor(R.color.white));
+                myLibraryImg.setImageResource(R.drawable.mylibrary_orange);
                 discoursesImg.setImageResource(R.drawable.discourse_grey);
                 searchImg.setImageResource(R.drawable.search_grey);
                 myAccountImg.setImageResource(R.drawable.account_grey);
@@ -335,7 +337,6 @@ public class CommonActivity extends AppCompatActivity implements MyLibraryFragme
         discourses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutBackground.setBackgroundColor(getResources().getColor(R.color.orange));
                 myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
                 discoursesImg.setImageResource(R.drawable.discourse_orange);
                 searchImg.setImageResource(R.drawable.search_grey);
@@ -352,7 +353,6 @@ public class CommonActivity extends AppCompatActivity implements MyLibraryFragme
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutBackground.setBackgroundColor(getResources().getColor(R.color.orange));
                 myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
                 discoursesImg.setImageResource(R.drawable.discourse_grey);
                 searchImg.setImageResource(R.drawable.search_orange);
@@ -370,7 +370,6 @@ public class CommonActivity extends AppCompatActivity implements MyLibraryFragme
         myAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutBackground.setBackgroundColor(getResources().getColor(R.color.orange));
                 myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
                 discoursesImg.setImageResource(R.drawable.discourse_grey);
                 searchImg.setImageResource(R.drawable.search_grey);
@@ -1209,10 +1208,6 @@ public class CommonActivity extends AppCompatActivity implements MyLibraryFragme
         seekBar_music.setEnabled(!isBuffer);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {

@@ -57,14 +57,14 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
         holder.img_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle profileData = new Bundle();
+              /*  Bundle profileData = new Bundle();
                 profileData.putString("data",holder.title_img.getText().toString());
 
                 PlayListDetailFragment fragment2 = new PlayListDetailFragment();
                 fragment2.setArguments(profileData);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
 /*
 
 

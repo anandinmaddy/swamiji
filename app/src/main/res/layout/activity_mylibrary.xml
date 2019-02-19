@@ -9,17 +9,13 @@
   >
     <android.support.design.widget.TabLayout
         android:id="@+id/tablayout"
-        style="@style/MyTabLayout"
+        style="@style/customTab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         app:tabTextAppearance="@style/customTab"
         android:background="@android:color/transparent"
-
         app:tabIndicatorColor="@color/orange"
-
         app:tabIndicatorHeight="@dimen/_2sdp"
-
-
         app:tabSelectedTextColor="@color/orange"
         app:tabTextColor="@color/orange">
 

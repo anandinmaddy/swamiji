@@ -58,8 +58,8 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
 
         final RecyclerView topicsRecyclerview = (RecyclerView) view.findViewById(R.id.topicsRecyclerview);
 
-        title = getActivity().findViewById(R.id.title);
-        title.setText("My Library");
+      //  title = getActivity().findViewById(R.id.title);
+       // title.setText("My Library");
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.startShimmer();
         //  setRecyclerView();
@@ -171,6 +171,7 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
         profileData.putString("data",listOfTopicsModels.get(position).getSong_title());
         profileData.putString("data1",listOfTopicsModels.get(position).getSong_image());
         profileData.putString("data2",listOfTopicsModels.get(position).getSong_post_id());
+        profileData.putString("data4",listOfTopicsModels.get(position).getSong_image());
 
 
         TopicsDetailsFragment fragment2 = new TopicsDetailsFragment();

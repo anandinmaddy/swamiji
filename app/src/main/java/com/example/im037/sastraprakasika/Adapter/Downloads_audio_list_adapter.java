@@ -62,6 +62,7 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
 
         Picasso.get()
                 .load(items.getImageSmall())
+                .placeholder(R.drawable.placeholder_song)
                 .into(song_img_view);
         //// song_img_view.setImageResource(R.drawable.vedanta);
 

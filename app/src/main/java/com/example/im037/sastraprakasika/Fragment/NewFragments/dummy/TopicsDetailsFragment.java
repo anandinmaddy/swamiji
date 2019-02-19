@@ -19,6 +19,7 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class TopicsDetailsFragment extends Fragment {
     ImageView img_url;
     TextView select_title;
     public static final String TAG = TopicsDetailsFragment.class.getSimpleName();
+    ShimmerFrameLayout shimmerFrameLayout;
 
 
     public TopicsDetailsFragment() {
@@ -52,8 +54,9 @@ public class TopicsDetailsFragment extends Fragment {
         imageView = (ImageView)view.findViewById(R.id.ablum_image_main);
         listView = (ListView)view.findViewById(R.id.listview_det);
         img_url = (ImageView)view.findViewById(R.id.back3);
-        select_title = (TextView)view.findViewById(R.id.title3);
-
+        select_title = (TextView)view.findViewById(R.id.titleview);
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.startShimmer();
         img_url.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,17 +70,20 @@ public class TopicsDetailsFragment extends Fragment {
 
 
 
-        select_title.setText(getArguments().getString("data2"));
+        select_title.setText(getArguments().getString("data"));
 
         Picasso.get()
-                .load(getArguments().getString("data3"))
+                .load(getArguments().getString("data4"))
+                .placeholder(R.drawable.placeholder_song)
                 .into(imageView);
 
-        new WebServices(getContext(), TAG).getTopicsDetail(Session.getInstance(getContext(), TAG).getUserId(), "topics",getArguments().getString("data1"), new VolleyResponseListerner() {
+        new WebServices(getContext(), TAG).getTopicsDetail(Session.getInstance(getContext(), TAG).getUserId(), "topics","1897", new VolleyResponseListerner() {
 
             @Override
             public void onResponse(JSONObject response) throws JSONException {
                 // hideCommonProgressBar();
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
                 System.out.println("library respon:::: "+response);
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
 

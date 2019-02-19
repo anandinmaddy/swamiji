@@ -145,6 +145,13 @@ public class DiscoursesNewFragment extends Fragment  {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle profileData = new Bundle();
+                profileData.putString("data",getArguments().getString("data1"));
+                profileData.putString("data1",getArguments().getString("title"));
+                profileData.putString("data3",getArguments().getString("backImag"));
+                profileData.putString("data4",getArguments().getString("backCount"));
+
+
                 DashBoardNewFragment fragment2 = new DashBoardNewFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 back.setVisibility(View.GONE);
@@ -160,6 +167,7 @@ public class DiscoursesNewFragment extends Fragment  {
         if(getArguments().getString("data3") != null){
             Picasso.get()
                     .load(getArguments().getString("data3"))
+                    .placeholder(R.drawable.placeholder_default)
                     .into(image1);
         }
         if(getArguments().getString("data4") != null){
@@ -319,6 +327,7 @@ public class DiscoursesNewFragment extends Fragment  {
         public void onBindViewHolder(@NonNull CategoryRecyclerviewAdapter.Customview holder, final int position) {
             Picasso.get()
                     .load(discoursesModels.get(position).getImage_url())
+                    .placeholder(R.drawable.placeholder_default)
                     .into(holder.topics_image);
             Log.d("value",discoursesModels.get(position).getName());
             String value=discoursesModels.get(position).getName();
