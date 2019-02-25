@@ -1,7 +1,9 @@
 package com.example.im037.sastraprakasika.Common;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -26,6 +28,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +70,7 @@ import com.example.im037.sastraprakasika.utils.GlobalBus;
 import com.example.im037.sastraprakasika.utils.MessageEvent;
 import com.example.im037.sastraprakasika.utils.PausableRotateAnimation;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.google.android.gms.common.internal.service.Common;
 import com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar;
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -81,6 +85,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 
 public class CommonActivity extends AppCompatActivity  {
+    private static final String ACTION = "com.android.activity.SEND_DATA";
     private static String TAG = "CommonActivity";
     private static FrameLayout frameLayout;
     private LinearLayout backgroundLinear;
@@ -94,7 +99,7 @@ public class CommonActivity extends AppCompatActivity  {
     private TextView title, songtitle;
     TextView time;
     LinearLayout discourses, myLibrary, search, myAccount;
-    static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg;
+    static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg, view_round;
     LinearLayout layoutBackground;
     TextView titleView;
     boolean doubleBackToExitPressedOnce = false;
@@ -110,13 +115,14 @@ public class CommonActivity extends AppCompatActivity  {
     AudioManager am;
     RelativeLayout rl_min_header;
     LinearLayout ll_max_header;
+
     RatingBar ratingBar;
     SeekBar seekBar_music, seekbar_min;
-    View view_playlist, view_download, view_rate, view_round;
-    TextView tv_min_title, tv_min_artist, tv_max_title, tv_max_artist, tv_music_title, tv_music_artist, tv_song_count,
+    View view_playlist, view_download, view_rate;
+    TextView tv_min_title, tv_min_artist, tv_music_title, tv_music_artist, tv_song_count,
             tv_current_time, tv_total_time;
-    RoundedImageView iv_max_song, iv_min_song, imageView_pager;
-    ImageView iv_music_bg, iv_min_previous, iv_min_play, iv_min_next, iv_max_fav, iv_max_option, iv_music_shuffle,
+    RoundedImageView  iv_min_song, imageView_pager;
+    ImageView iv_music_bg, iv_min_previous, iv_min_play, iv_min_next, iv_music_shuffle,
             iv_music_downloads, iv_music_previous, iv_music_next, iv_music_play,iv_music_addplaylist,imageView_heart;
 
     RelativeLayout rl_music_loading;
@@ -128,6 +134,7 @@ public class CommonActivity extends AppCompatActivity  {
     ImagePagerAdapter adapter;
     RelativeLayout include_sliding_panel_childtwo;
     Toolbar toolbarLayout;
+    private BroadcastReceiver yourReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +164,6 @@ public class CommonActivity extends AppCompatActivity  {
         myAccount = findViewById(R.id.accountLayout);
         discourses = findViewById(R.id.discoursesLayout);
         myLibrary = findViewById(R.id.myLibraryLayout);
-        rl_min_header = findViewById(R.id.rl_min_header);
-        ll_max_header = findViewById(R.id.ll_max_header);
         search = findViewById(R.id.searchLayout);
         myAccountImg = findViewById(R.id.account);
         discoursesImg = findViewById(R.id.discourses);
@@ -183,12 +188,12 @@ public class CommonActivity extends AppCompatActivity  {
         view_round = findViewById(R.id.vBgLike);
 
         iv_min_song = findViewById(R.id.iv_min_song);
-        iv_max_song = findViewById(R.id.iv_max_song);
+      //  iv_max_song = findViewById(R.id.iv_max_song);
         iv_min_previous = findViewById(R.id.iv_min_previous);
         iv_min_play = findViewById(R.id.iv_min_play);
         iv_min_next = findViewById(R.id.iv_min_next);
-        iv_max_fav = findViewById(R.id.iv_max_fav);
-        iv_max_option = findViewById(R.id.iv_max_option);
+       // iv_max_fav = findViewById(R.id.iv_max_fav);
+        //iv_max_option = findViewById(R.id.iv_max_option);
         imageView_heart = findViewById(R.id.ivLike);
 
         tv_current_time = findViewById(R.id.tv_music_time);
@@ -197,16 +202,34 @@ public class CommonActivity extends AppCompatActivity  {
         tv_music_title = findViewById(R.id.tv_music_title);
         tv_music_artist = findViewById(R.id.tv_music_artist);
         tv_min_title = findViewById(R.id.tv_min_title);
-        tv_min_artist = findViewById(R.id.tv_min_artist);
-        tv_max_title = findViewById(R.id.tv_max_title);
-        tv_max_artist = findViewById(R.id.tv_max_artist);
+       // tv_min_artist = findViewById(R.id.tv_min_artist);
+     //   tv_max_title = findViewById(R.id.tv_max_title);
+       // tv_max_artist = findViewById(R.id.tv_max_artist);
         sliding_layout = findViewById(R.id.sliding_layout);
 
-        iv_max_option.setColorFilter(Color.BLACK);
+      //  iv_max_option.setColorFilter(Color.BLACK);
+
+        final IntentFilter theFilter = new IntentFilter();
+        theFilter.addAction(ACTION);
+
+        this.yourReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String message = intent.getStringExtra("message");
+                if (message != null && message != ""){
+                    changeTextPager(Constant.arrayList_play.get(Integer.parseInt(message)));
+                }
+
+            }
+        };
+
+        this.registerReceiver(this.yourReceiver, theFilter);
 
 
+/*
 
-     /*   iv_max_fav.setOnClickListener(this.getApplicationContext());
+        iv_max_fav.setOnClickListener();
         iv_max_option.setOnClickListener(this);
 
         iv_min_play.setOnClickListener(this);
@@ -219,13 +242,33 @@ public class CommonActivity extends AppCompatActivity  {
         iv_music_shuffle.setOnClickListener(this);
         iv_music_downloads.setOnClickListener(this);
         sliding_layout.setOnClickListener(this);
-
 */
 
+     /*   iv_min_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPause();
+            }
+        });
+
+
+
         include_sliding_panel_childtwo.setVisibility(View.VISIBLE);
+        sliding_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+*/
 
 
-
+        iv_min_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPause();
+            }
+        });
 
         am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -291,9 +334,9 @@ public class CommonActivity extends AppCompatActivity  {
                     isExpand = false;
 
                     rl_min_header.setVisibility(View.VISIBLE);
-                    ll_max_header.setVisibility(View.INVISIBLE);
+                    ll_max_header.setVisibility(View.GONE);
                 } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
-                    rl_min_header.setVisibility(View.VISIBLE);
+                    rl_min_header.setVisibility(View.GONE);
                     ll_max_header.setVisibility(View.VISIBLE);
 
                     if (isExpand) {
@@ -306,7 +349,7 @@ public class CommonActivity extends AppCompatActivity  {
                 } else {
                     isExpand = true;
 
-                    rl_min_header.setVisibility(View.INVISIBLE);
+                    rl_min_header.setVisibility(View.GONE);
                     ll_max_header.setVisibility(View.VISIBLE);
                 }
             }
@@ -521,7 +564,7 @@ public class CommonActivity extends AppCompatActivity  {
             case R.id.iv_music_downloads:
                 setRepeat();
                 break;
-            case R.id.iv_max_option:
+         /*   case R.id.iv_max_option:
                 if (Constant.arrayList_play.size() > 0) {
                     showBottomSheetDialog();
                 }
@@ -538,7 +581,7 @@ public class CommonActivity extends AppCompatActivity  {
                 } else {
                     Toast.makeText(CommonActivity.this, getResources().getString(R.string.err_no_songs_selected), Toast.LENGTH_SHORT).show();
                 }
-                break;
+                break;*/
 
             /*case R.id.iv_music_add2playlist:
                 if (Constant.arrayList_play.size() > 0) {
@@ -719,6 +762,16 @@ public class CommonActivity extends AppCompatActivity  {
             changePlayPauseIcon(messageEvent.flag);
         }
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Extract data included in the Intent
+            String message = intent.getStringExtra("message");
+        }
+    };
+
+
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onViewPagerChanged(ItemMyPlayList itemMyPlayList) {
@@ -1057,35 +1110,36 @@ public class CommonActivity extends AppCompatActivity  {
     public void changeText(final ItemSong itemSong, final String page) {
 
         tv_min_title.setText(itemSong.getTitle());
-        tv_min_artist.setText(itemSong.getArtist());
+       // tv_min_artist.setText(itemSong.getArtist());
 
-        tv_max_title.setText(itemSong.getTitle());
+   /*     tv_max_title.setText(itemSong.getTitle());
         tv_max_artist.setText(itemSong.getArtist());
+*/
 
         ratingBar.setRating(Integer.parseInt(itemSong.getAverageRating()));
         tv_music_title.setText(itemSong.getTitle());
-        tv_music_artist.setText(itemSong.getArtist());
+        tv_music_artist.setText(itemSong.getTitle());
 
         tv_song_count.setText(Constant.playPos + 1 + "/" + Constant.arrayList_play.size());
         tv_total_time.setText(itemSong.getDuration());
 
         changeFav(dbHelper.checkFav(String.valueOf(itemSong.getId())));
+        Picasso.get()
+                .load((itemSong.getImageSmall()))
+                .placeholder(R.drawable.vedanta)
+                .into(view_round);
 
         if (Constant.isOnline) {
-            Picasso.get()
-                    .load(itemSong.getImageSmall())
-                    .placeholder(R.drawable.ic_music)
-                    .into(iv_min_song);
 
-            Picasso.get()
+          /*  Picasso.get()
                     .load(itemSong.getImageSmall())
                     .placeholder(R.drawable.ic_music)
-                    .into(iv_max_song);
+                    .into(iv_max_song);*/
 
 
             if (ratingBar.getVisibility() == View.GONE) {
                 ratingBar.setVisibility(View.VISIBLE);
-                iv_max_fav.setVisibility(View.VISIBLE);
+//                iv_max_fav.setVisibility(View.VISIBLE);
 
                 //iv_music_rate.setVisibility(View.VISIBLE);
                 view_rate.setVisibility(View.VISIBLE);
@@ -1099,19 +1153,15 @@ public class CommonActivity extends AppCompatActivity  {
                 view_download.setVisibility(View.GONE);
             }
         } else {
-            Picasso.get()
-                    .load((itemSong.getImageSmall()))
-                    .placeholder(R.drawable.ic_music)
-                    .into(iv_min_song);
 
-            Picasso.get()
+        /*    Picasso.get()
                     .load((itemSong.getImageSmall()))
                     .placeholder(R.drawable.ic_music)
-                    .into(iv_max_song);
+                    .into(iv_max_song);*/
 
             if (ratingBar.getVisibility() == View.VISIBLE) {
                 ratingBar.setVisibility(View.GONE);
-                iv_max_fav.setVisibility(View.GONE);
+             //   iv_max_fav.setVisibility(View.GONE);
 
                 //iv_music_rate.setVisibility(View.GONE);
                 view_rate.setVisibility(View.GONE);
@@ -1130,10 +1180,10 @@ public class CommonActivity extends AppCompatActivity  {
 
     public void changePlayPauseIcon(Boolean isPlay) {
         if (!isPlay) {
-            iv_music_play.setImageDrawable(getResources().getDrawable(R.drawable.play2_blackicon_new));
+            iv_music_play.setImageDrawable(getResources().getDrawable(R.drawable.play_orange));
             iv_min_play.setImageDrawable(getResources().getDrawable(R.drawable.play_icon_new));
         } else {
-            iv_music_play.setImageDrawable(getResources().getDrawable(R.drawable.pause2_blackicon_new));
+            iv_music_play.setImageDrawable(getResources().getDrawable(R.drawable.pause_orange_icon));
             iv_min_play.setImageDrawable(getResources().getDrawable(R.drawable.pause_icon_new));
         }
         seekUpdation();
@@ -1302,5 +1352,14 @@ public class CommonActivity extends AppCompatActivity  {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
+
+
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Do not forget to unregister the receiver!!!
+        this.unregisterReceiver(this.yourReceiver);
+    }
+
 }

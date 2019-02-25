@@ -59,18 +59,11 @@
                 android:focusableInTouchMode="true"
                 android:scrollHorizontally="true"
                 android:freezesText="true"
+
                 android:textSize="14sp"
                 android:textColor="@color/text_title"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/tv_min_artist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textColor="@color/text_duration"
-                android:textStyle="normal"
-                android:textSize="12sp"/>
 
         </LinearLayout>
 

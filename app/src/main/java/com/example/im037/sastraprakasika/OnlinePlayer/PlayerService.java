@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -79,6 +80,7 @@ public class PlayerService extends IntentService implements Player.EventListener
     DBHelper dbHelper;
     Boolean isNewSong = false;
     Bitmap bitmap;
+    String playerList = "";
 
     public PlayerService() {
         super(null);
@@ -97,6 +99,13 @@ public class PlayerService extends IntentService implements Player.EventListener
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        String username = intent.getStringExtra("from");
+        if (username.equalsIgnoreCase("lecture")){
+            playerList = username;
+        }else if(username.equalsIgnoreCase("download")){
+            playerList = username;
+        }
+
     }
 
     @Override
@@ -108,6 +117,10 @@ public class PlayerService extends IntentService implements Player.EventListener
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+
 
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
@@ -161,10 +174,23 @@ public class PlayerService extends IntentService implements Player.EventListener
         isNewSong = true;
         setBuffer(true);
 
-        String url = Constant.arrayList_play.get(Constant.playPos).getUrl().replace(" ", "%20");
+        Intent intent = new Intent();
+        intent.putExtra("message",Constant.playPos);
+        intent.setAction("com.android.activity.SEND_DATA");
+        getApplicationContext().sendBroadcast(intent);
+        MediaSource videoSource;
 
-        MediaSource videoSource = new ExtractorMediaSource(Uri.parse(url),
-                dataSourceFactory, extractorsFactory, null, null);
+        String url = Constant.arrayList_play.get(Constant.playPos).getUrl().replace(" ", "%20");
+        String OfflineLink = Constant.arrayList_play.get(Constant.playPos).getDownloads();
+        if (OfflineLink != null && !OfflineLink.equals("")){
+             videoSource = new ExtractorMediaSource(Uri.parse(OfflineLink),
+                    dataSourceFactory, extractorsFactory, null, null);
+        }else {
+             videoSource = new ExtractorMediaSource(Uri.parse(url),
+                    dataSourceFactory, extractorsFactory, null, null);
+        }
+
+
         exoPlayer.prepare(videoSource);
         exoPlayer.setPlayWhenReady(true);
 
@@ -330,16 +356,16 @@ public class PlayerService extends IntentService implements Player.EventListener
                     .setCancelButtonIntent(
                             MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_STOP)))
                     .addAction(new NotificationCompat.Action(
-                            R.mipmap.ic_noti_previous, "Previous",
+                            R.drawable.ic_skip_previous_black_24dp, "Previous",
                             ppreviousIntent))
                     .addAction(new NotificationCompat.Action(
-                            R.mipmap.ic_noti_pause, "Pause",
+                            R.drawable.ic_pause_black_24dp, "Pause",
                             pplayIntent))
                     .addAction(new NotificationCompat.Action(
-                            R.mipmap.ic_noti_next, "Next",
+                            R.drawable.ic_skip_next_black_24dp, "Next",
                             pnextIntent))
                     .addAction(new NotificationCompat.Action(
-                            R.mipmap.ic_noti_close, "Close",
+                            R.drawable.ic_stop_black_24dp, "Close",
                             pcloseIntent));
 
             notification.setContentTitle(Constant.arrayList_play.get(Constant.playPos).getTitle());
@@ -410,12 +436,12 @@ public class PlayerService extends IntentService implements Player.EventListener
             PendingIntent ppreviousIntent = PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             if (isPlay) {
                 notification.mActions.add(1, new NotificationCompat.Action(
-                        R.mipmap.ic_noti_pause, "Pause",
+                        R.drawable.ic_pause_notification, "Pause",
                         ppreviousIntent));
 
             } else {
                 notification.mActions.add(1, new NotificationCompat.Action(
-                        R.mipmap.ic_noti_play, "Play",
+                        R.drawable.ic_play_notification, "Play",
                         ppreviousIntent));
             }
         } else {

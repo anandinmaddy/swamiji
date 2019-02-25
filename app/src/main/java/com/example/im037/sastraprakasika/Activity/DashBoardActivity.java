@@ -130,9 +130,9 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
         back.setVisibility(View.GONE);
         //    setCommonProgressBar(View.VISIBLE);
 
-        callWebservice();
+      //  callWebservice();
 
-     /*   if(discoursesModelsList != null && discoursesModelsList.size() > 0){
+        if(discoursesModelsList != null && discoursesModelsList.size() > 0){
             mShimmerViewContainer.stopShimmer();
             mShimmerViewContainer.setVisibility(View.GONE);
             itemViewlayout.setVisibility(View.VISIBLE);
@@ -143,7 +143,7 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
         }else{
             callWebservice();
 
-        }*/
+        }
 
         SetAboutDetail();
 

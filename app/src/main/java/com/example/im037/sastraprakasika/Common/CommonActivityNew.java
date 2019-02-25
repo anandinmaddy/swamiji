@@ -173,7 +173,7 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
         tv_music_title = findViewById(R.id.tv_music_title);
         tv_music_artist = findViewById(R.id.tv_music_artist);
         tv_min_title = findViewById(R.id.tv_min_title);
-        tv_min_artist = findViewById(R.id.tv_min_artist);
+//        tv_min_artist = findViewById(R.id.tv_min_artist);
         tv_max_title = findViewById(R.id.tv_max_title);
         tv_max_artist = findViewById(R.id.tv_max_artist);
         sliding_layout = findViewById(R.id.sliding_layout);

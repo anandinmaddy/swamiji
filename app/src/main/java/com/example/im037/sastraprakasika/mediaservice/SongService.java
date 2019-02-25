@@ -480,6 +480,7 @@ public class SongService extends Service implements AudioManager.OnAudioFocusCha
     @SuppressLint("NewApi")
     private void playSong(String songPath, MediaItem data) {
         try {
+
             if (currentVersionSupportLockScreenControls) {
                 UpdateMetadata( data );
                 remoteControlClient.setPlaybackState( RemoteControlClient.PLAYSTATE_PLAYING );

@@ -68,15 +68,14 @@
                         android:layout_weight="0.2"
                         />
 
-                    <!--<ImageView-->
-                    <!--android:visibility="invisible"-->
-                    <!--android:id="@+id/plating_track_icon"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="@dimen/_25sdp"-->
-                    <!--android:paddingRight="@dimen/_7sdp"-->
-                    <!--android:src="@drawable/playing_trackicc"-->
-                    <!--android:layout_weight="0.2"-->
-                    <!--/>-->
+                    <ImageView
+                        android:id="@+id/plating_track_icon"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_25sdp"
+                        android:layout_weight="0.2"
+                        android:paddingRight="@dimen/_7sdp"
+                        android:src="@drawable/playing_trackicc"
+                        android:visibility="invisible" />
 
 
 

@@ -82,7 +82,11 @@ public class Constant  {
 
     public static int playPos = 0;
     public static ArrayList<ItemSong> arrayList_play = new ArrayList<>();
+    public static ArrayList<ItemSong> onlyOffline = new ArrayList<>();
+
     public static ArrayList<ItemSong> arrayListOfflineSongs = new ArrayList<>();
+    public static ArrayList<ItemSong> arrayListLectureslineSongs = new ArrayList<>();
+
     //public static ArrayList<ItemAlbums> arrayListOfflineAlbums = new ArrayList<>();
     //public static ArrayList<ItemArtist> arrayListOfflineArtist = new ArrayList<>();
 

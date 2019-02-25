@@ -152,20 +152,20 @@ public class DashBoardNewFragment extends Fragment  {
         back.setVisibility(View.GONE);
         //    setCommonProgressBar(View.VISIBLE);
 
-          callWebservice();
+        //  callWebservice();
 
-     /*   if(discoursesModelsList != null && discoursesModelsList.size() > 0){
+        if(discoursesModelsList != null && discoursesModelsList.size() > 0){
             mShimmerViewContainer.stopShimmer();
             mShimmerViewContainer.setVisibility(View.GONE);
             itemViewlayout.setVisibility(View.VISIBLE);
             discoursesModels.addAll(discoursesModelsList);
-            discourseView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
-            discourseView.setAdapter(new CategoryRecyclerviewAdapter(getApplicationContext(), discoursesModels,parentID,DashBoardActivity.this));
+            discourseView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
+            discourseView.setAdapter(new CategoryRecyclerviewAdapter(getContext(), discoursesModels,parentID));
 
         }else{
             callWebservice();
 
-        }*/
+        }
 
         //SetAboutDetail();
 

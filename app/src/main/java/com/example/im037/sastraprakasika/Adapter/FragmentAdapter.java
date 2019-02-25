@@ -54,10 +54,10 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
 
             case "Download":
               //  return new LecturesFragment_Audioplay();
-            return new DownloadsFragment();
+           // return new DownloadsFragment();
 
 //                return new DownloadsFragment();
-               // return new DownloadsFragmentNew();
+                return new DownloadsFragmentNew();
             case "Playlists":
 
               return new PlaylistsFragment();

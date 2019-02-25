@@ -43,6 +43,7 @@ import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.mediautil.MediaItem;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,6 +77,7 @@ public class DownloadsFragmentNew extends Fragment  {
     RecyclerView recyclerView;
     Downloads_audio_list_adapter downloads_audio_list_adapter = null;
     View view;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     // add new
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
@@ -105,8 +107,9 @@ public class DownloadsFragmentNew extends Fragment  {
         view = inflater.inflate(R.layout.fragment_downloads_main, container, false);
 
         context = getContext();
-        init();
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
 
+        init();
 
         //lect_det = new ArrayList<ListOfLecturesListDetails>();
 //        for (int i = 0; i < img_url.length; i++) {
@@ -184,18 +187,21 @@ public class DownloadsFragmentNew extends Fragment  {
             setListeners();
             txt_playingSong.setSelected(true);
             //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-
+            shimmerFrameLayout.startShimmer();
             if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
                 if (PlayerConstants.SONGS_LIST.size() <= 0) {
                     ItemSongDatabase db = Room.databaseBuilder(getActivity(),
                             ItemSongDatabase.class, "Lecturers").allowMainThreadQueries().build();
-                    ItemSong[] lecturersList =  db.userDao().loadAllUsers();
+                 //   ItemSong[] lecturersList =  db.userDao().getAll();
                     if(Constant.arrayListOfflineSongs.size() > 0){
                      //   Constant.arrayListOfflineSongs.add(lecturersList[0]);
+                        setListItems();
+
                     }else{
                         callWebservice();
                     }
-
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
                     //loadUrlData();
 
                 }
@@ -234,7 +240,7 @@ public class DownloadsFragmentNew extends Fragment  {
                 //play a song in media player priya Ramakrishanan
                 Constant.isOnline = false;
                 Constant.arrayList_play.clear();
-                Constant.arrayList_play.addAll(Constant.arrayListOfflineSongs);
+                Constant.arrayList_play.addAll(Constant.onlyOffline);
                 Constant.playPos = position;
                 Intent intent = new Intent(getActivity(), PlayerService.class);
                 intent.setAction(PlayerService.ACTION_PLAY);
@@ -368,7 +374,15 @@ public class DownloadsFragmentNew extends Fragment  {
 
     private void setListItems() {
         //listView_song = (ListView) view.findViewById( R.id.listViewMusicSong_list );
-        downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.arrayListOfflineSongs, getActivity());
+        ArrayList<ItemSong> onlyOffline = new ArrayList<>();
+        for(int i=0; i<Constant.arrayList_play.size(); i++) {
+            ItemSong offlineSong = Constant.arrayList_play.get(i);
+            if (offlineSong.getDownloads() != null && !offlineSong.getDownloads().equals("")){
+                Constant.onlyOffline.add(offlineSong);
+            }
+        }
+
+            downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.onlyOffline, getActivity());
         listView_song.setAdapter(downloads_audio_list_adapter);
 
     }
