@@ -12,11 +12,14 @@ import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.example.im037.sastraprakasika.Common.CustomVolleyRequestQueue;
 import com.example.im037.sastraprakasika.MyApp;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 
@@ -46,6 +49,7 @@ public class VolleyClass {
     String offlineTitle = "No Network";
     private Context context;
     private String TAG = "";
+    private RequestQueue mQueue;
 
     public VolleyClass(Context context, String tag) {
         this.context = context;
@@ -65,6 +69,16 @@ public class VolleyClass {
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
+            final RequestFuture<JSONObject> futureRequest = RequestFuture.newFuture();
+            mQueue = CustomVolleyRequestQueue.getInstance(context)
+                    .getRequestQueue();
+
+            final JsonObjectRequest jsonRequests = new JsonObjectRequest(Request.Method
+                    .GET, url,
+                    new JSONObject(), futureRequest, futureRequest);
+            mQueue.add(jsonRequests);
+
+
             JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,
                     url, jsonObject,
                     new Response.Listener<JSONObject>() {

@@ -3,7 +3,6 @@ package com.example.im037.sastraprakasika.Fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,10 +10,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,9 +31,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Downloads_audio_list_adapter;
+import com.example.im037.sastraprakasika.Adapter.Lectures_audio_list_adapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Entity.ItemSongDatabase;
 import com.example.im037.sastraprakasika.Entity.Lecturers;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
+import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.ListOfLecturesListDetails;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
@@ -49,10 +54,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-public class DownloadsFragmentNew extends Fragment  {
+public class DownloadsFragmentNew extends Fragment implements Downloads_audio_list_adapter.IProcessFilter {
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
@@ -71,14 +80,14 @@ public class DownloadsFragmentNew extends Fragment  {
     //    ListView mediaListView;
     //ProgressBar progressBar;
     SeekBar seekBart_aud_main;
-    TextView txt_textBufferDuration, txt_textDuration;
+    TextView txt_textBufferDuration, txt_textDuration,noSongsFound;
     static ImageView img_imageViewAlbumArt;
     static Context context;
     RecyclerView recyclerView;
     Downloads_audio_list_adapter downloads_audio_list_adapter = null;
     View view;
     ShimmerFrameLayout shimmerFrameLayout;
-
+    DiscousesAppDatabase db;
     // add new
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
     public static final String TAG = LecturesFragment_Audioplay.class.getSimpleName();
@@ -108,6 +117,8 @@ public class DownloadsFragmentNew extends Fragment  {
 
         context = getContext();
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
+        db = Room.databaseBuilder(getActivity().getApplicationContext(),
+                DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
 
         init();
 
@@ -188,18 +199,35 @@ public class DownloadsFragmentNew extends Fragment  {
             txt_playingSong.setSelected(true);
             //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             shimmerFrameLayout.startShimmer();
+            ArrayList<ItemSong> offlineSongs = new ArrayList<>();
+            HashMap<String,String> downloadedFile = downloadFiles();
+
             if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
                 if (PlayerConstants.SONGS_LIST.size() <= 0) {
-                    ItemSongDatabase db = Room.databaseBuilder(getActivity(),
-                            ItemSongDatabase.class, "Lecturers").allowMainThreadQueries().build();
-                 //   ItemSong[] lecturersList =  db.userDao().getAll();
+
+                    List<ItemSong> itemSongs = db.itemSongDao().getAll();
+
+                    for(ItemSong itemSong : Constant.arrayList_play){
+                        for(Map.Entry<String, String> hashMap : downloadedFile.entrySet()){
+                            if(hashMap.getKey().equalsIgnoreCase(itemSong.getTitle())){
+                                offlineSongs.add(itemSong);
+                                db.itemSongDao().update(hashMap.getValue(),hashMap.getKey());
+                            }
+                        }
+                    }
+
+                    setListItems();
+
+                    //      Constant.arrayListOfflineSongs.clear();
+                  //  Constant.arrayListOfflineSongs.addAll(db.itemSongDao().getAll());
+  /*               //   ItemSong[] lecturersList =  db.userDao().getAll();
                     if(Constant.arrayListOfflineSongs.size() > 0){
                      //   Constant.arrayListOfflineSongs.add(lecturersList[0]);
                         setListItems();
 
                     }else{
-                        callWebservice();
-                    }
+                    //    callWebservice();
+                    }*/
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
                     //loadUrlData();
@@ -208,6 +236,38 @@ public class DownloadsFragmentNew extends Fragment  {
 
             }
         }
+
+    private HashMap<String, String> downloadFiles() {
+
+            HashMap<String,String> downloadSongs = new HashMap<String, String>();
+            try {
+                File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
+                String path = Environment.getExternalStorageDirectory().toString() + "/Swamiji";
+                File directory = new File(path);
+                File[] files = directory.listFiles();
+                if (files != null) {
+                    for (int i = 0; i < files.length; i++) {
+                        String result = files[i].getName().replace(".swami","");
+
+                        downloadSongs.put(result,files[i].toString());
+                    }
+                }
+
+                if (downloadSongs != null && downloadSongs.size() > 0){
+                    Iterator myVeryOwnIterator = downloadSongs.keySet().iterator();
+                    while(myVeryOwnIterator.hasNext()) {
+                        String key=(String)myVeryOwnIterator.next();
+
+                    }
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return downloadSongs;
+
+    }
 
 
     private void getViews() {
@@ -229,7 +289,7 @@ public class DownloadsFragmentNew extends Fragment  {
         btn_Next = (Button) view.findViewById(R.id.btnNext_btn);
         btn_Previous = (Button) view.findViewById(R.id.btnPrevious_btn);
         layout_desc_below = (LinearLayout) view.findViewById(R.id.layoutdesc);
-
+        noSongsFound = (TextView)view.findViewById(R.id.nosongs);
 
     }
 
@@ -240,7 +300,7 @@ public class DownloadsFragmentNew extends Fragment  {
                 //play a song in media player priya Ramakrishanan
                 Constant.isOnline = false;
                 Constant.arrayList_play.clear();
-                Constant.arrayList_play.addAll(Constant.onlyOffline);
+                Constant.arrayList_play.addAll(Constant.arrayListOfflineSongs);
                 Constant.playPos = position;
                 Intent intent = new Intent(getActivity(), PlayerService.class);
                 intent.setAction(PlayerService.ACTION_PLAY);
@@ -323,6 +383,14 @@ public class DownloadsFragmentNew extends Fragment  {
                                             itemSong.setClassName(jsonObject.optString("classname"));
                                             itemSong.setImageBig(image_url);
                                             itemSong.setImageSmall(image_url);
+                                            String isOfflinevideo = readFileNames(jsonObject.optString("title"));
+                                            if (isOfflinevideo != null && isOfflinevideo != ""){
+                                                itemSong.setDownloads(isOfflinevideo);
+                                            }else {
+                                                itemSong.setDownloads("");
+                                            }
+
+
                                             try{
 
                                                 db.userDao().insertAll(itemSong);
@@ -372,23 +440,77 @@ public class DownloadsFragmentNew extends Fragment  {
         }
 
 
-    private void setListItems() {
-        //listView_song = (ListView) view.findViewById( R.id.listViewMusicSong_list );
-        ArrayList<ItemSong> onlyOffline = new ArrayList<>();
-        for(int i=0; i<Constant.arrayList_play.size(); i++) {
-            ItemSong offlineSong = Constant.arrayList_play.get(i);
-            if (offlineSong.getDownloads() != null && !offlineSong.getDownloads().equals("")){
-                Constant.onlyOffline.add(offlineSong);
+    private static String readFileNames(String title) {
+        HashMap<String,String> downloadSongs = new HashMap<String, String>();
+        try {
+            File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
+            String path = Environment.getExternalStorageDirectory().toString() + "/Swamiji";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    String result = files[i].getName().replace(".mp3","");
+                    downloadSongs.put(result,files[i].toString());
+                }
             }
+
+            if (downloadSongs != null && downloadSongs.size() > 0){
+                Iterator myVeryOwnIterator = downloadSongs.keySet().iterator();
+                while(myVeryOwnIterator.hasNext()) {
+                    String key=(String)myVeryOwnIterator.next();
+                    if (key.equalsIgnoreCase(title)){
+                        return (String)downloadSongs.get(key);
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-            downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.onlyOffline, getActivity());
-        listView_song.setAdapter(downloads_audio_list_adapter);
-
+        return null;
     }
 
 
 
+    private void setListItems() {
+        //listView_song = (ListView) view.findViewById( R.id.listViewMusicSong_list );
+        ArrayList<ItemSong> onlyOffline = new ArrayList<>();
+        Constant.arrayListOfflineSongs.clear();
+        List<ItemSong> itemSongs = db.itemSongDao().getAll();
+
+        for(int i=0; i<itemSongs.size(); i++) {
+            ItemSong offlineSong = itemSongs.get(i);
+            if (offlineSong.getDownloads() != null && !offlineSong.getDownloads().equals("")){
+                Constant.arrayListOfflineSongs.add(offlineSong);
+            }
+        }
+            if (Constant.arrayListOfflineSongs.size() <= 0){
+                noSongsFound.setVisibility(View.VISIBLE);
+                listView_song.setVisibility(View.GONE);
+            }else{
+                noSongsFound.setVisibility(View.GONE);
+                listView_song.setVisibility(View.VISIBLE);
+            }
+            downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.arrayListOfflineSongs, getActivity(),this);
+            listView_song.setAdapter(downloads_audio_list_adapter);
+
+    }
+
+
+    @Override
+    public void onProcessFilter(String filename) {
+        db.itemSongDao().update("",filename);
+
+        MyLibraryFragment fragment2 = new MyLibraryFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("from","download");
+        FragmentManager fragmentManager = getFragmentManager();
+        fragment2.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+        fragmentTransaction.commit();
+    }
 }
 
 

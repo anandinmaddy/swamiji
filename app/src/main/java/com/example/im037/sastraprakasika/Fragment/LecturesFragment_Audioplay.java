@@ -16,7 +16,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +33,9 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Lectures_audio_list_adapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Mediaactivity.Audio_player_activity;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
-import com.example.im037.sastraprakasika.Model.ListOfLecturesListDetails;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.example.im037.sastraprakasika.OnlinePlayer.Methods;
@@ -60,7 +63,7 @@ import java.util.List;
 
 import static android.view.View.VISIBLE;
 
-public class LecturesFragment_Audioplay extends Fragment {
+public class LecturesFragment_Audioplay extends Fragment implements Lectures_audio_list_adapter.IProcessFilter {
 
     Methods methods;
 
@@ -83,12 +86,14 @@ public class LecturesFragment_Audioplay extends Fragment {
     static ImageView img_imageViewAlbumArt;
     static Context context;
     RecyclerView recyclerView;
-    Lectures_audio_list_adapter lectures_audio_list_adapter = null;
+  //  Lectures_audio_list_adapter lectures_audio_list_adapter = null;
     View view;
     TextView title;
     // add new
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
     List<ItemSong> itemSongList = new ArrayList<>();
+    List<ItemSong> itemSongListNew = new ArrayList<>();
+
     private static final int MY_PERMISSIONS_REQUEST_MULTIPLE = 1100;
 
     ShimmerFrameLayout shimmerFrameLayout;
@@ -120,10 +125,10 @@ public class LecturesFragment_Audioplay extends Fragment {
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
+        shimmerFrameLayout.startShimmer();
 
         context = getContext();
-        init();
-        shimmerFrameLayout.startShimmer();
+       init();
         title = getActivity().findViewById(R.id.title);
         title.setText("My Library");
 
@@ -142,27 +147,55 @@ public class LecturesFragment_Audioplay extends Fragment {
 
 
             itemSongList = db.itemSongDao().getAll();
-            listView_song = (ListView) view.findViewById(R.id.listViewMusicSong_list);
-        Constant.arrayList_play.clear();
-        Constant.arrayList_play.addAll(itemSongList);
+
+            for (ItemSong itemSong : itemSongList){
+                String isOfflinevideo = readFileNames(itemSong.getTitle());
+                if (isOfflinevideo != null && !isOfflinevideo.isEmpty()){
+                    db.itemSongDao().update(isOfflinevideo,itemSong.getTitle());
+                }
+            }
+
+
+        itemSongListNew = db.itemSongDao().getAll();
+
+        listView_song = (ListView) view.findViewById(R.id.listViewMusicSong_list);
+
         shimmerFrameLayout.stopShimmer();
         shimmerFrameLayout.setVisibility(View.GONE);
 
-        if (itemSongList != null && itemSongList.size() > 0){
-            final Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(itemSongList, getActivity());
+        if (itemSongListNew != null && itemSongListNew.size() > 0){
+            Constant.arrayList_play.clear();
+            Constant.arrayList_play.addAll(itemSongListNew);
+            Constant.arrayListLectureslineSongs.clear();
+            Constant.arrayListLectureslineSongs.addAll(itemSongListNew);
+
+         //   Constant.arrayListLectureslineSongs.addAll(itemSongList);
+
+            Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayListLectureslineSongs, getActivity(),this);
+        //    listView_song.smoothScrollToPosition(Constant.lastPosition);
+
+
             listView_song.setAdapter(lectures_audio_list_adapter);
+            listView_song.setSelection(Constant.downloadPosition);
+
+            //   lectures_audio_list_adapter.notifyDataSetChanged();
         }else {
-            final Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(lect_det, getActivity());
-            listView_song.setAdapter(lectures_audio_list_adapter);
+            //listView_song.invalidateViews();
+            callWebservice();
+/*
+            final Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(lect_det, getActivity(),this);
+            listView_song.smoothScrollToPosition(Constant.lastPosition);
+            listView_song.setAdapter(lectures_audio_list_adapter);*/
         }
 
 
-        listView_song.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+ /*       listView_song.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 lectures_audio_list_adapter.notifyDataSetChanged();
             }
-        });
+        });*/
 
         return view;
 
@@ -223,11 +256,13 @@ public class LecturesFragment_Audioplay extends Fragment {
     private void init() {
         getViews();
         setListeners();
+
         txt_playingSong.setSelected(true);
         //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 
         if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
           //  callWebservice();
+
 
             if(db.itemSongDao().getAll().size() > 0){
                 shimmerFrameLayout.stopShimmer();
@@ -235,6 +270,7 @@ public class LecturesFragment_Audioplay extends Fragment {
             }else {
                 callWebservice();
             }
+
 
             /*
             if (PlayerConstants.SONGS_LIST.size() <= 0) {
@@ -266,8 +302,13 @@ public class LecturesFragment_Audioplay extends Fragment {
 
     private void setListItems() {
         //listView_song = (ListView) view.findViewById( R.id.listViewMusicSong_list );
-        lectures_audio_list_adapter = new Lectures_audio_list_adapter(itemSongList, getActivity());
+        Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
+     //   listView_song.smoothScrollToPosition(Constant.lastPosition);
+
+
         listView_song.setAdapter(lectures_audio_list_adapter);
+        listView_song.setSelection(Constant.downloadPosition);
+
 
     }
 
@@ -328,8 +369,8 @@ public class LecturesFragment_Audioplay extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View item, int position, long id) {
                 Constant.isOnline = false;
-                Constant.arrayList_play.clear();
-                Constant.arrayList_play.addAll(Constant.arrayListOfflineSongs);
+            /*    Constant.arrayList_play.clear();
+                Constant.arrayList_play.addAll(Constant.arrayListLectureslineSongs);*/
                 Constant.playPos = position;
                 Intent intent = new Intent(getActivity(), PlayerService.class);
                 intent.setAction(PlayerService.ACTION_PLAY);
@@ -431,9 +472,62 @@ public class LecturesFragment_Audioplay extends Fragment {
         });
     }
 
+
+    @Override
+    public void onProcessFilter(boolean b) {
+        // Process the filter after download
+        Log.d("rest","res");
+        listView_song.invalidateViews();
+
+
+        //listView_song.setSelection(Constant.lastPlayed);
+
+        if (b){
+            MyLibraryFragment fragment2 = new MyLibraryFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("from","lecture");
+            FragmentManager fragmentManager = getFragmentManager();
+            fragment2.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+            fragmentTransaction.commit();
+        }else {
+            Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
+
+            listView_song.setAdapter(lectures_audio_list_adapter);
+            listView_song.setSelection(Constant.downloadPosition);
+
+        }
+
+    //    fragment2.setArguments(profileData);
+
+
+        /*
+        if (itemSongList != null && itemSongList.size() > 0){
+
+            lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
+            listView_song.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+
+            listView_song.setAdapter(lectures_audio_list_adapter);
+        }else {
+             lectures_audio_list_adapter = new Lectures_audio_list_adapter(lect_det, getActivity(),this);
+            listView_song.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+
+            listView_song.setAdapter(lectures_audio_list_adapter);
+        }*/
+
+
+     //   lectures_audio_list_adapter.notifyDataSetChanged();
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
+
+  /*      lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
+        lectures_audio_list_adapter.notifyDataSetChanged();
+*/
         /*try {
             boolean isServiceRunning = UtilFunctions.isServiceRunning( SongService.class.getName(), getApplicationContext() );
             if (isServiceRunning) {
@@ -533,7 +627,7 @@ public class LecturesFragment_Audioplay extends Fragment {
     }
 
 
-    private void callWebservice() {
+    public  void callWebservice() {
 
       /*  progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading ..., Please wait");
@@ -561,6 +655,7 @@ public class LecturesFragment_Audioplay extends Fragment {
                                 db.itemSongDao().deleteAll();
                                 JSONObject jsonObject1 = response.optJSONObject("data");
                                 JSONArray contentArray = jsonObject1.optJSONArray("datacontent");
+                                Constant.arrayListLectureslineSongs.clear();
                                 for (int i = 0; i < contentArray.length(); i++) {
 
                                     JSONObject dataConten = contentArray.getJSONObject(i);
@@ -597,10 +692,10 @@ public class LecturesFragment_Audioplay extends Fragment {
 
                                     }
 
-                                    Constant.arrayList_play.clear();
-                                    Constant.arrayList_play.addAll(Constant.arrayListLectureslineSongs);
-
                                 }
+
+                                Constant.arrayList_play.clear();
+                                Constant.arrayList_play.addAll(Constant.arrayListLectureslineSongs);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -650,7 +745,7 @@ public class LecturesFragment_Audioplay extends Fragment {
                 File[] files = directory.listFiles();
                 if (files != null) {
                     for (int i = 0; i < files.length; i++) {
-                        String result = files[i].getName().replace(".mp3","");
+                        String result = files[i].getName().replace(".swami","");
                         downloadSongs.put(result,files[i].toString());
                     }
                 }

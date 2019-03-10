@@ -42,11 +42,11 @@ public class PlaylistsFragment extends Fragment {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-           /*     NewPlaylistFragment fragment2 = new NewPlaylistFragment();
+               NewPlaylistFragment fragment2 = new NewPlaylistFragment();
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.commit();*/
+                fragmentTransaction.commit();
 
             }
         });

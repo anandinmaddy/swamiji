@@ -3,14 +3,18 @@ package com.example.im037.sastraprakasika.OnlinePlayer;
 import android.content.Context;
 
 import com.example.im037.sastraprakasika.Entity.Lecturers;
+import com.example.im037.sastraprakasika.Model.ListOfTopicsDetailed;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Constant  {
 
     public static final String LAST_SYNC = "LAST_SYNC";
     private static final long serialVersionUID = 1L;
+    public static String isFromPage = "lecture";
+    public static int lastPlayed = 0;
 
     private static String SERVER_URL = "";
 
@@ -85,8 +89,15 @@ public class Constant  {
     public static ArrayList<ItemSong> onlyOffline = new ArrayList<>();
 
     public static ArrayList<ItemSong> arrayListOfflineSongs = new ArrayList<>();
+    public static ArrayList<ItemSong> playListSongs1= new ArrayList<>();
+    public static int downloadPosition = 0;
     public static ArrayList<ItemSong> arrayListLectureslineSongs = new ArrayList<>();
 
+    public static ArrayList<ListOfTopicsDetailed> arrayTopiclineSongs = new ArrayList<>();
+    public static ArrayList<ListOfTopicsDetailed> arrayOfflineTopiclineSongs = new ArrayList<>();
+    public static int currentTab= 2;
+
+    public static int lastPosition = 0;
     //public static ArrayList<ItemAlbums> arrayListOfflineAlbums = new ArrayList<>();
     //public static ArrayList<ItemArtist> arrayListOfflineArtist = new ArrayList<>();
 

@@ -1,42 +1,19 @@
 package com.example.im037.sastraprakasika.Model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+public class ListOfTopicsDetailedOld {
 
-@Entity
-public class ListOfTopicsDetailed {
-
-
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    int id;
-    @ColumnInfo(name = "title")
     String topics_det_title;
-    @ColumnInfo(name = "mp3")
     String topics_det_img;
-    @ColumnInfo(name = "type")
     String topics_det_type;
-    @ColumnInfo(name = "post_id")
     String topics_det_post_id;
-    @ColumnInfo(name = "image_url")
     String topics_det_imgurl;
-    @ColumnInfo(name = "parentid")
     String topics_parentid;
-    @ColumnInfo(name = "subid")
     String topics_subid;
-    @ColumnInfo(name = "time")
     String topics_time;
-    @ColumnInfo(name = "classname")
     String topics_classname;
 
 
-    public ListOfTopicsDetailed(){
-        return;
-    }
-
-    public ListOfTopicsDetailed(String topics_det_title, String topics_det_img, String topics_det_type, String topics_det_post_id, String topics_det_imgurl, String topics_parentid, String topics_subid, String topics_time,String top_cname) {
+    public ListOfTopicsDetailedOld(String topics_det_title, String topics_det_img, String topics_det_type, String topics_det_post_id, String topics_det_imgurl, String topics_parentid, String topics_subid, String topics_time, String top_cname) {
         this.topics_det_title = topics_det_title;
         this.topics_det_img = topics_det_img;
         this.topics_det_type = topics_det_type;

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.FragmentAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.utils.Selected;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -72,7 +73,9 @@ public class MyLibraryFragment extends Fragment  {
         this.mView = view;
 
         titleView = getActivity().findViewById(R.id.title);
-//       / passvalue = getIntent().getStringExtra( "from" );
+        if(getArguments() != null){
+            passvalue = getArguments().getString( "from" );
+        }
 
         back=(ImageView)getActivity().findViewById(R.id.back);
         tablayout = view.findViewById(R.id.tablayout);
@@ -82,8 +85,8 @@ public class MyLibraryFragment extends Fragment  {
 //      /  common_view.setVisibility(View.VISIBLE);
        // commonactivity_titleText=(TextView)view.findViewById(R.id.title) ;
         commonactivity_linearlayout=(LinearLayout)getActivity().findViewById(R.id.ss);
-        titleView.setTextColor(getResources().getColor(R.color.black));
-        titleView.setTypeface(null, Typeface.BOLD);
+     //   titleView.setTextColor(getResources().getColor(R.color.black));
+       // titleView.setTypeface(null, Typeface.BOLD);
         viewpager = view.findViewById(R.id.viewpager);
         back.setVisibility(View.GONE);
         viewpager.setOffscreenPageLimit(4);
@@ -91,16 +94,36 @@ public class MyLibraryFragment extends Fragment  {
         titleView.setText("My Library");
         commonactivity_linearlayout.setBackgroundColor(getResources().getColor(R.color.white));
         viewpager.setAdapter(adapter);
-        if("player".equalsIgnoreCase( passvalue) ){
+        if(Constant.currentTab == 0){
+            viewpager.setCurrentItem( 0 );
+        }else if(Constant.currentTab == 1) {
+            viewpager.setCurrentItem( 1);
+        }else if(Constant.currentTab == 2){
             viewpager.setCurrentItem( 2 );
-        }else if("playlist".equalsIgnoreCase( passvalue ))
-        {
+        }else if(Constant.currentTab == 3){
             viewpager.setCurrentItem( 3 );
         }else {
             viewpager.setCurrentItem( 0 );
         }
         tablayout.setupWithViewPager(viewpager);
         viewpager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
+
+        tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Constant.currentTab = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                Constant.currentTab = tab.getPosition();
+            }
+        });
 
 
 

@@ -20,6 +20,9 @@ public interface ItemSongDao {
     @Query("DELETE FROM ItemSong")
     void deleteAll();
 
+    @Query("UPDATE ItemSong SET downloads=:download WHERE title = :title")
+    void update(String download,String title);
+
 
 
 

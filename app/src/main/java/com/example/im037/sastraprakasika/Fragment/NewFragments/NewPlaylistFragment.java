@@ -74,9 +74,12 @@ public class NewPlaylistFragment extends Fragment {
                     CommonMethod.showSnackbar(playListTitle, "Please Enter Playlist Title", getActivity());
                 } else {
                     title = playListTitle.getText().toString();
-                    PlaylistsFragment fragment2 = new PlaylistsFragment();
-
-                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    MyLibraryFragment fragment2 = new MyLibraryFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("from","playlist");
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragment2.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                     fragmentTransaction.commit();
                 }
@@ -86,9 +89,12 @@ public class NewPlaylistFragment extends Fragment {
         cancel_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlaylistsFragment fragment2 = new PlaylistsFragment();
-
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("from","playlist");
+                FragmentManager fragmentManager = getFragmentManager();
+                fragment2.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.commit();
             }

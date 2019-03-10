@@ -1,5 +1,8 @@
 package com.example.im037.sastraprakasika.Common;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +15,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
@@ -46,23 +51,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.im037.sastraprakasika.Activity.DashBoardActivity;
-import com.example.im037.sastraprakasika.Activity.MyAccountActivity;
+import com.bumptech.glide.Glide;
 import com.example.im037.sastraprakasika.Activity.MyLibraryActivity;
-import com.example.im037.sastraprakasika.Activity.SearchActivity;
-import com.example.im037.sastraprakasika.Fragment.LecturesFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyAccountFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.SearchPageFragment;
-import com.example.im037.sastraprakasika.Fragment.TopicsFragment;
-import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
+import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
+import com.example.im037.sastraprakasika.Model.ListOfTopicsDetailed;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemMyPlayList;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.example.im037.sastraprakasika.OnlinePlayer.Methods;
 import com.example.im037.sastraprakasika.OnlinePlayer.PlayerService;
 import com.example.im037.sastraprakasika.R;
+import com.example.im037.sastraprakasika.Session;
+import com.example.im037.sastraprakasika.VolleyResponseListerner;
+import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.mediautil.MediaItem;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
 import com.example.im037.sastraprakasika.utils.DBHelper;
@@ -70,7 +75,6 @@ import com.example.im037.sastraprakasika.utils.GlobalBus;
 import com.example.im037.sastraprakasika.utils.MessageEvent;
 import com.example.im037.sastraprakasika.utils.PausableRotateAnimation;
 import com.example.im037.sastraprakasika.utils.Selected;
-import com.google.android.gms.common.internal.service.Common;
 import com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar;
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -82,6 +86,19 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class CommonActivity extends AppCompatActivity  {
@@ -96,9 +113,10 @@ public class CommonActivity extends AppCompatActivity  {
     private SlidingUpPanelLayout playerLayout;
     static boolean isHomeActivityRunning = false;
     SlidingUpPanelLayout sliding_layout;
+    RelativeLayout rl_download_loading;
     private TextView title, songtitle;
     TextView time;
-    LinearLayout discourses, myLibrary, search, myAccount;
+    LinearLayout discourses, myLibrary, search, myAccount,bottomLayout,bottomLayoutblank;
     static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg, view_round;
     LinearLayout layoutBackground;
     TextView titleView;
@@ -135,6 +153,9 @@ public class CommonActivity extends AppCompatActivity  {
     RelativeLayout include_sliding_panel_childtwo;
     Toolbar toolbarLayout;
     private BroadcastReceiver yourReceiver;
+    private String songUrl;
+    private String songTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,11 +190,11 @@ public class CommonActivity extends AppCompatActivity  {
         discoursesImg = findViewById(R.id.discourses);
         myLibraryImg = findViewById(R.id.myLibrary);
         searchImg = findViewById(R.id.search);
-        seekBar_music = findViewById(R.id.seekbar_music);
         iv_music_addplaylist = findViewById( R.id.iv_music_add2playlist );
         seekbar_min = findViewById(R.id.seekbar_min);
         seekbar_min.setPadding(0, 0, 0, 0);
-
+        bottomLayout = findViewById(R.id.bottomLayout);
+        rl_download_loading = findViewById(R.id.rl_download_loading);
         methods = new Methods(this);
         dbHelper = new DBHelper(this);
         layoutBackground = findViewById(R.id.ss);
@@ -207,6 +228,8 @@ public class CommonActivity extends AppCompatActivity  {
        // tv_max_artist = findViewById(R.id.tv_max_artist);
         sliding_layout = findViewById(R.id.sliding_layout);
 
+        bottomLayoutblank = findViewById(R.id.bottomLayoutblank);
+
       //  iv_max_option.setColorFilter(Color.BLACK);
 
         final IntentFilter theFilter = new IntentFilter();
@@ -227,12 +250,12 @@ public class CommonActivity extends AppCompatActivity  {
         this.registerReceiver(this.yourReceiver, theFilter);
 
 
-/*
 
-        iv_max_fav.setOnClickListener();
-        iv_max_option.setOnClickListener(this);
 
-        iv_min_play.setOnClickListener(this);
+     //   iv_max_fav.setOnClickListener();
+       // iv_max_option.setOnClickListener(this);
+
+   /*     iv_min_play.setOnClickListener(this);
         iv_min_next.setOnClickListener(this);
         iv_min_previous.setOnClickListener(this);
 
@@ -241,10 +264,10 @@ public class CommonActivity extends AppCompatActivity  {
         iv_music_previous.setOnClickListener(this);
         iv_music_shuffle.setOnClickListener(this);
         iv_music_downloads.setOnClickListener(this);
-        sliding_layout.setOnClickListener(this);
-*/
+        sliding_layout.setOnClickListener(this);*/
 
-     /*   iv_min_play.setOnClickListener(new View.OnClickListener() {
+
+        iv_min_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 playPause();
@@ -252,15 +275,49 @@ public class CommonActivity extends AppCompatActivity  {
         });
 
 
-
-        include_sliding_panel_childtwo.setVisibility(View.VISIBLE);
-        sliding_layout.setOnClickListener(new View.OnClickListener() {
+        iv_min_previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                previous();
+            }
+        });
+
+
+        iv_music_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPause();
+            }
+        });
+
+        iv_music_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previous();
 
             }
         });
-*/
+
+        iv_min_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                next();
+            }
+        });
+
+        iv_music_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                next();
+            }
+        });
+
+
+
+
+        include_sliding_panel_childtwo.setVisibility(View.VISIBLE);
+
+
 
 
         iv_min_play.setOnClickListener(new View.OnClickListener() {
@@ -275,9 +332,11 @@ public class CommonActivity extends AppCompatActivity  {
         iv_music_downloads.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new DownloadFileAsync().execute(songUrl,songTitle);
+/*
                 Intent intent = new Intent(CommonActivity.this,MyLibraryActivity.class );
                 intent.putExtra( "from","player" );
-                startActivity( intent );
+                startActivity( intent );*/
             }
         });
 
@@ -315,7 +374,11 @@ public class CommonActivity extends AppCompatActivity  {
                 try {
                     Intent intent = new Intent(CommonActivity.this, PlayerService.class);
                     intent.setAction(PlayerService.ACTION_SEEKTO);
-                    intent.putExtra("seekto", methods.getSeekFromPercentage(progress, methods.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
+                    if (Constant.isFromPage.equalsIgnoreCase("topic")){
+                        intent.putExtra("seekto", methods.getSeekFromPercentage(progress, methods.calculateTime(Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_time())));
+                    }else {
+                        intent.putExtra("seekto", methods.getSeekFromPercentage(progress, methods.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
+                    }
                     startService(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -332,13 +395,15 @@ public class CommonActivity extends AppCompatActivity  {
             public void onPanelSlide(View panel, float slideOffset) {
                 if (slideOffset == 0.0f) {
                     isExpand = false;
-
                     rl_min_header.setVisibility(View.VISIBLE);
                     ll_max_header.setVisibility(View.GONE);
+                    bottomLayout.setVisibility(View.VISIBLE);
+                    bottomLayoutblank.setVisibility(View.GONE);
                 } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
                     rl_min_header.setVisibility(View.GONE);
                     ll_max_header.setVisibility(View.VISIBLE);
-
+                    bottomLayout.setVisibility(View.GONE);
+                    bottomLayoutblank.setVisibility(View.VISIBLE);
                     if (isExpand) {
                         rl_min_header.setAlpha(1.0f - slideOffset);
                         ll_max_header.setAlpha(0.0f + slideOffset);
@@ -348,9 +413,10 @@ public class CommonActivity extends AppCompatActivity  {
                     }
                 } else {
                     isExpand = true;
-
+                    bottomLayout.setVisibility(View.GONE);
                     rl_min_header.setVisibility(View.GONE);
                     ll_max_header.setVisibility(View.VISIBLE);
+                    bottomLayoutblank.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -369,8 +435,8 @@ public class CommonActivity extends AppCompatActivity  {
                 myAccountImg.setImageResource(R.drawable.account_grey);
 
                 MyLibraryFragment myLibraryFragment = new MyLibraryFragment();
-              //  volumePageFragment.setArguments(profileData);
                 startNewFragment(myLibraryFragment,"library");
+                //  volumePageFragment.setArguments(profileData);
 
             //    CommonMethod.changeActivity(CommonActivity.this, MyLibraryActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
@@ -664,7 +730,8 @@ public class CommonActivity extends AppCompatActivity  {
     }
 
     public void playPause() {
-        if (Constant.arrayList_play.size() > 0) {
+
+        if (Constant.isFromPage.equalsIgnoreCase("topic") ? Constant.arrayOfflineTopiclineSongs.size() > 0 : Constant.arrayList_play.size() > 0) {
             //checkSlidingPanelLayout(true);
             Intent intent = new Intent(CommonActivity.this, PlayerService.class);
             if (Constant.isPlayed) {
@@ -684,7 +751,7 @@ public class CommonActivity extends AppCompatActivity  {
     }
 
     public void next() {
-        if (Constant.arrayList_play.size() > 0) {
+        if (Constant.isFromPage.equalsIgnoreCase("topic") ? Constant.arrayOfflineTopiclineSongs.size() > 0 : Constant.arrayList_play.size() > 0) {
             if (!Constant.isOnline || methods.isNetworkAvailable()) {
                 isRotateAnim = false;
                 Intent intent = new Intent(CommonActivity.this, PlayerService.class);
@@ -699,7 +766,7 @@ public class CommonActivity extends AppCompatActivity  {
     }
 
     public void previous() {
-        if (Constant.arrayList_play.size() > 0) {
+        if (Constant.isFromPage.equalsIgnoreCase("topic") ? Constant.arrayOfflineTopiclineSongs.size() > 0 : Constant.arrayList_play.size() > 0) {
             if (!Constant.isOnline || methods.isNetworkAvailable()) {
                 isRotateAnim = false;
                 Intent intent = new Intent(CommonActivity.this, PlayerService.class);
@@ -748,6 +815,16 @@ public class CommonActivity extends AppCompatActivity  {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSongChange(ItemSong itemSong) {
         changeText(itemSong, "home");
+        Constant.context = CommonActivity.this;
+        changeImageAnimation(PlayerService.getInstance().getIsPlayling());
+//        GlobalBus.getBus().removeStickyEvent(itemSong);
+    }
+
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onSongChangeNew(ListOfTopicsDetailed itemSong) {
+        changeTextList(itemSong, "home");
         Constant.context = CommonActivity.this;
         changeImageAnimation(PlayerService.getInstance().getIsPlayling());
 //        GlobalBus.getBus().removeStickyEvent(itemSong);
@@ -1116,6 +1193,8 @@ public class CommonActivity extends AppCompatActivity  {
         tv_max_artist.setText(itemSong.getArtist());
 */
 
+        songTitle = itemSong.getTitle();
+        songUrl = itemSong.getUrl();
         ratingBar.setRating(Integer.parseInt(itemSong.getAverageRating()));
         tv_music_title.setText(itemSong.getTitle());
         tv_music_artist.setText(itemSong.getTitle());
@@ -1129,6 +1208,7 @@ public class CommonActivity extends AppCompatActivity  {
                 .placeholder(R.drawable.vedanta)
                 .into(view_round);
 
+
         if (Constant.isOnline) {
 
           /*  Picasso.get()
@@ -1138,7 +1218,7 @@ public class CommonActivity extends AppCompatActivity  {
 
 
             if (ratingBar.getVisibility() == View.GONE) {
-                ratingBar.setVisibility(View.VISIBLE);
+              //  ratingBar.setVisibility(View.VISIBLE);
 //                iv_max_fav.setVisibility(View.VISIBLE);
 
                 //iv_music_rate.setVisibility(View.VISIBLE);
@@ -1177,6 +1257,81 @@ public class CommonActivity extends AppCompatActivity  {
         }
         viewpager.setCurrentItem(Constant.playPos);
     }
+
+
+    public void changeTextList(final ListOfTopicsDetailed itemSong, final String page) {
+
+        tv_min_title.setText(itemSong.getTopics_det_title());
+        // tv_min_artist.setText(itemSong.getArtist());
+
+   /*     tv_max_title.setText(itemSong.getTitle());
+        tv_max_artist.setText(itemSong.getArtist());
+*/
+
+        songTitle = itemSong.getTopics_det_title();
+        songUrl = itemSong.getTopics_det_imgurl();
+     //   ratingBar.setRating(Integer.parseInt(itemSong.getr()));
+        tv_music_title.setText(itemSong.getTopics_det_title());
+        tv_music_artist.setText(itemSong.getTopics_det_title());
+
+        tv_song_count.setText(Constant.playPos + 1 + "/" + Constant.arrayList_play.size());
+        tv_total_time.setText(itemSong.getTopics_time());
+
+      //  changeFav(dbHelper.checkFav(String.valueOf(itemSong.getTopics_det_post_id())));
+        Picasso.get()
+                .load((itemSong.getTopics_det_img()))
+                .placeholder(R.drawable.vedanta)
+                .into(view_round);
+
+        if (Constant.isOnline) {
+
+          /*  Picasso.get()
+                    .load(itemSong.getImageSmall())
+                    .placeholder(R.drawable.ic_music)
+                    .into(iv_max_song);*/
+
+
+            if (ratingBar.getVisibility() == View.GONE) {
+                //  ratingBar.setVisibility(View.VISIBLE);
+//                iv_max_fav.setVisibility(View.VISIBLE);
+
+                //iv_music_rate.setVisibility(View.VISIBLE);
+                view_rate.setVisibility(View.VISIBLE);
+            }
+
+            if (Constant.isSongDownload) {
+                //iv_music_download.setVisibility(View.VISIBLE);
+                view_download.setVisibility(View.VISIBLE);
+            } else {
+                //iv_music_download.setVisibility(View.GONE);
+                view_download.setVisibility(View.GONE);
+            }
+        } else {
+
+        /*    Picasso.get()
+                    .load((itemSong.getImageSmall()))
+                    .placeholder(R.drawable.ic_music)
+                    .into(iv_max_song);*/
+
+            if (ratingBar.getVisibility() == View.VISIBLE) {
+                ratingBar.setVisibility(View.GONE);
+                //   iv_max_fav.setVisibility(View.GONE);
+
+                //iv_music_rate.setVisibility(View.GONE);
+                view_rate.setVisibility(View.GONE);
+
+                //iv_music_download.setVisibility(View.GONE);
+                view_download.setVisibility(View.GONE);
+            }
+        }
+
+        if (!page.equals("")) {
+            viewpager.setAdapter(adapter);
+            viewpager.setOffscreenPageLimit(Constant.arrayList_play.size());
+        }
+        viewpager.setCurrentItem(Constant.playPos);
+    }
+
 
     public void changePlayPauseIcon(Boolean isPlay) {
         if (!isPlay) {
@@ -1361,5 +1516,218 @@ public class CommonActivity extends AppCompatActivity  {
         // Do not forget to unregister the receiver!!!
         this.unregisterReceiver(this.yourReceiver);
     }
+
+    protected static void lecturesAPICALL(final Activity mActivity) {
+        final DiscousesAppDatabase db;
+
+        db = Room.databaseBuilder(mActivity.getApplicationContext(),
+                DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
+        new WebServices(mActivity.getApplicationContext(), TAG).getlibrary(Session.getInstance(mActivity.getApplicationContext(), TAG).getUserId(), "lectures", new VolleyResponseListerner() {
+
+            @Override
+            public void onResponse(final JSONObject response) throws JSONException {
+                // hideCommonProgressBar();
+                //   progressDialog.hide();
+//
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Constant.arrayListOfflineSongs.clear();
+                        System.out.println("library respon:::: " + response);
+                        if (response.optString("resultcode").equalsIgnoreCase("200")) {
+
+
+                            try {
+                                db.itemSongDao().deleteAll();
+                                JSONObject jsonObject1 = response.optJSONObject("data");
+                                JSONArray contentArray = jsonObject1.optJSONArray("datacontent");
+                                for (int i = 0; i < contentArray.length(); i++) {
+
+                                    JSONObject dataConten = contentArray.getJSONObject(i);
+                                    JSONArray trackArray = dataConten.optJSONArray("track");
+                                    String image_url = dataConten.optString("image_url");
+                                    String volume_name = dataConten.optString("volume_name");
+
+                                    for (int j = 0; j < trackArray.length(); j++) {
+                                        JSONObject jsonObject = trackArray.optJSONObject(j);
+                                        MediaItem mediaItem = new MediaItem();
+                                        mediaItem.setTitle(jsonObject.optString("title"));
+                                        mediaItem.setPath(jsonObject.optString("mp3"));
+                                        mediaItem.setDuration(jsonObject.optString("time"));
+                                        mediaItem.setAlbum_img(image_url);
+                                        mediaItem.setAlbum(volume_name);
+                                        ItemSong itemSong = new ItemSong();
+
+                                        itemSong.setUrl(jsonObject.optString("mp3"));
+                                        itemSong.setTitle(jsonObject.optString("title"));
+                                        itemSong.setDuration(jsonObject.optString("time"));
+                                        itemSong.setClassName(jsonObject.optString("classname"));
+                                        itemSong.setImageBig(image_url);
+                                        itemSong.setImageSmall(image_url);
+                                        String isOfflinevideo = readFileNames(jsonObject.optString("title"));
+                                        if (isOfflinevideo != null && isOfflinevideo != ""){
+                                            itemSong.setDownloads(isOfflinevideo);
+                                        }
+
+
+
+                                        db.itemSongDao().insertAll(itemSong);
+                                        Constant.arrayListLectureslineSongs.add(itemSong);
+
+
+                                    }
+
+                                    Constant.arrayList_play.clear();
+                                    Constant.arrayList_play.addAll(Constant.arrayListLectureslineSongs);
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        } else {
+                            try {
+                                if (response.getString("resultcode").equalsIgnoreCase("400")) {
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                });
+
+
+            }
+
+            @Override
+            public void onError(String message, String title) {
+
+            }
+        });
+    }
+
+    private static String readFileNames(String title) {
+        HashMap<String,String> downloadSongs = new HashMap<String, String>();
+        try {
+            File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
+            String path = Environment.getExternalStorageDirectory().toString() + "/Swamiji";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    String result = files[i].getName().replace(".mp3","");
+                    downloadSongs.put(result,files[i].toString());
+                }
+            }
+
+            if (downloadSongs != null && downloadSongs.size() > 0){
+                Iterator myVeryOwnIterator = downloadSongs.keySet().iterator();
+                while(myVeryOwnIterator.hasNext()) {
+                    String key=(String)myVeryOwnIterator.next();
+                    if (key.equalsIgnoreCase(title)){
+                        return (String)downloadSongs.get(key);
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    class DownloadFileAsync extends AsyncTask<String, String,String> {
+        public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+      //  private ProgressDialog mProgressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            rl_download_loading.setVisibility(View.VISIBLE);
+            iv_music_downloads.setVisibility(View.INVISIBLE);
+            onCreateDialog(DIALOG_DOWNLOAD_PROGRESS);
+        }
+
+        @Override
+        protected String doInBackground(String... aurl) {
+            int count;
+            try {
+                URL url = new URL(aurl[0]);
+                String title = aurl[1];
+                URLConnection conexion = url.openConnection();
+                conexion.connect();
+                int lenghtOfFile = conexion.getContentLength();
+                Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
+                InputStream input = new BufferedInputStream(url.openStream());
+                OutputStream output = new FileOutputStream(setFileName(title));
+                byte data[] = new byte[1024];
+                long total = 0;
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress(""+(int)((total*100)/lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+             //   mProgressDialog.dismiss();
+
+            }
+            return "done";
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            Log.d("ANDRO_ASYNC",progress[0]);
+          //  mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+        }
+
+        @Override
+        protected void onPostExecute(String unused) {
+            Toast.makeText(CommonActivity.this, "Download completed", Toast.LENGTH_SHORT).show();
+            rl_download_loading.setVisibility(View.GONE);
+            iv_music_downloads.setVisibility(View.VISIBLE);
+          //  mProgressDialog.dismiss();
+        }
+
+
+
+        protected Dialog onCreateDialog(int id) {
+            switch (id) {
+                case DIALOG_DOWNLOAD_PROGRESS:
+          /*          mProgressDialog = new ProgressDialog(CommonActivity.this);
+                    mProgressDialog.setMessage("Download in progress..");
+                    mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    mProgressDialog.setCancelable(true);
+                    mProgressDialog.show();
+                    return mProgressDialog;*/
+                default:
+                    return null;
+            }
+        }
+
+        private File setFileName(String title) {
+            File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
+            if (!folder.exists())
+                folder.mkdirs();
+
+            File file = new File(folder, title+".swami");
+
+
+            return file;
+        }
+
+
+
+    }
+
+
+
 
 }

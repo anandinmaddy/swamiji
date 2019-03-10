@@ -127,7 +127,18 @@
         <!--android:layout_height="1dp"-->
         <!--android:background="@color/light_grey"-->
         <!--android:visibility="gone"/>-->
-
+    <LinearLayout
+        android:id="@+id/bottomLayoutblank"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:weightSum="4"
+        android:visibility="gone"
+        android:windowSoftInputMode="adjustPan"
+        android:fitsSystemWindows="true">
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bottomLayout"
@@ -137,6 +148,7 @@
         android:orientation="horizontal"
         android:background="@android:color/white"
         android:weightSum="4"
+
         android:windowSoftInputMode="adjustPan"
         android:fitsSystemWindows="true">
 

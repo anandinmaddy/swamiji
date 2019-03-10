@@ -81,7 +81,7 @@ public class PlayerService extends IntentService implements Player.EventListener
     Boolean isNewSong = false;
     Bitmap bitmap;
     String playerList = "";
-
+    Boolean isExistingPlayer = false;
     public PlayerService() {
         super(null);
     }
@@ -137,11 +137,22 @@ public class PlayerService extends IntentService implements Player.EventListener
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        String action = intent.getAction();
-        switch (action) {
+        String action = "";
+        Bundle bundles = null;
+        if(intent != null){
+             action = intent.getAction();
+             bundles = intent.getExtras();
+        }
 
+        switch (action) {
             case ACTION_PLAY:
-                startNewSong();
+                if (bundles != null && bundles.getString("from") !=null && bundles.getString("from").equalsIgnoreCase("topics")){
+                    isExistingPlayer = true;
+                    startNewSong(false);
+                }else {
+                    isExistingPlayer = false;
+                    startNewSong(true);
+                }
                 break;
             case ACTION_TOGGLE:
                 togglePlay();
@@ -170,7 +181,8 @@ public class PlayerService extends IntentService implements Player.EventListener
         return START_STICKY;
     }
 
-    private void startNewSong() {
+
+    private void startNewSong(boolean b) {
         isNewSong = true;
         setBuffer(true);
 
@@ -179,18 +191,26 @@ public class PlayerService extends IntentService implements Player.EventListener
         intent.setAction("com.android.activity.SEND_DATA");
         getApplicationContext().sendBroadcast(intent);
         MediaSource videoSource;
+    if (!b){
 
-        String url = Constant.arrayList_play.get(Constant.playPos).getUrl().replace(" ", "%20");
-        String OfflineLink = Constant.arrayList_play.get(Constant.playPos).getDownloads();
-        if (OfflineLink != null && !OfflineLink.equals("")){
-             videoSource = new ExtractorMediaSource(Uri.parse(OfflineLink),
+            String url = Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_img().replace(" ", "%20");
+
+            videoSource = new ExtractorMediaSource(Uri.parse(url),
                     dataSourceFactory, extractorsFactory, null, null);
-        }else {
-             videoSource = new ExtractorMediaSource(Uri.parse(url),
-                    dataSourceFactory, extractorsFactory, null, null);
-        }
 
 
+    }else {
+    String url = Constant.arrayList_play.get(Constant.playPos).getUrl().replace(" ", "%20");
+    String OfflineLink = Constant.arrayList_play.get(Constant.playPos).getDownloads();
+    if (OfflineLink != null && !OfflineLink.equals("")){
+        videoSource = new ExtractorMediaSource(Uri.parse(OfflineLink),
+                dataSourceFactory, extractorsFactory, null, null);
+    }else {
+        videoSource = new ExtractorMediaSource(Uri.parse(url),
+                dataSourceFactory, extractorsFactory, null, null);
+    }
+
+}
         exoPlayer.prepare(videoSource);
         exoPlayer.setPlayWhenReady(true);
 
@@ -211,30 +231,72 @@ public class PlayerService extends IntentService implements Player.EventListener
         setBuffer(true);
         if (Constant.isSuffle) {
             Random rand = new Random();
-            Constant.playPos = rand.nextInt((Constant.arrayList_play.size() - 1) + 1);
+            if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+                Constant.playPos = rand.nextInt((Constant.arrayOfflineTopiclineSongs.size() - 1) + 1);
+            }else{
+                Constant.playPos = rand.nextInt((Constant.arrayList_play.size() - 1) + 1);
+            }
         } else {
             if (Constant.playPos > 0) {
                 Constant.playPos = Constant.playPos - 1;
             } else {
-                Constant.playPos = Constant.arrayList_play.size() - 1;
+                if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+                    Constant.playPos = Constant.arrayOfflineTopiclineSongs.size() - 1;
+                }else {
+                    Constant.playPos = Constant.arrayList_play.size() - 1;
+                }
             }
         }
-        startNewSong();
+        if(Constant.isFromPage.equalsIgnoreCase("topic")){
+            startNewSong(false);
+
+        }else{
+            startNewSong(true);
+
+        }
     }
 
     private void next() {
         setBuffer(true);
         if (Constant.isSuffle) {
             Random rand = new Random();
-            Constant.playPos = rand.nextInt((Constant.arrayList_play.size() - 1) + 1);
-        } else {
-            if (Constant.playPos < (Constant.arrayList_play.size() - 1)) {
-                Constant.playPos = Constant.playPos + 1;
-            } else {
-                Constant.playPos = 0;
+            if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+                Constant.playPos = rand.nextInt((Constant.arrayOfflineTopiclineSongs.size() - 1) + 1);
+            }else {
+                Constant.playPos = rand.nextInt((Constant.arrayList_play.size() - 1) + 1);
             }
+        } else {
+            if (Constant.isFromPage.equalsIgnoreCase("topic")){
+                if (Constant.playPos < (Constant.arrayOfflineTopiclineSongs.size() - 1)) {
+                    Constant.playPos = Constant.playPos + 1;
+                } else {
+                    Constant.playPos = 0;
+                }
+            }else{
+                if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+                    if (Constant.playPos < (Constant.arrayOfflineTopiclineSongs.size() - 1)) {
+                        Constant.playPos = Constant.playPos + 1;
+                    } else {
+                        Constant.playPos = 0;
+                    }
+                }else{
+                    if (Constant.playPos < (Constant.arrayList_play.size() - 1)) {
+                        Constant.playPos = Constant.playPos + 1;
+                    } else {
+                        Constant.playPos = 0;
+                    }
+                }
+
+            }
+
         }
-        startNewSong();
+        if(Constant.isFromPage.equalsIgnoreCase("topic")){
+            startNewSong(false);
+
+        }else{
+            startNewSong(true);
+
+        }
     }
 
     private void seekTo(long seek) {
@@ -247,13 +309,18 @@ public class PlayerService extends IntentService implements Player.EventListener
         } else {
             if (Constant.isSuffle) {
                 Random rand = new Random();
-                Constant.playPos = rand.nextInt((Constant.arrayList_play.size() - 1) + 1);
+                if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+                    Constant.playPos = rand.nextInt((Constant.arrayOfflineTopiclineSongs.size() - 1) + 1);
+                }else{
+                    Constant.playPos = rand.nextInt((Constant.arrayList_play.size() - 1) + 1);
+
+                }
             } else {
                 next();
             }
         }
 
-        startNewSong();
+        startNewSong(true);
     }
 
     private void changePlayPause(Boolean flag) {
@@ -326,13 +393,20 @@ public class PlayerService extends IntentService implements Player.EventListener
         PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
                 closeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
+        String title = "";
+
+        if (isExistingPlayer){
+            title=  Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_title();
+        }else {
+            title =  Constant.arrayList_play.get(Constant.playPos).getTitle();
+        }
         notification = new NotificationCompat.Builder(this)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(getString(R.string.app_name))
                 .setPriority(Notification.PRIORITY_LOW)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setTicker(Constant.arrayList_play.get(Constant.playPos).getTitle())
+                .setTicker(title)
                 .setChannelId(NOTIFICATION_CHANNEL_ID)
                 .setOnlyAlertOnce(true);
 
@@ -368,9 +442,20 @@ public class PlayerService extends IntentService implements Player.EventListener
                             R.drawable.ic_stop_black_24dp, "Close",
                             pcloseIntent));
 
-            notification.setContentTitle(Constant.arrayList_play.get(Constant.playPos).getTitle());
-            notification.setContentText(Constant.arrayList_play.get(Constant.playPos).getArtist());
+            if (isExistingPlayer){
+                title=  Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_title();
+            }else {
+                title =  Constant.arrayList_play.get(Constant.playPos).getTitle();
+            }
+
+            notification.setContentTitle(title);
+            notification.setContentText(title);
         } else {
+            if (isExistingPlayer){
+                title=  Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_title();
+            }else {
+                title =  Constant.arrayList_play.get(Constant.playPos).getTitle();
+            }
             bigViews.setOnClickPendingIntent(R.id.imageView_noti_play, pplayIntent);
 
             bigViews.setOnClickPendingIntent(R.id.imageView_noti_next, pnextIntent);
@@ -382,11 +467,11 @@ public class PlayerService extends IntentService implements Player.EventListener
 
             bigViews.setImageViewResource(R.id.imageView_noti_play, android.R.drawable.ic_media_pause);
 
-            bigViews.setTextViewText(R.id.textView_noti_name, Constant.arrayList_play.get(Constant.playPos).getTitle());
-            smallViews.setTextViewText(R.id.status_bar_track_name, Constant.arrayList_play.get(Constant.playPos).getTitle());
+            bigViews.setTextViewText(R.id.textView_noti_name, title);
+            smallViews.setTextViewText(R.id.status_bar_track_name, title);
 
-            bigViews.setTextViewText(R.id.textView_noti_artist, Constant.arrayList_play.get(Constant.playPos).getArtist());
-            smallViews.setTextViewText(R.id.status_bar_artist_name, Constant.arrayList_play.get(Constant.playPos).getArtist());
+            bigViews.setTextViewText(R.id.textView_noti_artist, title);
+            smallViews.setTextViewText(R.id.status_bar_artist_name, title);
 
             notification.setCustomContentView(smallViews).setCustomBigContentView(bigViews);
         }
@@ -400,7 +485,15 @@ public class PlayerService extends IntentService implements Player.EventListener
             @Override
             protected String doInBackground(String... strings) {
                 //JsonUtils.okhttpGET(Constant.URL_SONG_1 + Constant.arrayList_play.get(Constant.playPos).getId() + Constant.URL_SONG_2 + "");
-                getBitmapFromURL(Constant.arrayList_play.get(Constant.playPos).getImageSmall());
+                String title = "";
+
+                if (isExistingPlayer){
+                    title=  Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_imgurl();
+                }else {
+                    title =  Constant.arrayList_play.get(Constant.playPos).getImageSmall();
+                }
+
+                getBitmapFromURL(title);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     notification.setLargeIcon(bitmap);
                 } else {
@@ -414,14 +507,25 @@ public class PlayerService extends IntentService implements Player.EventListener
     }
 
     private void updateNoti() {
+        String title = "";
+        String artist = "";
+        if (isExistingPlayer){
+            title=  Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_title();
+            artist = Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_det_title();
+
+        }else {
+            title =  Constant.arrayList_play.get(Constant.playPos).getTitle();
+            artist = Constant.arrayList_play.get(Constant.playPos).getArtist();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notification.setContentTitle(Constant.arrayList_play.get(Constant.playPos).getTitle());
-            notification.setContentText(Constant.arrayList_play.get(Constant.playPos).getArtist());
+            notification.setContentTitle(title);
+            notification.setContentText(artist);
         } else {
-            bigViews.setTextViewText(R.id.textView_noti_name, Constant.arrayList_play.get(Constant.playPos).getTitle());
-            bigViews.setTextViewText(R.id.textView_noti_artist, Constant.arrayList_play.get(Constant.playPos).getArtist());
-            smallViews.setTextViewText(R.id.status_bar_artist_name, Constant.arrayList_play.get(Constant.playPos).getArtist());
-            smallViews.setTextViewText(R.id.status_bar_track_name, Constant.arrayList_play.get(Constant.playPos).getTitle());
+            bigViews.setTextViewText(R.id.textView_noti_name, title);
+            bigViews.setTextViewText(R.id.textView_noti_artist, artist);
+            smallViews.setTextViewText(R.id.status_bar_artist_name, artist);
+            smallViews.setTextViewText(R.id.status_bar_track_name, title);
         }
         updateNotiImage();
         updateNotiPlay(exoPlayer.getPlayWhenReady());
@@ -464,7 +568,12 @@ public class PlayerService extends IntentService implements Player.EventListener
                 isNewSong = false;
                 Constant.isPlayed = true;
                 setBuffer(false);
-                GlobalBus.getBus().postSticky(Constant.arrayList_play.get(Constant.playPos));
+                if(isExistingPlayer){
+                    GlobalBus.getBus().postSticky(Constant.arrayOfflineTopiclineSongs.get(Constant.playPos));
+
+                }else {
+                    GlobalBus.getBus().postSticky(Constant.arrayList_play.get(Constant.playPos));
+                }
                 if (notification == null) {
                     createNoti();
                     changeImageAnimation();

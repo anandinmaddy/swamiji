@@ -43,6 +43,7 @@ import com.example.im037.sastraprakasika.utils.Selected;
 import com.example.im037.sastraprakasika.utils.TypeConvertor;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.facebook.stetho.Stetho;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -77,6 +78,8 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
     LinearLayout homeView;
     ShimmerFrameLayout mShimmerViewContainer;
     ScrollView itemViewlayout;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +89,10 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
         db = Room.databaseBuilder(getApplicationContext(),
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
         discoursesTitle = findViewById(R.id.discoursesTitle);
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle newBundle = new Bundle();
+        newBundle.putString("eee","3232");
+        mFirebaseAnalytics.logEvent("testng",newBundle);
         discourses = findViewById(R.id.discourses);
         back = findViewById(R.id.back);
 //        vedanta = findViewById(R.id.vedanta);
@@ -109,6 +115,7 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
 //                CommonMethod.changeActivity(DashBoardActivity.this, VolumeActivity.class);
 //            }
 //        });
+        CommonActivity.lecturesAPICALL(this);
         content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

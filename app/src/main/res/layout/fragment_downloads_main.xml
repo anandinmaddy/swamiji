@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         app:shimmer_duration="800"
         >
@@ -65,9 +65,11 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:visibility="visible"
         android:background="@android:color/transparent"
         android:layout_marginBottom="60dp"
         />
+
 
 
     <LinearLayout
@@ -83,7 +85,14 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
             />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nosongs"
+            android:textSize="@dimen/_15sdp"
+            android:padding="@dimen/_5sdp"
+            android:visibility="gone"
+            android:text="No Offline Songs Found !" />
 
         <LinearLayout
             android:layout_width="match_parent"

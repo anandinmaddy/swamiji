@@ -1,39 +1,19 @@
 package com.example.im037.sastraprakasika.Model;
 
+import java.io.Serializable;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-
-@Entity
-public class ListOfTopicsModels {
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    int id;
-
-    @ColumnInfo(name = "image_url")
+public class ListOfTopicsModelsOld implements Serializable {
     private String song_image;
-    @ColumnInfo(name = "parentname")
     private String song_title;
-    @ColumnInfo(name = "volume_name")
     private String song_volume;
-    @ColumnInfo(name = "description")
     private String song_description;
-    @ColumnInfo(name = "count")
     private String song_count;
-    @ColumnInfo(name = "parentid")
     private String song_parentid;
-    @ColumnInfo(name = "post_id")
     private String song_post_id;
 
 
-    public ListOfTopicsModels(){
-        return;
-    }
 
-
-    public ListOfTopicsModels(String image_url, String name, String song_volume,String song_description,String song_count,String song_parentid,String song_post_id) {
+    public ListOfTopicsModelsOld(String image_url, String name, String song_volume, String song_description, String song_count, String song_parentid, String song_post_id) {
         this.song_image = image_url;
         this.song_title = name;
         this.song_volume = song_volume;

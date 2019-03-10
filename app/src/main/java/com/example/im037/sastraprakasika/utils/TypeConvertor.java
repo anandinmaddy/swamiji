@@ -2,8 +2,10 @@ package com.example.im037.sastraprakasika.utils;
 
 import android.arch.persistence.room.TypeConverter;
 
+import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscoursesNewModel;
+import com.example.im037.sastraprakasika.Model.ListOfTopicsDetailed;
 import com.example.im037.sastraprakasika.Model.VolumeModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,6 +19,9 @@ public class TypeConvertor {
     private static Type discoursesNew = new TypeToken<List<DiscoursesNewModel>>(){}.getType();
 
     private static Type typeVolume = new TypeToken<List<VolumeModel>>(){}.getType();
+
+    private static Type typeDetailed = new TypeToken<List<TopicsDetailsFragment>>(){}.getType();
+
 
     @TypeConverter
     public static List<DiscoursesModel> stringToNestedData(String json) {
@@ -36,6 +41,11 @@ public class TypeConvertor {
     @TypeConverter
     public static List<VolumeModel> stringToNestedDataVolume(String json) {
         return gson.fromJson(json, typeVolume);
+    }
+
+    @TypeConverter
+    public static List<ListOfTopicsDetailed> stringToNestedTopicDetail(String json) {
+        return gson.fromJson(json, typeDetailed);
     }
 
 }

@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.example.im037.sastraprakasika.R;
 import com.squareup.picasso.Picasso;
@@ -24,7 +27,15 @@ public class createPlaylistAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    @Override
+    static class ViewHolderItem {
+        ImageView song_img_view;
+        TextView song_title_view;
+        TextView song_artist;
+        TextView song_dur;
+        ImageView playicon_img;
+        CheckBox checkbox;
+    }
+        @Override
     public int getCount() {
         return mediaItems.size();
     }
@@ -40,18 +51,27 @@ public class createPlaylistAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        final ViewHolderItem viewHolder;
+
         // inflate the layout for each list row
         if (view == null) {
+            viewHolder = new ViewHolderItem();
             view = LayoutInflater.from(context).
                     inflate(R.layout.activity_create_playlist_adapter, viewGroup, false);
+            viewHolder.song_img_view = (ImageView)view.findViewById(R.id.ablum_image_img);
+            viewHolder.song_title_view = (TextView)view.findViewById(R.id.album_title_txt);
+            viewHolder.song_artist = (TextView)view.findViewById(R.id.song_type_txt);
+            viewHolder.song_dur = (TextView)view.findViewById(R.id.duration_txt);
+            viewHolder.playicon_img = (ImageView)view.findViewById(R.id.play_icon_imgg);
+            viewHolder.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
+            view.setTag(viewHolder);
+        }else {
+            viewHolder = (ViewHolderItem) view.getTag();
+            notifyDataSetChanged();
         }
 
-        ImageView song_img_view = (ImageView)view.findViewById(R.id.ablum_image_img);
-        TextView song_title_view = (TextView)view.findViewById(R.id.album_title_txt);
-        TextView song_artist = (TextView)view.findViewById(R.id.song_type_txt);
-        TextView song_dur = (TextView)view.findViewById(R.id.duration_txt);
-        final ImageView playicon_img = (ImageView)view.findViewById(R.id.play_icon_imgg);
+
         // final ImageView playlist_track = (ImageView)view.findViewById(R.id.plating_track_icon);
         // TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
 
@@ -63,11 +83,32 @@ public class createPlaylistAdapter extends BaseAdapter {
 
         Picasso.get()
                 .load(items.getImageSmall())
-                .into(song_img_view);
+                .into(viewHolder.song_img_view);
 
-        song_title_view.setText(items.getTitle());
-        song_artist.setText(items.getClassName());
-        song_dur.setText(items.getDuration());
+
+
+
+        viewHolder.song_title_view.setText(items.getTitle());
+        viewHolder.song_artist.setText(items.getClassName());
+        viewHolder.song_dur.setText(items.getDuration());
+        viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Constant.playListSongs1.add(mediaItems.get(i));
+                }else {
+                    if (Constant.playListSongs1.contains(mediaItems.get(i))){
+                        Constant.playListSongs1.remove(mediaItems.get(i));
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
 
         return view;
     }

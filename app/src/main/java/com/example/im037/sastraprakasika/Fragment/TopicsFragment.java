@@ -1,5 +1,6 @@
 package com.example.im037.sastraprakasika.Fragment;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.example.im037.sastraprakasika.Adapter.TopicsRecyclerviewAdapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.VolumeDetailsFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
+import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.ListOfTopicsModels;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
@@ -34,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -46,7 +49,9 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
     public static final String TAG = TopicsFragment.class.getSimpleName();
     ShimmerFrameLayout shimmerFrameLayout;
     TextView title;
+    DiscousesAppDatabase db;
 
+    List<ListOfTopicsModels> listOfTopicsOffline = new ArrayList<>();
 
     @Nullable
     @Override
@@ -57,6 +62,8 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
 
 
         final RecyclerView topicsRecyclerview = (RecyclerView) view.findViewById(R.id.topicsRecyclerview);
+        db = Room.databaseBuilder(getActivity().getApplicationContext(),
+                DiscousesAppDatabase.class, "ListOfTopics").allowMainThreadQueries().build();
 
       //  title = getActivity().findViewById(R.id.title);
        // title.setText("My Library");
@@ -65,6 +72,30 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
         //  setRecyclerView();
 //        mostrarDatosFactura();
         System.out.println("library frag:::::");
+
+        listOfTopicsOffline = db.listOfTopicsModels().getAll();
+
+        if (listOfTopicsModels != null && listOfTopicsOffline.size() > 0){
+            shimmerFrameLayout.stopShimmer();
+            shimmerFrameLayout.setVisibility(View.GONE);
+            listOfTopicsOffline.clear();
+            listOfTopicsOffline = db.listOfTopicsModels().getAll();
+            listOfTopicsModels.addAll(listOfTopicsOffline);
+            topicsRecyclerview.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
+
+            topicsRecyclerview.setAdapter(new TopicsRecyclerviewAdapter(getContext(),listOfTopicsModels,getFragmentManager()));
+
+
+        }else {
+            callwebservice(topicsRecyclerview);
+        }
+
+        SetAboutDetail();
+
+        return view;
+    }
+
+    private void callwebservice(final RecyclerView topicsRecyclerview) {
         new WebServices(getActivity(), TAG).getlibrary("52", "topics", new VolleyResponseListerner() {
             boolean isResponse = false;
             @Override
@@ -77,6 +108,7 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
                     isResponse = true;
                     SpaceItemdecoration decoration = new SpaceItemdecoration(16);
                     topicsRecyclerview.addItemDecoration(decoration);
+                    db.listOfTopicsModels().deleteAll();
                     for (int i = 0; i < response.optJSONArray("data").length(); i++) {
                         listOfTopicsModels.add(new ListOfTopicsModels(
                                 response.optJSONArray("data").optJSONObject(i).optString("image_url"),
@@ -86,13 +118,26 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
                                 response.optJSONArray("data").optJSONObject(i).optString("count"),
                                 response.optJSONArray("data").optJSONObject(i).optString("parentid"),
                                 response.optJSONArray("data").optJSONObject(i).optString("post_id")
-                        ));
+ ));
+                                ListOfTopicsModels listOfTopicsModels = new ListOfTopicsModels();
+                                listOfTopicsModels.setSong_image(response.optJSONArray("data").optJSONObject(i).optString("image_url"));
+                                listOfTopicsModels.setSong_title(response.optJSONArray("data").optJSONObject(i).optString("parentname"));
+                                listOfTopicsModels.setSong_volume(response.optJSONArray("data").optJSONObject(i).optString("volume_name"));
+                                listOfTopicsModels.setSong_description(response.optJSONArray("data").optJSONObject(i).optString("description"));
+                                listOfTopicsModels.setSong_count(response.optJSONArray("data").optJSONObject(i).optString("count"));
+                                listOfTopicsModels.setSong_parentid(response.optJSONArray("data").optJSONObject(i).optString("parentid"));
+                                listOfTopicsModels.setSong_post_id(response.optJSONArray("data").optJSONObject(i).optString("post_id"));
+
+
+                               db.listOfTopicsModels().insertAll(listOfTopicsModels);
+
+
                     }
                     topicsRecyclerview.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
 
                     topicsRecyclerview.setAdapter(new TopicsRecyclerviewAdapter(getContext(),listOfTopicsModels,getFragmentManager()));
 
-                        final FragmentActivity c = getActivity();
+                    final FragmentActivity c = getActivity();
 
 
 
@@ -108,9 +153,6 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
             }
         });
 
-        SetAboutDetail();
-
-        return view;
     }
 
     public void SetAboutDetail() {

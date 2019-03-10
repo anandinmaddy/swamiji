@@ -86,8 +86,8 @@ public class Topics_detailed_items extends AppCompatActivity{
 
                         ));
                     }
-                    TopicsDetailedAdapter topicsDetailedAdapter = new TopicsDetailedAdapter(listOfTopicsDetaileds,getApplicationContext());
-                    listView.setAdapter(topicsDetailedAdapter);
+                  /*  TopicsDetailedAdapter topicsDetailedAdapter = new TopicsDetailedAdapter(listOfTopicsDetaileds,getApplicationContext());
+                    listView.setAdapter(topicsDetailedAdapter);*/
 //                    topicsRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false));
 //                    topicsRecyclerview.setAdapter(new TopicsRecyclerviewAdapter(getActivity(), listOfTopicsModels,itopice_listener));
 

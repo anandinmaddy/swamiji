@@ -1,18 +1,14 @@
 package com.example.im037.sastraprakasika.Adapter;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.StrictMode;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,50 +16,59 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.example.im037.sastraprakasika.Common.CommonActivity;
-import com.example.im037.sastraprakasika.Common.CommonMethod;
-import com.example.im037.sastraprakasika.Model.ListOfLecturesListDetails;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.example.im037.sastraprakasika.OnlinePlayer.PlayerService;
 import com.example.im037.sastraprakasika.R;
-import com.google.android.gms.common.internal.service.Common;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Logger;
 
 public class Lectures_audio_list_adapter extends BaseAdapter {
 
 //    ArrayList<ListOfLecturesListDetails> lect_det;
-    List<ItemSong> mediaItems;
+   // List<ItemSong> mediaItems;
+    ArrayList<ItemSong> mediaItems;
+    boolean downloadStatus = false;
     Context context;
     int playerPosition;
+    int downloadCount = 0;
+    HashMap<String,Integer> hashMap= new HashMap<>();
 
-    public Lectures_audio_list_adapter(List<ItemSong> media_det, Context context) {
-        this.mediaItems = media_det;
-        this.context = context;
+    private IProcessFilter mCallback;
+    int lastposition = 0;
+
+
+    public interface IProcessFilter {
+        void onProcessFilter(boolean b);
     }
 
-    @Override
+
+    public Lectures_audio_list_adapter(ArrayList<ItemSong> media_det, Context context,IProcessFilter mCallback) {
+        this.mediaItems = media_det;
+        this.context = context;
+        this.mCallback = mCallback;
+
+    }
+
+
     public int getCount() {
         return mediaItems.size();
     }
+
 
     @Override
     public Object getItem(int i) {
@@ -84,6 +89,10 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         ImageView playicon_img;
         ImageView playlist_track;
         ImageView downloadBtn;
+        RelativeLayout loadingDownload;
+     //   MaterialProgressBar button_progress_2;
+   //     CircleProgressView circleProgressView;
+        ProgressBar circularProgressbar;
     }
 
 
@@ -95,6 +104,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
 
         if (view == null) {
             viewHolder = new ViewHolderItem();
+
             view = LayoutInflater.from(context).
                     inflate(R.layout.lectures_audio_list_items, viewGroup, false);
 
@@ -105,16 +115,28 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
             viewHolder.playicon_img = (ImageView)view.findViewById(R.id.play_icon);
             viewHolder.playlist_track = (ImageView)view.findViewById(R.id.plating_track_icon);
             viewHolder.downloadBtn = (ImageView) view.findViewById(R.id.iv_music_downloads);
-            viewHolder.playicon_img.setVisibility( View.VISIBLE );
-            viewHolder.playlist_track.setVisibility( View.GONE );
-
+           // viewHolder.circleProgressView = (CircleProgressView) view.findViewById(R.id.circleView);
+         //   viewHolder.button_progress_2 = (MaterialProgressBar) view.findViewById(R.id.downloadProgressBar);
+            viewHolder.loadingDownload = (RelativeLayout) view.findViewById(R.id.rl_music_loading);
+            viewHolder.circularProgressbar = (ProgressBar) view.findViewById(R.id.progressBar);
             view.setTag(viewHolder);
+
         }else{
             viewHolder = (ViewHolderItem) view.getTag();
+            notifyDataSetChanged();
         }
 
+        viewHolder.downloadBtn.setTag(i);
 
 
+        if((Integer) viewHolder.downloadBtn.getTag() != null && (Integer) viewHolder.downloadBtn.getTag() == i  && downloadStatus == true){
+            viewHolder.downloadBtn.setVisibility(View.GONE);
+        }else if((Integer) viewHolder.downloadBtn.getTag() != null && (Integer) viewHolder.downloadBtn.getTag() == i && !mediaItems.get(i).getDownloads().isEmpty()){
+            viewHolder.downloadBtn.setVisibility(View.GONE);
+        }else  {
+            viewHolder.downloadBtn.setVisibility(View.VISIBLE);
+
+        }
    //     TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
 
 
@@ -122,6 +144,8 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+           //     viewHolder.downloadBtn.setTag(i);
+             //   viewHolder.circularProgressbar.setTag(i);
                 boolean isDownloaded = readFileNames(mediaItems.get(i).getTitle().toString());
                 if (isDownloaded){
                     Toast.makeText(context, "Audio already downloaded, kindly check Downloads", Toast.LENGTH_SHORT).show();
@@ -136,7 +160,22 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                                 // The dialog is automatically dismissed when a dialog button is clicked.
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        new DownloadFileAsync().execute(mediaItems.get(i).getUrl(),mediaItems.get(i).getTitle());
+                                  /*      if(viewHolder.downloadBtn.getTag().equals(i)){
+                                            viewHolder.downloadBtn.setVisibility(View.GONE);
+                                            viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
+                                        }*/
+                                     //   viewHolder.circularProgressbar.setIndeterminateDrawable(new IndeterminateCircularProgressDrawable(context));
+                                        viewHolder.downloadBtn.setVisibility(View.GONE);
+                                        viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
+                                        downloadStatus = true;
+                                        Constant.downloadPosition = i;
+                                        downloadCount = downloadCount +1;
+                                        new DownloadFileAsync(viewHolder.circularProgressbar,viewHolder.downloadBtn,i).execute(mediaItems.get(i).getUrl(),mediaItems.get(i).getTitle(),String.valueOf(i));
+                                /*        if(viewHolder.downloadBtn.getTag().equals(i)) {
+                                            viewHolder.downloadBtn.setVisibility(View.VISIBLE);
+                                            viewHolder.circularProgressbar.setVisibility(View.GONE);
+                                        }*/
+
                                     }
                                 })
 
@@ -145,8 +184,22 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
                     }else{
-                        new DownloadFileAsync().execute(mediaItems.get(i).getUrl(),mediaItems.get(i).getTitle());
+                   /*     if(viewHolder.downloadBtn.getTag().equals(i)) {
 
+                            viewHolder.downloadBtn.setVisibility(View.GONE);
+                            viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
+                        }*/
+                        viewHolder.downloadBtn.setVisibility(View.GONE);
+                        viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
+                        Constant.downloadPosition = i;
+                        downloadCount = downloadCount +1;
+
+                        new DownloadFileAsync(viewHolder.circularProgressbar,viewHolder.downloadBtn,i).execute(mediaItems.get(i).getUrl(),mediaItems.get(i).getTitle(),String.valueOf(i));
+                /*        if(viewHolder.downloadBtn.getTag().equals(i)) {
+
+                            viewHolder.downloadBtn.setVisibility(View.VISIBLE);
+                            viewHolder.circularProgressbar.setVisibility(View.GONE);
+                        }*/
                     }
                 }
 
@@ -161,14 +214,26 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         }
 
 
-        viewHolder.playicon_img.setVisibility( View.VISIBLE );
-        viewHolder.playlist_track.setVisibility( View.GONE );
-
       //  Glide.with(context).asGif().load(R.drawable.playing).into(playlist_track);
 
         if (PlayerService.getIsPlayling() && Constant.playPos == i){
-            viewHolder.playicon_img.setVisibility( View.GONE );
-            viewHolder.playlist_track.setVisibility( View.VISIBLE );
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                viewHolder.playicon_img.setImageResource(android.R.color.transparent);
+                viewHolder.playicon_img.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause_grey_web));
+            } else {
+                viewHolder.playicon_img.setImageResource(android.R.color.transparent);
+                viewHolder.playicon_img.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_pause_grey_web));
+            }
+
+          //  viewHolder.playlist_track.setVisibility( View.VISIBLE );
+        }else{
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                viewHolder.playicon_img.setImageResource(android.R.color.transparent);
+                viewHolder.playicon_img.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play_grey_web));
+            } else {
+                viewHolder.playicon_img.setImageResource(android.R.color.transparent);
+                viewHolder.playicon_img.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_play_grey_web));
+            }
         }
 
 
@@ -189,27 +254,46 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
             System.out.println(e);
         }*/
 
+      final int lastPlayed = 0;
+
     //   song_img_view.setImageBitmap(image);
         viewHolder.playicon_img.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
               Constant.playPos = i;
-
-                  viewHolder.playicon_img.setVisibility( View.GONE );
-                  viewHolder.playlist_track.setVisibility( View.VISIBLE );
+              Constant.lastPosition = i;
+              //    viewHolder.playicon_img.setVisibility( View.GONE );
+                //  viewHolder.playlist_track.setVisibility( View.VISIBLE );
                   playerPosition = i;
+              Constant.arrayList_play.clear();
+              Constant.arrayList_play.addAll(Constant.arrayListLectureslineSongs);
 
               Constant.isOnline = false;
-
+              mCallback.onProcessFilter(false);
+              Constant.isFromPage = "lecture";
               Intent intent = new Intent(context, PlayerService.class);
               intent.putExtra("from","lecture");
-              intent.setAction(PlayerService.ACTION_PLAY);
-              context.getApplicationContext().startService(intent);
+             // intent.setAction(PlayerService.ACTION_PLAY);
+          //    context.getApplicationContext().startService(intent);
+
+              if (Constant.isPlayed && Constant.lastPlayed == i) {
+                  viewHolder.playicon_img.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play_grey_web));
+                  intent.setAction(PlayerService.ACTION_TOGGLE);
+                  context.getApplicationContext().startService(intent);
+              } else {
+                  if (!Constant.isOnline) {
+                      Constant.lastPlayed = i;
+                      viewHolder.playicon_img.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_pause_grey_web));
+                      intent.setAction(PlayerService.ACTION_PLAY);
+                      context.getApplicationContext().startService(intent);
+                  }
+              }
+
           }
 
        });
 
-        viewHolder.song_img_view.setImageResource(R.drawable.tamil);
+       // viewHolder.song_img_view.setImageResource(R.drawable.tamil);
 
 
 
@@ -226,7 +310,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
             File[] files = directory.listFiles();
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
-                    String result = files[i].getName().replace(".mp3","");
+                    String result = files[i].getName().replace(".swami","");
                     downloadSongs.add(result);
                 }
             }
@@ -247,12 +331,16 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
     private boolean isMobiledata(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
-
-        if (info.getTypeName().equalsIgnoreCase("WIFI")){
-            return false;
-        }else {
-            return true;
+        if(info != null){
+            if (info.getTypeName().equalsIgnoreCase("WIFI")){
+                return false;
+            }else {
+                return true;
+            }
+        }else{
+            Toast.makeText(context, "Try in online!", Toast.LENGTH_SHORT).show();
         }
+        return false;
     }
 
     private void downloadMp3(String url, String title) {
@@ -274,54 +362,99 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
 
     class DownloadFileAsync extends AsyncTask<String, String, String> {
         public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-        private ProgressDialog mProgressDialog;
+        ProgressBar progressBar;
+        ImageView downloadbtn;
+        int progressVal;
+        public DownloadFileAsync(ProgressBar circularProgressbar,ImageView downloadBtn,int progress) {
+            this.progressBar = circularProgressbar;
+            this.downloadbtn = downloadBtn;
+            this.progressVal = progress;
+        }
+
+
+        //  private ProgressDialog mProgressDialog;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            onCreateDialog(DIALOG_DOWNLOAD_PROGRESS);
+            if (downloadbtn.getTag().equals(progressVal)){
+                downloadbtn.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+
+            }
+         //viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
+          //  onCreateDialog(DIALOG_DOWNLOAD_PROGRESS);
         }
 
         @Override
         protected String doInBackground(String... aurl) {
             int count;
+
             try {
+
                 URL url = new URL(aurl[0]);
                 String title = aurl[1];
                 URLConnection conexion = url.openConnection();
                 conexion.connect();
                 int lenghtOfFile = conexion.getContentLength();
                 Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
-                InputStream input = new BufferedInputStream(url.openStream());
+                InputStream input = new BufferedInputStream(
+                        url.openStream(), 8192);
                 OutputStream output = new FileOutputStream(setFileName(title));
-                byte data[] = new byte[1024];
+                byte data[] = new byte[4096];
                 long total = 0;
                 while ((count = input.read(data)) != -1) {
                     total += count;
                     publishProgress(""+(int)((total*100)/lenghtOfFile));
+
                     output.write(data, 0, count);
                 }
 
                 output.flush();
                 output.close();
                 input.close();
+                Toast.makeText(context, "Download completed", Toast.LENGTH_SHORT).show();
+
             } catch (Exception e) {
                 e.printStackTrace();
-                mProgressDialog.dismiss();
+              //  mProgressDialog.dismiss();
 
             }
-            return null;
+            return "done";
         }
 
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC",progress[0]);
-            mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+            if (progress.length > 1){
+                Log.d("ANDRO_ASYNC_____",progress[1]);
+            }
+
+            super.onProgressUpdate();
+            if (downloadbtn.getTag().equals(progressVal)) {
+
+                progressBar.setProgress(Integer.parseInt(progress[0]));
+                downloadbtn.setVisibility(View.GONE);
+            }
+
+//            viewHolder.circularProgressbar.setProgress(Integer.parseInt(progress[0]));
+         //   mProgressDialog.setProgress(Integer.parseInt(progress[0]));
         }
 
         @Override
         protected void onPostExecute(String unused) {
-            Toast.makeText(context, "Download completed", Toast.LENGTH_SHORT).show();
 
-            mProgressDialog.dismiss();
+            downloadCount = downloadCount -1 ;
+
+            if (downloadCount == 0){
+                mCallback.onProcessFilter(true);
+            }
+         //
+            if (downloadbtn.getTag().equals(progressVal)){
+                downloadbtn.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            downloadStatus = false;
+            //   mProgressDialog.dismiss();
         }
 
 
@@ -329,12 +462,12 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         protected Dialog onCreateDialog(int id) {
             switch (id) {
                 case DIALOG_DOWNLOAD_PROGRESS:
-                    mProgressDialog = new ProgressDialog(context);
+            /*        mProgressDialog = new ProgressDialog(context);
                     mProgressDialog.setMessage("Download in progress..");
                     mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                     mProgressDialog.setCancelable(true);
                     mProgressDialog.show();
-                    return mProgressDialog;
+                    return mProgressDialog;*/
                 default:
                     return null;
             }
@@ -345,7 +478,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                 if (!folder.exists())
                     folder.mkdirs();
 
-            File file = new File(folder, title+".mp3");
+            File file = new File(folder, title+".swami");
 
 
             return file;
@@ -355,6 +488,9 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
 
     }
 
+    private void setValues(String[] progress) {
+
+    }
 
 
 }
