@@ -83,8 +83,10 @@ public class ClickEdit_Activity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView_edit.setLayoutManager(linearLayoutManager);
         // call the constructor of CustomAdapter to send the reference and data to Adapter
+/*
         Adapter_playlist_edit adapter_playlist_next = new Adapter_playlist_edit(titleImages_next,img_song_next,class_type,dur,getApplicationContext());
         recyclerView_edit.setAdapter(adapter_playlist_next); // set the Adapter to RecyclerView
+*/
 
     }
 

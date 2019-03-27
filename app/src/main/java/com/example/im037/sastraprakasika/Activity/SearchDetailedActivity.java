@@ -96,8 +96,8 @@ public class SearchDetailedActivity extends Activity {
 //                    Picasso.get()
 //                .load(search_lists.get(0).getImage_url())
 //                .into(imageView);
-                    Searchdetailed_adapter searchdetailed_adapter = new Searchdetailed_adapter(getApplicationContext(),search_lists);
-                    listView.setAdapter(searchdetailed_adapter);
+              /*      Searchdetailed_adapter searchdetailed_adapter = new Searchdetailed_adapter(getApplicationContext(),search_lists);
+                    listView.setAdapter(searchdetailed_adapter);*/
 
                 } else if (response.getString("resultcode").equalsIgnoreCase("400")) {
                     Toast.makeText(getApplicationContext(),"result code not access",Toast.LENGTH_SHORT).show();

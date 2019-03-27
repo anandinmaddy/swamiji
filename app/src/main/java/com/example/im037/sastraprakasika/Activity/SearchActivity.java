@@ -66,7 +66,7 @@ public class SearchActivity extends CommonActivity implements AdapterView.OnItem
         back.setVisibility(View.GONE);
         ButterKnife.bind(this);
         searchRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SongRecyclerViewAdapter(SearchActivity.this, arrayList,type);
+        //adapter = new SongRecyclerViewAdapter(SearchActivity.this, arrayList,type);
         searchRecyclerview.setAdapter(adapter);
         init();
 
@@ -249,7 +249,7 @@ public class SearchActivity extends CommonActivity implements AdapterView.OnItem
 
                     }
 
-                    adapter = new SongRecyclerViewAdapter(SearchActivity.this, arrayList,type);
+                  //  adapter = new SongRecyclerViewAdapter(SearchActivity.this, arrayList,type,getFragmentManager());
                     searchRecyclerview.setAdapter(adapter);
                 }else{
                     CommonMethod.showSnackbar(searchSpin,response.optString("resultmessage"),SearchActivity.this);

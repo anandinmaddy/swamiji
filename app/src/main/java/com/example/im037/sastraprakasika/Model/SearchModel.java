@@ -1,15 +1,33 @@
 package com.example.im037.sastraprakasika.Model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
-public class SearchModel implements Serializable{
+@Entity
+public class SearchModel{
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    int id;
+
+    @ColumnInfo(name = "parentid")
     private String parentid;
+    @ColumnInfo(name = "image_url")
     private String image_url;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "subid")
     private String subid;
+    @ColumnInfo(name = "type")
     private String type;
+    @ColumnInfo(name = "time")
     private String time;
+    @ColumnInfo(name = "post_id")
     private String post_id;
+    @ColumnInfo(name = "mp3")
     private String mp3;
 
 

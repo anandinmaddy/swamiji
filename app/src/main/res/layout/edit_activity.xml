@@ -12,6 +12,7 @@
         android:layout_height="?android:actionBarSize"
         android:background="@color/white"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:weightSum="3">
 
@@ -59,19 +60,30 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="Cancel"
+
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-
             android:textSize="18dp"
             android:textColor="@color/orange"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/deleteplaylist"
+            android:layout_marginLeft="110dp"
+            android:layout_gravity="center"
+            android:background="@drawable/delete_icon_new" />
+
         <TextView
             android:id="@+id/doneedit"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
+            android:gravity="end"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:text="Done"
             android:textSize="18dp"
+
             android:textAlignment="viewEnd"
             android:layout_marginRight="15dp"
             android:textColor="@color/orange"

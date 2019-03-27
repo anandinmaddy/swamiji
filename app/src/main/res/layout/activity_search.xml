@@ -47,19 +47,39 @@
 
 
     </LinearLayout>
-    <View
-        android:id="@+id/view_primary1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/primary_noti_content_layout"
-        android:background="@color/mild_grey" />
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/searchRecyclerview"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayingSong_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        android:gravity="center"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/view_primary1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/primary_noti_content_layout"
+            android:background="@color/mild_grey" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/noresult"
+        android:textSize="@dimen/_15sdp"
+        android:padding="@dimen/_5sdp"
+        android:visibility="gone"
+        android:text="No Result Found !" />
+
+    </LinearLayout>
     <!--<SearchView-->
     <!--android:layout_marginLeft="40dp"-->
     <!--android:layout_marginTop="12dp"-->

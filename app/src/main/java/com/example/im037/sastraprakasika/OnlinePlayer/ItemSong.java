@@ -45,6 +45,9 @@ public class ItemSong {
 	@ColumnInfo(name = "totalRate")
 	String totalRate="";
 
+	@ColumnInfo(name = "track_id")
+	String trackId="";
+
 	@ColumnInfo(name = "averageRating")
 	String averageRating="0";
 
@@ -120,6 +123,14 @@ public class ItemSong {
 		this.image = image;
 	}
 
+	public String getTrackId() {
+		return trackId;
+	}
+
+	public void setTrackId(String trackId) {
+		this.trackId = trackId;
+	}
+
 	public ItemSong(int id, String catId, String catName, String artist, String url, String imageBig, String imageSmall, String title, String Duration, String Description, String totalRate, String averageRating, String views, String downloads,String cname) {
 		this.id = id;
 		this.catId = catId;
@@ -136,6 +147,7 @@ public class ItemSong {
 		this.views = views;
 		this.downloads = downloads;
 		this.className = cname;
+
 	}
 
 	public ItemSong(int id, String artist, String url, String image, String title, String Duration, String Description) {

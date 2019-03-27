@@ -51,6 +51,7 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:minHeight="@dimen/_25sdp"
         android:paddingLeft="@dimen/_10sdp"
+        android:visibility="gone"
         android:text="Downloaded Lectures"
         android:textColor="@color/black"
         android:textSize="@dimen/_15sdp"

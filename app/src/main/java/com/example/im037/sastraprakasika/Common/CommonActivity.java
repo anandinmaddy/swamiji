@@ -1563,6 +1563,8 @@ public class CommonActivity extends AppCompatActivity  {
                                         itemSong.setTitle(jsonObject.optString("title"));
                                         itemSong.setDuration(jsonObject.optString("time"));
                                         itemSong.setClassName(jsonObject.optString("classname"));
+                                        itemSong.setTrackId(jsonObject.optString("track_id"));
+
                                         itemSong.setImageBig(image_url);
                                         itemSong.setImageSmall(image_url);
                                         String isOfflinevideo = readFileNames(jsonObject.optString("title"));

@@ -42,6 +42,7 @@ public class MyLibraryFragment extends Fragment  {
     //TextView commonactivity_titleText;
     private TabLayout tablayout;
     private ViewPager viewpager;
+    ShimmerFrameLayout shimmerFrameLayout;
     private  String title[]={"Topics","Lectures","Download","Playlists"};
  //   private TextView titleView;
     private FragmentAdapter adapter;
@@ -49,7 +50,6 @@ public class MyLibraryFragment extends Fragment  {
     RelativeLayout common_dragview;
     View common_view;
     FrameLayout common_shadow;
-    ShimmerFrameLayout shimmerFrameLayout;
     TextView titleView;
     Activity activity;
     Context context;
@@ -77,6 +77,8 @@ public class MyLibraryFragment extends Fragment  {
             passvalue = getArguments().getString( "from" );
         }
 
+        shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.startShimmer();
         back=(ImageView)getActivity().findViewById(R.id.back);
         tablayout = view.findViewById(R.id.tablayout);
       //  common_view=(View)view.findViewById(R.id.viewId);
@@ -94,6 +96,9 @@ public class MyLibraryFragment extends Fragment  {
         titleView.setText("My Library");
         commonactivity_linearlayout.setBackgroundColor(getResources().getColor(R.color.white));
         viewpager.setAdapter(adapter);
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+
         if(Constant.currentTab == 0){
             viewpager.setCurrentItem( 0 );
         }else if(Constant.currentTab == 1) {

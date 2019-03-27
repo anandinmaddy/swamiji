@@ -2,7 +2,11 @@ package com.example.im037.sastraprakasika.Adapter;
 
 
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.SearchDetailedActivity;
+import com.example.im037.sastraprakasika.Activity.SearchDetailedFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.PlayListDetailFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.SearchPageFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
+import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.SearchModel;
 import com.example.im037.sastraprakasika.R;
 
@@ -24,11 +34,15 @@ public class SongRecyclerViewAdapter extends RecyclerView.Adapter<SongRecyclerVi
     private Activity context;
     private ArrayList<SearchModel> arrayList;
     String type;
+    DiscousesAppDatabase db;
+    FragmentManager fragmentManager;
 
-    public SongRecyclerViewAdapter(Activity context, ArrayList<SearchModel> arrayList,String type) {
+
+    public SongRecyclerViewAdapter(Activity context, ArrayList<SearchModel> arrayList,String type, FragmentManager fragmentManager) {
         this.context = context;
         this.arrayList = arrayList;
         this.type = type;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -38,18 +52,28 @@ public class SongRecyclerViewAdapter extends RecyclerView.Adapter<SongRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        db = Room.databaseBuilder(context,
+                DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
 
         holder.searchTitle.setText(arrayList.get(position).getTitle());
         holder.imageicon.setImageResource(R.drawable.righticonsearch);
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+/*
                 SearchModel search_det = arrayList.get(position);
                 Intent intent = new Intent(context, SearchDetailedActivity.class);
                 intent.putExtra( "model",search_det );
                 intent.putExtra( "TYPE",type );
-                context.startActivity( intent );
+                context.startActivity( intent );*/
+                Bundle bundle = new Bundle();
+                bundle.putString("from","search");
+                SearchDetailedFragment fragment2 = new SearchDetailedFragment();
+                fragment2.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.commit();
 
             }
         } );

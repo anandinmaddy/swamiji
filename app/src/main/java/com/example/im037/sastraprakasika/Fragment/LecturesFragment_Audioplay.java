@@ -305,8 +305,12 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
      //   listView_song.smoothScrollToPosition(Constant.lastPosition);
 
+        try {
+            listView_song.setAdapter(lectures_audio_list_adapter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        listView_song.setAdapter(lectures_audio_list_adapter);
         listView_song.setSelection(Constant.downloadPosition);
 
 
@@ -676,6 +680,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                                         itemSong.setUrl(jsonObject.optString("mp3"));
                                         itemSong.setTitle(jsonObject.optString("title"));
                                         itemSong.setDuration(jsonObject.optString("time"));
+                                        itemSong.setTrackId(jsonObject.optString("track_id"));
                                         itemSong.setClassName(jsonObject.optString("classname"));
                                         itemSong.setImageBig(image_url);
                                         itemSong.setImageSmall(image_url);

@@ -32,9 +32,11 @@ import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.ItemOffSet;
+import com.example.im037.sastraprakasika.Model.PlayList;
 import com.example.im037.sastraprakasika.Model.VolumeModel;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
+import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
@@ -150,9 +152,39 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
         }else{
             callWebservice();
 
+
         }
+        callPlayList();
 
         SetAboutDetail();
+
+    }
+
+    private void callPlayList() {
+
+            new WebServices(this.getApplicationContext(), TAG).getPlayLists(Session.getInstance(this.getApplicationContext(), TAG).getUserId(),  new VolleyResponseListerner() {
+                List<PlayList> playLists ;
+
+                @Override
+                public void onResponse(JSONObject response) throws JSONException {
+                    if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                        db.playListDao().deleteAll();
+                        playLists = TypeConvertor.stringToNestedDataPlayList(response.optJSONArray("data").toString());
+                        try {
+                            for (PlayList playList : playLists) {
+                                db.playListDao().insertAll(playList);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onError(String message, String title) {          }
+            });
+
 
     }
 

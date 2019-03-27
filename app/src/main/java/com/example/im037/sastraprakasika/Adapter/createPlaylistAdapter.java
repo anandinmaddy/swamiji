@@ -25,6 +25,7 @@ public class createPlaylistAdapter extends BaseAdapter {
     public createPlaylistAdapter(ArrayList<ItemSong> media_det, Context context) {
         this.mediaItems = media_det;
         this.context = context;
+        Constant.playListSongs1.clear();
     }
 
     static class ViewHolderItem {
@@ -68,13 +69,18 @@ public class createPlaylistAdapter extends BaseAdapter {
             view.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolderItem) view.getTag();
-            notifyDataSetChanged();
+        //    notifyDataSetChanged();
         }
 
+        viewHolder.checkbox.setTag(i);
 
         // final ImageView playlist_track = (ImageView)view.findViewById(R.id.plating_track_icon);
         // TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
-
+        if(viewHolder.checkbox.getTag().equals(i) && viewHolder.checkbox.isChecked()){
+            viewHolder.checkbox.setButtonDrawable(R.drawable.add_orange);
+        }else{
+            viewHolder.checkbox.setButtonDrawable(R.drawable.add_grey);
+        }
 
 
 
@@ -95,8 +101,14 @@ public class createPlaylistAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
+                    if (viewHolder.checkbox.getTag().equals(i)){
+                        viewHolder.checkbox.setButtonDrawable(R.drawable.add_orange);
+                        viewHolder.checkbox.setChecked(isChecked);
+                    }
                     Constant.playListSongs1.add(mediaItems.get(i));
                 }else {
+                        viewHolder.checkbox.setButtonDrawable(R.drawable.add_grey);
+                        viewHolder.checkbox.setChecked(false);
                     if (Constant.playListSongs1.contains(mediaItems.get(i))){
                         Constant.playListSongs1.remove(mediaItems.get(i));
                     }

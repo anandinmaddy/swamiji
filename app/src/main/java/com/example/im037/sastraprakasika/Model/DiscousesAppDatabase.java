@@ -8,7 +8,7 @@ import android.arch.persistence.room.RoomDatabase;
 import com.example.im037.sastraprakasika.Entity.ItemSongDao;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 
-@Database(entities = {DiscoursesModel.class,VolumeModel.class,DiscoursesNewModel.class,ItemSong.class,ListOfTopicsModels.class,ListOfTopicsDetailed.class},exportSchema = false,version = 1)
+@Database(entities = {DiscoursesModel.class,VolumeModel.class,DiscoursesNewModel.class,ItemSong.class,ListOfTopicsModels.class,ListOfTopicsDetailed.class,PlayList.class,SearchModel.class},exportSchema = true,version = 1)
 public abstract class DiscousesAppDatabase extends RoomDatabase {
     public abstract DiscoursesModelDao userDao();
 
@@ -21,4 +21,9 @@ public abstract class DiscousesAppDatabase extends RoomDatabase {
     public abstract ListOfTopicsDao listOfTopicsModels();
 
     public abstract ListOfTopicsDetailedDao listOfTopicsDetailed();
+
+    public abstract PlayListDao playListDao();
+
+    public abstract SearchModelDao searchModelDao();
+
 }

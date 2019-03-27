@@ -13,6 +13,7 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:minHeight="@dimen/_25sdp"
         android:paddingLeft="@dimen/_10sdp"
+        android:visibility="gone"
         android:text="@string/topics_title_text"
         android:textColor="@color/black"
         android:textSize="@dimen/_15sdp"

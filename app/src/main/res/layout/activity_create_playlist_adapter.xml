@@ -111,7 +111,7 @@
                 android:id="@+id/checkbox"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:button="@drawable/checkbox"
+                android:button="@drawable/add_grey"
                 android:layout_weight="0.2"/>
         </LinearLayout>
         <View

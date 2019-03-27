@@ -380,6 +380,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
                                             itemSong.setUrl(jsonObject.optString("mp3"));
                                             itemSong.setTitle(jsonObject.optString("title"));
                                             itemSong.setDuration(jsonObject.optString("time"));
+                                            itemSong.setTrackId(jsonObject.optString("track_id"));
                                             itemSong.setClassName(jsonObject.optString("classname"));
                                             itemSong.setImageBig(image_url);
                                             itemSong.setImageSmall(image_url);

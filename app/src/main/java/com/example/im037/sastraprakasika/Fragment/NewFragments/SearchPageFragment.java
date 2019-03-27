@@ -1,5 +1,6 @@
 package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.example.im037.sastraprakasika.Activity.SearchActivity;
 import com.example.im037.sastraprakasika.Adapter.SongRecyclerViewAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.SearchModel;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
@@ -62,6 +64,8 @@ public class SearchPageFragment extends Fragment {
     RecyclerView searchRecyclerview;
     Spinner searchSpin;
     EditText searchBar;
+    static DiscousesAppDatabase db;
+
 
     //  @BindView( R.id.image_close )
 //            ImageView imageView_close;
@@ -73,6 +77,7 @@ public class SearchPageFragment extends Fragment {
     ImageView back;
     LinearLayout main_layout;
     TextView titleView;
+    TextView noSearchResult;
     private OnFragmentInteractionListener mListener;
 
     public SearchPageFragment() {
@@ -88,13 +93,12 @@ public class SearchPageFragment extends Fragment {
      * @return A new instance of fragment SearchPageFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SearchPageFragment newInstance(String param1, String param2) {
+    public SearchPageFragment newInstance(String param1, String param2) {
         SearchPageFragment fragment = new SearchPageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
-
 
 
         return fragment;
@@ -118,15 +122,19 @@ public class SearchPageFragment extends Fragment {
         CommonActivity.setSelected( Selected.SEARCH);
         titleView = (TextView) getActivity().findViewById(R.id.title);
 
+        db = Room.databaseBuilder(getActivity().getApplicationContext(),
+                DiscousesAppDatabase.class, "ListOfTopics").allowMainThreadQueries().build();
+
         searchRecyclerview = (RecyclerView) view.findViewById(R.id.searchRecyclerview) ;
         searchSpin = (Spinner) view.findViewById(R.id.search_spin);
         searchBar = (EditText) view.findViewById(R.id.search_bar);
         back = getActivity().findViewById(R.id.back);
         main_layout = view.findViewById(R.id.mainSearch);
+        noSearchResult = view.findViewById(R.id.noresult);
         back.setVisibility(View.GONE);
 //        ButterKnife.bind(getActivity());
         searchRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type);
+        adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
         searchRecyclerview.setAdapter(adapter);
         init();
 
@@ -177,6 +185,7 @@ public class SearchPageFragment extends Fragment {
         // attaching data adapter to spinner
         searchSpin.setAdapter(dataAdapter);
 
+        type = searchSpin.getSelectedItem().toString().toLowerCase();
         return view;
     }
 
@@ -253,6 +262,8 @@ public class SearchPageFragment extends Fragment {
                 String text = searchBar.getText().toString();
                 int maxChar = 2;
                 if (text.length() > maxChar) {
+                    noSearchResult.setVisibility(View.VISIBLE);
+                    noSearchResult.setText("Searching. Please wait...");
                     showSearchData();
                 } else if (text.length() == 0) {
                     arrayList.clear();
@@ -282,11 +293,14 @@ public class SearchPageFragment extends Fragment {
         new WebServices(getActivity(), TAG).setSearchUpdate(Session.getInstance(getActivity(), TAG).getUserId(),type, searchBar.getText().toString(), new VolleyResponseListerner() {
             @Override
             public void onResponse(JSONObject response) throws JSONException {
+                noSearchResult.setVisibility(View.GONE);
+                searchRecyclerview.setVisibility(View.VISIBLE);
                 System.out.println("search response:::: "+response);
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     arrayList.clear();
                     JSONArray jsonArray = response.optJSONArray("data");
                     for (int i = 0; i < jsonArray.length(); i++) {
+                        db.searchModelDao().deleteAll();
                         SearchModel model = new SearchModel();
 
 
@@ -299,13 +313,23 @@ public class SearchPageFragment extends Fragment {
                         // model.setImage_url(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("image_url"));*/
                         arrayList.add(model);
 
-
+                        db.searchModelDao().insertAll(model);
+                    }
+                    if (arrayList.size() > 0 ){
+                        noSearchResult.setVisibility(View.GONE);
+                        searchRecyclerview.setVisibility(View.VISIBLE);
+                        adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
+                        searchRecyclerview.setAdapter(adapter);
+                    }else {
+                        searchRecyclerview.setVisibility(View.GONE);
+                        noSearchResult.setVisibility(View.VISIBLE);
                     }
 
-                    adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type);
-                    searchRecyclerview.setAdapter(adapter);
                 }else{
-                    CommonMethod.showSnackbar(searchSpin,response.optString("resultmessage"),getActivity());
+                    searchRecyclerview.setVisibility(View.GONE);
+                    noSearchResult.setVisibility(View.VISIBLE);
+                    noSearchResult.setText("No Result Found !");
+                  //  CommonMethod.showSnackbar(searchSpin,response.optString("resultmessage"),getActivity());
                 }
 
             }

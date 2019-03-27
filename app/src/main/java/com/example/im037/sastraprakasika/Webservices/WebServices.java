@@ -5,8 +5,12 @@ import android.content.Context;
 import com.example.im037.sastraprakasika.ConstantValues;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WebServices {
@@ -119,6 +123,75 @@ public class WebServices {
             e.printStackTrace();
         }
         volleyClass.volleyPostData(ConstantValues.CATEGORY_LIST, jsonObject, listerner);
+    }
+
+    public void getPlayLists(String user_id,VolleyResponseListerner listerner) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", user_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        volleyClass.volleyPostData(ConstantValues.PLAY_LIST, jsonObject, listerner);
+    //    volleyClass.volleyPostDataSync(ConstantValues.PLAY_LIST, jsonObject, listerner);
+
+    }
+
+
+    public void deletePlayLists(String user_id,String player_id,VolleyResponseListerner listerner) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", user_id);
+            jsonObject.put("player_id", player_id);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        volleyClass.volleyPostData(ConstantValues.DELETE_PLAYLIST_SONG, jsonObject, listerner);
+        //    volleyClass.volleyPostDataSync(ConstantValues.PLAY_LIST, jsonObject, listerner);
+
+    }
+
+
+    public void savePlayLists(String user_id, String player_id, String player_name, JSONArray tracks, VolleyResponseListerner listerner) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", user_id);
+            jsonObject.put("player_id", player_id);
+            jsonObject.put("player_name", player_name);
+            jsonObject.put("tracks",tracks);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        volleyClass.volleyPostData(ConstantValues.CREATE_PLAYLIST, jsonObject, listerner);
+    }
+
+
+    public void addtoPlayLists(String user_id, String player_id, JSONArray tracks, VolleyResponseListerner listerner) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", user_id);
+            jsonObject.put("player_id", player_id);
+            jsonObject.put("tracks",tracks);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        volleyClass.volleyPostData(ConstantValues.ADD_PLAYLIST_SONG, jsonObject, listerner);
+    }
+
+
+    public void getPlaylistSongs(String user_id , String player_id,  VolleyResponseListerner listerner) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", user_id);
+            jsonObject.put("player_id", player_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        volleyClass.volleyPostData(ConstantValues.GET_PLAYLIST_SONG, jsonObject, listerner);
     }
 
     public void getlibrary(String user_id, String type, VolleyResponseListerner listerner) {

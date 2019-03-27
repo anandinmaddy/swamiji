@@ -26,6 +26,9 @@ import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -122,7 +125,7 @@ public class VolleyClass {
 
                 }
             });
-            int MY_SOCKET_TIMEOUT_MS = 60000;
+            int MY_SOCKET_TIMEOUT_MS = 20000;
             jsonRequest.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             MyApp.getInstanse().addToRequestQueue(jsonRequest);
         } else
@@ -133,6 +136,46 @@ public class VolleyClass {
         }
 
     }
+
+    public void volleyPostDataSync(final String url, JSONObject jsonObject, final VolleyResponseListerner listerner) {
+     /*   final ProgressDialog pDialog = new ProgressDialog(context);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);*/
+        RequestQueue mQueue = null;
+
+        mQueue = CustomVolleyRequestQueue.getInstance(context)
+                .getRequestQueue();
+
+        Log.d(TAG, "volleyPostData  url - " + url);
+        Log.d(TAG, "volleyPostData  data - " + jsonObject.toString());
+        if (isOnLline()) {
+            RequestFuture<JSONObject> future = RequestFuture.newFuture();
+            JsonObjectRequest request = new JsonObjectRequest(url, new JSONObject(), future, future);
+            mQueue.add(request);
+
+            try {
+                JSONObject response = future.get(); // this will block
+                try {
+                    listerner.onResponse(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (InterruptedException e) {
+                // exception handling
+            } catch (ExecutionException e) {
+                // exception handling
+            }
+
+        } else
+
+        {
+            Log.d(TAG, "volleyPostData response - No Internet");
+            listerner.onError(offline, offlineTitle);
+        }
+
+    }
+
 
 
 

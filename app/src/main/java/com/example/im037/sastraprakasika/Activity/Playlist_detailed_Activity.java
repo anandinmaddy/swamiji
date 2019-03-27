@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Adapter_Playlist_Next;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class Playlist_detailed_Activity extends AppCompatActivity{
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         // call the constructor of CustomAdapter to send the reference and data to Adapter
-        Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(titleImages_next,img_song_next,class_type,dur,getApplicationContext());
+        Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongs1,getApplicationContext());
         recyclerView.setAdapter(adapter_playlist_next); // set the Adapter to RecyclerView
     }
 }

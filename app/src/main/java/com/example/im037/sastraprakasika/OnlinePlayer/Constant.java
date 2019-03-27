@@ -1,15 +1,22 @@
 package com.example.im037.sastraprakasika.OnlinePlayer;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.example.im037.sastraprakasika.Entity.Lecturers;
 import com.example.im037.sastraprakasika.Model.ListOfTopicsDetailed;
+import com.example.im037.sastraprakasika.Model.PlayList;
+import com.example.im037.sastraprakasika.Session;
 
-import java.io.Serializable;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Constant  {
+
+public class Constant {
 
     public static final String LAST_SYNC = "LAST_SYNC";
     private static final long serialVersionUID = 1L;
@@ -87,15 +94,23 @@ public class Constant  {
     public static int playPos = 0;
     public static ArrayList<ItemSong> arrayList_play = new ArrayList<>();
     public static ArrayList<ItemSong> onlyOffline = new ArrayList<>();
+    public static ArrayList<ItemSong> playListSongSync = new ArrayList<>();
 
     public static ArrayList<ItemSong> arrayListOfflineSongs = new ArrayList<>();
-    public static ArrayList<ItemSong> playListSongs1= new ArrayList<>();
+    public static ArrayList<ItemSong> playListSongsList = new ArrayList<>();
+    public static ArrayList<Integer> trackList = new ArrayList<>();
+
+    public static ArrayList<ItemSong> playListSongs1 = new ArrayList<>();
+    public static Map<String, ArrayList<ItemSong>> playListMap = new <String, ArrayList<ItemSong>>HashMap();
+
+    public static String titleName = "";
     public static int downloadPosition = 0;
     public static ArrayList<ItemSong> arrayListLectureslineSongs = new ArrayList<>();
 
     public static ArrayList<ListOfTopicsDetailed> arrayTopiclineSongs = new ArrayList<>();
     public static ArrayList<ListOfTopicsDetailed> arrayOfflineTopiclineSongs = new ArrayList<>();
-    public static int currentTab= 2;
+    public static int currentTab = 2;
+    public static ArrayList<PlayList> playListArray = new ArrayList<>();
 
     public static int lastPosition = 0;
     //public static ArrayList<ItemAlbums> arrayListOfflineAlbums = new ArrayList<>();
@@ -118,4 +133,7 @@ public class Constant  {
     public static String ad_publisher_id = "";
     public static String ad_banner_id = "";
     public static String ad_inter_id = "";
+    public static String jsonReturn = "";
+
+
 }

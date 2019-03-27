@@ -12,25 +12,17 @@
         android:orientation="vertical"
         android:weightSum="2">
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal"
             android:weightSum="2">
-            <!--<android.support.v7.widget.CardView-->
-                <!--android:layout_width="50dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--app:cardCornerRadius="@dimen/_10sdp"-->
-                <!--app:cardElevation="@dimen/_5sdp">-->
-
 
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/_6sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
                 app:cardElevation="@dimen/_5sdp">
                 <ImageView
                     android:id="@+id/ablum_image_det_list_next"
@@ -42,23 +34,23 @@
             </android.support.v7.widget.CardView>
             <!--</android.support.v7.widget.CardView>-->
             <LinearLayout
-                android:layout_width="321dp"
+                android:layout_width="wrap_content"
+                android:id="@+id/songView"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.8"
                 android:orientation="vertical">
 
                 <TextView
-
                     android:id="@+id/album_title_det_list_next"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:paddingLeft="@dimen/_10sdp"
                     android:text="An overview of yoga"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
-
 
                 <LinearLayout
                     android:layout_width="wrap_content"
