@@ -7,8 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,29 +92,44 @@ public class MyLibraryFragment extends Fragment  {
      //   titleView.setTextColor(getResources().getColor(R.color.black));
        // titleView.setTypeface(null, Typeface.BOLD);
         viewpager = view.findViewById(R.id.viewpager);
-        back.setVisibility(View.GONE);
+        back.setVisibility(View.VISIBLE);
         viewpager.setOffscreenPageLimit(4);
         adapter=new FragmentAdapter(getFragmentManager(),title);
         titleView.setText("My Library");
-        commonactivity_linearlayout.setBackgroundColor(getResources().getColor(R.color.white));
+        titleView.setTextColor(getResources().getColor(R.color.white));
         viewpager.setAdapter(adapter);
         shimmerFrameLayout.stopShimmer();
         shimmerFrameLayout.setVisibility(View.GONE);
 
-        if(Constant.currentTab == 0){
+        if(Constant.currentTab == 0 && Constant.backPress) {
+            Constant.backPress = false;
             viewpager.setCurrentItem( 0 );
-        }else if(Constant.currentTab == 1) {
-            viewpager.setCurrentItem( 1);
-        }else if(Constant.currentTab == 2){
+        }else if(Constant.currentTab == 1 && Constant.backPress){
+            Constant.backPress = false;
+            viewpager.setCurrentItem( 1 );
+        }else if(Constant.currentTab == 2 && Constant.backPress){
+            Constant.backPress = false;
             viewpager.setCurrentItem( 2 );
-        }else if(Constant.currentTab == 3){
+        }else if(Constant.currentTab == 3 && Constant.backPress){
+            Constant.backPress = false;
             viewpager.setCurrentItem( 3 );
-        }else {
-            viewpager.setCurrentItem( 0 );
         }
         tablayout.setupWithViewPager(viewpager);
         viewpager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back.setVisibility(View.GONE);
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    Log.i("MainActivity", "popping backstack");
+                    fm.popBackStack();
+                } else {
+                    Log.i("MainActivity", "nothing on backstack, calling super");
+                }
+            }
+        });
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -139,8 +156,8 @@ public class MyLibraryFragment extends Fragment  {
     @Override
     public void onPause() {
         super.onPause();
-        commonactivity_linearlayout.setBackgroundColor(getResources().getColor(R.color.orange));
-        titleView.setTextColor(getResources().getColor(R.color.white));
+       // commonactivity_linearlayout.setBackgroundColor(getResources().getColor(R.color.orange));
+       // titleView.setTextColor(getResources().getColor(R.color.white));
 
     }
 }

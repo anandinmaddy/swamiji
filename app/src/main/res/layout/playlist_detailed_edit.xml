@@ -88,24 +88,22 @@
                     android:textAlignment="textStart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/_10sdp"
+
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginRight="0dp"
                         android:id="@+id/play_icon_next_edit"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        android:src="@drawable/play_lectures"
+                        android:layout_width="9dp"
+                        android:layout_height="9dp"
+                        android:src="@drawable/play_arrow"
                         android:layout_weight="0"
                         />
 
 
                     <TextView
-                        android:layout_marginTop="2dp"
-
                         android:id="@+id/song_type_next_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -120,14 +118,12 @@
                     <!--android:layout_height="wrap_content"-->
                     <!--android:text="1" />-->
                     <TextView
-                        android:layout_marginTop="2dp"
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" | " />
 
                     <TextView
-                        android:layout_marginTop="2dp"
 
                         android:layout_marginLeft="2dp"
                         android:id="@+id/duration_det_list_next_edit"

@@ -3,35 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Activity.VolumeDetailsActivity">
 
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:visibility="visible"
-        android:orientation="vertical"
-        app:shimmer_duration="800"
-        >
-
-
-        <!-- Adding 7 rows of placeholders -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-        </LinearLayout>
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,25 +15,92 @@
         android:id="@+id/topview"
         android:background="@color/white"
         android:orientation="vertical">
-    <LinearLayout
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            android:orientation="vertical"
+            app:shimmer_duration="800"
+            >
+
+
+            <!-- Adding 7 rows of placeholders -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <include layout="@layout/data_placeholder_layout" />
+                <include layout="@layout/data_placeholder_layout" />
+                <include layout="@layout/data_placeholder_layout" />
+                <include layout="@layout/data_placeholder_layout" />
+                <include layout="@layout/data_placeholder_layout" />
+                <include layout="@layout/data_placeholder_layout" />
+                <include layout="@layout/data_placeholder_layout" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal">
-    <android.support.v7.widget.CardView
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="@dimen/_100sdp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="@dimen/_5sdp"
-        android:layout_marginTop="10dp"
-        android:visibility="visible"
-        android:paddingLeft="5dp"
-        app:cardCornerRadius="@dimen/_5sdp">
+            <android.support.v7.widget.CardView
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                android:paddingLeft="4dp"
+                app:cardCornerRadius="@dimen/_5sdp">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="@dimen/_100sdp"/>
-    </android.support.v7.widget.CardView>
+
+                <ImageView
+
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+
+                    />
+            </android.support.v7.widget.CardView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/aboutTxt"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_toRightOf="@+id/imageHead"
+                android:layout_marginLeft="5dp"
+                android:minHeight="@dimen/_20sdp"
+                android:textSize="@dimen/_15sdp"
+                android:maxWidth="@dimen/_140sdp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/knowMoreTxt"
+                android:layout_below="@id/aboutTxt"
+                android:layout_toRightOf="@+id/imageHead"
+                android:text="Know More"
+                android:textColor="@color/orange"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+
+                />
+
+        </RelativeLayout>
 
     <com.example.im037.sastraprakasika.Readmore.ReadMoreTextView
         android:id="@+id/description"
@@ -67,6 +110,7 @@
         android:layout_marginLeft="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_toRightOf="@+id/card"
+        android:visibility="gone"
         android:padding="@dimen/_5sdp"
         android:text=""
         android:textSize="@dimen/_12sdp" />
@@ -94,15 +138,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topview"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="-5dp"
         android:layout_marginBottom="60dp"
         android:background="@android:color/white"
         android:childDivider="#00000000"
-
+        android:scrollbars="none"
         android:descendantFocusability="blocksDescendants"
         android:divider="@color/white_smoke"
-        android:dividerHeight="7dp"
+        android:dividerHeight="0.5dp"
         android:groupIndicator="@null">
+
 
     </ExpandableListView>
     </RelativeLayout>

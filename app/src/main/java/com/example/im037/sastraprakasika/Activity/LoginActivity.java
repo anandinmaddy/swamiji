@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void googleLogin() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
@@ -242,7 +242,7 @@ public class LoginActivity extends AppCompatActivity {
                             response.getJSONObject("data").optString("token"),
                             response.getJSONObject("data").optString("ID"),"");
 //                    startService(new Intent(LoginActivity.this, RegistrationIntentService.class));
-                    CommonMethod.changeActivity(LoginActivity.this, CommonActivity.class);
+                    CommonMethod.changeActivity(LoginActivity.this, DashBoardActivity.class);
                     finish();
 
                 } else if (response.getString("resultcode").equalsIgnoreCase("400")) {

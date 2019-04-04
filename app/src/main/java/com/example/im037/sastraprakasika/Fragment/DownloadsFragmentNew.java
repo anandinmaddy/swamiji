@@ -294,7 +294,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     }
 
     private void setListeners() {
-        listView_song.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /* listView_song.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View item, int position, long id) {
                 //play a song in media player priya Ramakrishanan
@@ -308,7 +308,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
                 //( (CommonActivity) getActivity()).checkSlidingPanelLayout( true );
                 //play a song in media player
             }
-        });
+        });*/
     }
 
 
@@ -506,6 +506,8 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         MyLibraryFragment fragment2 = new MyLibraryFragment();
         Bundle bundle = new Bundle();
         bundle.putString("from","download");
+        Constant.currentTab = 2;
+        Constant.backPress = true;
         FragmentManager fragmentManager = getFragmentManager();
         fragment2.setArguments(bundle);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

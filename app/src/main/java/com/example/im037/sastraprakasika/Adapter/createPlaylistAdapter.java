@@ -35,6 +35,7 @@ public class createPlaylistAdapter extends BaseAdapter {
         TextView song_dur;
         ImageView playicon_img;
         CheckBox checkbox;
+        TextView className;
     }
         @Override
     public int getCount() {
@@ -64,6 +65,8 @@ public class createPlaylistAdapter extends BaseAdapter {
             viewHolder.song_title_view = (TextView)view.findViewById(R.id.album_title_txt);
             viewHolder.song_artist = (TextView)view.findViewById(R.id.song_type_txt);
             viewHolder.song_dur = (TextView)view.findViewById(R.id.duration_txt);
+            viewHolder.className = (TextView)view.findViewById(R.id.className);
+
             viewHolder.playicon_img = (ImageView)view.findViewById(R.id.play_icon_imgg);
             viewHolder.checkbox = (CheckBox) view.findViewById(R.id.checkbox);
             view.setTag(viewHolder);
@@ -87,9 +90,14 @@ public class createPlaylistAdapter extends BaseAdapter {
 //        ListOfLecturesListDetails details = (ListOfLecturesListDetails)lect_det.get(i);
         ItemSong items = mediaItems.get(i);
 
-        Picasso.get()
-                .load(items.getImageSmall())
-                .into(viewHolder.song_img_view);
+        try {
+            Picasso.get()
+                    .load(items.getImageSmall())
+                    .into(viewHolder.song_img_view);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
 
@@ -123,5 +131,17 @@ public class createPlaylistAdapter extends BaseAdapter {
 
 
         return view;
+    }
+    @Override
+    public int getViewTypeCount() {
+
+        return getCount();
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+
+        return position;
     }
 }

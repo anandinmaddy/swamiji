@@ -8,7 +8,7 @@
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="15dp"
         android:visibility="gone"
         android:orientation="vertical"
@@ -30,9 +30,8 @@
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginLeft="2dp"
         android:weightSum="2">
@@ -62,7 +61,6 @@
                     android:id="@+id/album_image_playlist"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:layout_marginTop="12dp"
                     android:src="@drawable/tamil"
                     android:layout_weight="0.4"
                     />

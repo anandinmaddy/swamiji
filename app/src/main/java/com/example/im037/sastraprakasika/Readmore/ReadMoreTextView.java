@@ -211,4 +211,6 @@ public class ReadMoreTextView extends TextView {
             e.printStackTrace();
         }
     }
+
+
 }

@@ -19,6 +19,7 @@ import com.example.im037.sastraprakasika.Activity.SearchDetailedFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.PlayListDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.SearchPageFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.VolumeDetailsFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.SearchModel;
@@ -66,6 +67,24 @@ public class SongRecyclerViewAdapter extends RecyclerView.Adapter<SongRecyclerVi
                 intent.putExtra( "model",search_det );
                 intent.putExtra( "TYPE",type );
                 context.startActivity( intent );*/
+
+                Bundle profileData = new Bundle();
+                profileData.putString("data",arrayList.get(position).getParentid());
+                profileData.putString("data1",arrayList.get(position).getSubid());
+                profileData.putString("data2",arrayList.get(position).getTitle());
+                profileData.putString("data3",arrayList.get(position).getImage_url());
+                profileData.putString("data4",arrayList.get(position).getDescription());
+                //    mListener.onFragmentInteraction(PlayerConstants.VOLUME_FRAGMENT, profileData);
+
+                //  CommonActivity.startNewFragment(volumePageFragment, "volumeFragment");
+                VolumeDetailsFragment fragment2 = new VolumeDetailsFragment();
+                fragment2.setArguments(profileData);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                /*
                 Bundle bundle = new Bundle();
                 bundle.putString("from","search");
                 SearchDetailedFragment fragment2 = new SearchDetailedFragment();
@@ -74,7 +93,7 @@ public class SongRecyclerViewAdapter extends RecyclerView.Adapter<SongRecyclerVi
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.commit();
-
+*/
             }
         } );
 

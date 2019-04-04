@@ -53,6 +53,7 @@
         android:id="@+id/layout_txt"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <TextView
@@ -147,6 +148,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:id="@+id/addlectu"
         android:orientation="horizontal">
         <ImageView
 
@@ -179,5 +181,6 @@
         android:id="@+id/playListRecyclerView_next_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scrollbars="none"
         android:layout_below="@+id/layout_txt"/>
 </LinearLayout>

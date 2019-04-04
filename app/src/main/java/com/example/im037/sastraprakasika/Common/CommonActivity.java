@@ -329,6 +329,7 @@ public class CommonActivity extends AppCompatActivity  {
 
         am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+
         iv_music_downloads.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -532,7 +533,8 @@ public class CommonActivity extends AppCompatActivity  {
         frameLayout = (FrameLayout) findViewById(R.id.commonActivityFrameLayout);
         backgroundLinear = (LinearLayout) findViewById(R.id.ss);
         if(title.equals("My Library")){
-            this.title.setTextColor(Color.parseColor("#000000"));
+            this.title.setTextColor(getResources().getColor(R.color.white));
+
             this.title.setTypeface(null, Typeface.BOLD);
             backgroundLinear.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }
@@ -1370,7 +1372,7 @@ public class CommonActivity extends AppCompatActivity  {
             // if (!fragmentPopped || isFromNotification){ //fragment not in back stack, create it.
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.commonActivityFrameLayout, frag, tag);
-            ft.addToBackStack(backStateName);
+            ft.addToBackStack(null);
             ft.commit();
             // }
         }

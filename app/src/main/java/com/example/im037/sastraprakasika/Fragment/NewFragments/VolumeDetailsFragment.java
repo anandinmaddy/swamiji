@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.example.im037.sastraprakasika.Activity.VolumeDetailsActivity;
 import com.example.im037.sastraprakasika.Adapter.ExpandableListAdapter;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.VolumeDetailsModel;
 import com.example.im037.sastraprakasika.R;
@@ -45,6 +47,7 @@ public class VolumeDetailsFragment extends Fragment {
 
     Context context;
     ImageView image;
+
     RelativeLayout common_dragview;
     public static final String TAG = VolumeDetailsActivity.class.getSimpleName();
     ArrayList<VolumeDetailsModel> arrayList = new ArrayList<>();
@@ -54,7 +57,9 @@ public class VolumeDetailsFragment extends Fragment {
     private int lastExpandedPosition = -1;
     ShimmerFrameLayout mShimmerViewContainer;
     ImageView back;
-    TextView titleView;
+    TextView titleView,knowMoretxt,pageTitle;
+    String title,desc,imagetxt;
+
     public VolumeDetailsFragment() {
         // Required empty public constructor
     }
@@ -67,7 +72,10 @@ public class VolumeDetailsFragment extends Fragment {
         context = getActivity().getApplicationContext();
         CommonActivity.setSelected(Selected.DISCOURSES);
         titleView = (TextView) getActivity().findViewById(R.id.title);
-        back = (ImageView) getActivity().findViewById(R.id.back);        image = view.findViewById(R.id.image);
+        knowMoretxt = (TextView) view.findViewById(R.id.knowMoreTxt);
+        pageTitle = (TextView) view.findViewById(R.id.aboutTxt);
+        back = (ImageView) getActivity().findViewById(R.id.back);
+        image = view.findViewById(R.id.image);
         expandableList = view.findViewById(R.id.expandable_list);
         description = view.findViewById(R.id.description);
         mShimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
@@ -76,6 +84,10 @@ public class VolumeDetailsFragment extends Fragment {
         back.setVisibility(View.VISIBLE);
 
         if(getArguments() != null){
+            title = getArguments().getString("data2");
+            pageTitle.setText(title);
+            desc = getArguments().getString("data4");
+            imagetxt = getArguments().getString("data3");
             titleView.setText(getArguments().getString("data2"));
         }else {
             titleView.setText("Introduction to Vedanta");
@@ -84,18 +96,40 @@ public class VolumeDetailsFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DashBoardNewFragment fragment2 = new DashBoardNewFragment();
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    Log.i("MainActivity", "popping backstack");
+                    fm.popBackStack();
+                } else {
+                    Log.i("MainActivity", "nothing on backstack, calling super");
+                }
+            }
+        });
+
+        knowMoretxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("data",desc);
+                bundle.putString("data2",imagetxt);
+                bundle.putString("data1",title);
+                bundle.putString("from","volume");
+
+                AboutDetailFragment fragment2 = new AboutDetailFragment();
                 FragmentManager fragmentManager = getFragmentManager();
-                back.setVisibility(View.GONE);
+                fragment2.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
 
+
         description.setTrimLines(6);
         Picasso.get().load(getArguments().getString("data3")).placeholder(R.drawable.placeholder_default)
                 .into(image);
+
         description.setText(getArguments().getString("data4"));
 
 

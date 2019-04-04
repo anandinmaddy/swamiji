@@ -65,8 +65,10 @@
             android:layout_width="@dimen/_250sdp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="left"
+            android:gravity="center_horizontal"
             android:maxLines="1"
+
+            android:text="Not Playing"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
             android:textSize="18sp"/>
@@ -88,7 +90,7 @@
             android:id="@+id/iv_music_downloads"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_toRightOf="@+id/tv_music_title"
             android:background="@drawable/ripple"
             android:clickable="true"

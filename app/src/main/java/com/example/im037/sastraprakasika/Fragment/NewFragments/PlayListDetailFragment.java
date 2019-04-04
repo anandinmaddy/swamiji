@@ -39,9 +39,10 @@ public class PlayListDetailFragment extends Fragment {
     TextView txtview,nosongs;
     RecyclerView recyclerView;
     // ImageView back;
-    TextView edit_text,titleView,playlistTxt;
+    TextView titleView,playlistTxt;
     ShimmerFrameLayout shimmerFrameLayout;
     String player_id = "";
+    TextView pageAction;
     public static final String TAG = PlayListDetailFragment.class.getSimpleName();
 
     ArrayList titleImages_next = new ArrayList<>(Arrays.asList("An Overview Of Yoga", "Intoduction into Human Pursuits","Right Action and Attribute"));
@@ -62,10 +63,10 @@ public class PlayListDetailFragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.playListRecyclerView_next);
         imageView = (ImageView)view.findViewById(R.id.album_image_playlist_next);
         txtview = (TextView)view.findViewById(R.id.album_image_title_next);
-        edit_text = (TextView)view.findViewById(R.id.edittext);
         playlistTxt = (TextView) view.findViewById(R.id.playList);
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         nosongs = (TextView) view.findViewById(R.id.nosongs);
+        pageAction = (TextView) getActivity().findViewById(R.id.pageAction);
         if (getArguments()!= null && getArguments().getString("data") != null){
             txtview.setText(getArguments().getString("data"));
             player_id =getArguments().getString("player_id");
@@ -94,8 +95,10 @@ public class PlayListDetailFragment extends Fragment {
 
       //  callWebService();
 
+        pageAction.setVisibility(View.VISIBLE);
+        pageAction.setText("Edit");
 
-        edit_text.setOnClickListener(new View.OnClickListener() {
+        pageAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ClickEditFragment fragment2 = new ClickEditFragment();
@@ -107,6 +110,7 @@ public class PlayListDetailFragment extends Fragment {
                 fragment2.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
             }
@@ -121,13 +125,13 @@ public class PlayListDetailFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                back.setVisibility(View.GONE);
                 MyLibraryFragment fragment2 = new MyLibraryFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("from","playlist");
-                FragmentManager fragmentManager = getFragmentManager();
-                fragment2.setArguments(bundle);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 3;
+                Constant.backPress = true;
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -203,5 +207,15 @@ public class PlayListDetailFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        pageAction.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        pageAction.setVisibility(View.VISIBLE);
+    }
 }

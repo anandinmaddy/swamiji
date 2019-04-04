@@ -27,7 +27,9 @@ import android.widget.Toast;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.DiscoursesNewFragment;
+import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.LecturesFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
@@ -81,6 +83,7 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
     ShimmerFrameLayout mShimmerViewContainer;
     ScrollView itemViewlayout;
     private FirebaseAnalytics mFirebaseAnalytics;
+    TextView knowMoreTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +107,7 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
         Stetho.initializeWithDefaults(this);
         content.setMaxLines(Integer.MAX_VALUE);
         homeView = (LinearLayout) findViewById(R.id.homeView);
+        knowMoreTxt = (TextView) findViewById(R.id.knowMoreTxt);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
         itemViewlayout = (ScrollView) findViewById(R.id.itemViewlayout);
@@ -117,6 +121,10 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
 //                CommonMethod.changeActivity(DashBoardActivity.this, VolumeActivity.class);
 //            }
 //        });
+
+        DashBoardNewFragment discoursesNewFragment = new DashBoardNewFragment();
+        startNewFragment(discoursesNewFragment,"home");
+/*
         CommonActivity.lecturesAPICALL(this);
         content.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +139,15 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
             }
         });
 
-
+        knowMoreTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle profileData = new Bundle();
+                AboutDetailFragment aboutDetailFragment = new AboutDetailFragment();
+                aboutDetailFragment.setArguments(profileData);
+                startNewFragment(aboutDetailFragment,"home");
+            }
+        });
         if(db != null){
             discoursesModelsList = db.userDao().getAll();
         }
@@ -141,7 +157,7 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
 
       //  callWebservice();
 
-        if(discoursesModelsList != null && discoursesModelsList.size() > 0){
+    *//*    if(discoursesModelsList != null && discoursesModelsList.size() > 0){
             mShimmerViewContainer.stopShimmer();
             mShimmerViewContainer.setVisibility(View.GONE);
             itemViewlayout.setVisibility(View.VISIBLE);
@@ -153,11 +169,12 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
             callWebservice();
 
 
-        }
+        }*//*
         callPlayList();
 
         SetAboutDetail();
-
+        DashBoardNewFragment discoursesNewFragment = new DashBoardNewFragment();
+        startNewFragment(discoursesNewFragment,"home");*/
     }
 
     private void callPlayList() {
@@ -199,19 +216,16 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
                 itemViewlayout.setVisibility(View.VISIBLE);
                 ArrayList<DiscoursesModel> test = new ArrayList<>();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                    db.userDao().deleteAll();
                     SpaceItemdecoration decoration = new SpaceItemdecoration(16);
                     discourseView.addItemDecoration(decoration);
                     db.userDao().getAll();
-                    String  jsonString =response.toString(); //http request
-                    DiscoursesModel data =new DiscoursesModel();
-                    Gson gson = new Gson();
-                    data= gson.fromJson(jsonString,DiscoursesModel.class);
                     List<DiscoursesModel> discoursesModelsNew = TypeConvertor.stringToNestedData(response.optJSONArray("data").toString());
                     for (DiscoursesModel discoursesModel : discoursesModelsNew){
                         db.userDao().insertAll(discoursesModel);
                     }
 
-
+                    discoursesModels.clear();
                     discoursesModels.addAll(discoursesModelsNew);
                     discourseView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
                     ItemOffSet itemDecoration = new ItemOffSet(getApplicationContext(), R.dimen._4sdp);
@@ -302,24 +316,14 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-            startActivity(intent);
-            finish();
-            return;
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i("MainActivity", "popping backstack");
+            fm.popBackStack();
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
         }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
     }
     public void startNewFragment(final Fragment frag, final String tag) {
         if ( frag != null && !frag.isAdded()) {
@@ -330,7 +334,7 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
             // if (!fragmentPopped || isFromNotification){ //fragment not in back stack, create it.
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.commonActivityFrameLayout, frag, tag);
-            ft.addToBackStack(backStateName);
+            ft.addToBackStack(null);
             ft.commit();
             // }
         }

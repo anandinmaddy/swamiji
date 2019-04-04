@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical"
         app:shimmer_duration="800"
         >
@@ -66,6 +66,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:scrollbars="none"
         android:visibility="visible"
         android:background="@android:color/transparent"
         android:layout_marginBottom="60dp"

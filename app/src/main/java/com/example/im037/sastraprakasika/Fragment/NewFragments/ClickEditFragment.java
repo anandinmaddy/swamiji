@@ -8,10 +8,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ public class ClickEditFragment extends Fragment {
     RecyclerView recyclerView_edit;
     TextView cancel_txt,done_txt;
     ImageView deleteplaylist;
+    LinearLayout addlectu;
 
     ArrayList titleImages_next = new ArrayList<>(Arrays.asList("An Overview Of Yoga", "Intoduction into Human Pursuits","Right Action and Attribute"));
     ArrayList img_song_next = new ArrayList<>(Arrays.asList(R.drawable.vedanta,R.drawable.intro_vedanta,R.drawable.bagavad));
@@ -75,13 +78,16 @@ public class ClickEditFragment extends Fragment {
         back_btn = getActivity().findViewById(R.id.back);
         recyclerView_edit = (RecyclerView)view.findViewById(R.id.playListRecyclerView_next_edit);
         cancel_txt = (TextView)view.findViewById(R.id.cancel_edit);
-        done_txt = (TextView)view.findViewById(R.id.doneedit);
+        done_txt = (TextView)getActivity().findViewById(R.id.pageAction);
         deleteplaylist = (ImageView) view.findViewById(R.id.deleteplaylist);
+        addlectu = (LinearLayout) view.findViewById(R.id.addlectu);
 
         if(getArguments() != null){
             titleTxt= getArguments().getString("data");
             playerId = getArguments().getString("player_id");
         }
+        done_txt.setVisibility(View.VISIBLE);
+        done_txt.setText("Done");
 
         cancel_txt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +98,10 @@ public class ClickEditFragment extends Fragment {
                 bundle.putString("from","playlist");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragment2.setArguments(bundle);
+                Constant.currentTab = 3;
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
             }
@@ -109,15 +117,18 @@ public class ClickEditFragment extends Fragment {
         done_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 MyLibraryFragment fragment2 = new MyLibraryFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("from","playlist");
+                Constant.currentTab = 3;
+                Constant.backPress = true;
                 FragmentManager fragmentManager = getFragmentManager();
                 fragment2.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.commit();
+
+
 
 
             }
@@ -126,19 +137,18 @@ public class ClickEditFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyLibraryFragment fragment2 = new MyLibraryFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("from","playlist");
-                FragmentManager fragmentManager = getFragmentManager();
-                fragment2.setArguments(bundle);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.commit();
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    Log.i("MainActivity", "popping backstack");
+                    fm.popBackStack();
+                } else {
+                    Log.i("MainActivity", "nothing on backstack, calling super");
+                }
 
             }
         });
 
-        add_btn.setOnClickListener(new View.OnClickListener() {
+        addlectu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -146,10 +156,12 @@ public class ClickEditFragment extends Fragment {
                 bundle.putString("from","edit");
                 bundle.putString("player_id",playerId);
                 Constant.titleName = titleTxt;
+                Constant.currentTab = 3;
                 MyLectureFragment fragment2 = new MyLectureFragment();
                 fragment2.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -160,7 +172,7 @@ public class ClickEditFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView_edit.setLayoutManager(linearLayoutManager);
         // call the constructor of CustomAdapter to send the reference and data to Adapter
-        Adapter_playlist_edit adapter_playlist_next = new Adapter_playlist_edit(Constant.playListSongSync,playerId,getContext());
+        Adapter_playlist_edit adapter_playlist_next = new Adapter_playlist_edit(Constant.playListSongSync,playerId,getContext(),getFragmentManager());
         recyclerView_edit.setAdapter(adapter_playlist_next); // set the Adapter to RecyclerView
 
 
@@ -181,6 +193,7 @@ public class ClickEditFragment extends Fragment {
                     fragment2.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
 
                     Toast.makeText(getContext(),"Playlist deleted",Toast.LENGTH_SHORT).show();
@@ -198,4 +211,15 @@ public class ClickEditFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        done_txt.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        done_txt.setVisibility(View.VISIBLE);
+    }
 }

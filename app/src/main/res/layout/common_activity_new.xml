@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.wang.avi.AVLoadingIndicatorView
@@ -18,7 +19,7 @@
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_54sdp"
+        android:layout_marginBottom="@dimen/_44sdp"
         android:gravity="bottom"
         sothree:umanoPanelHeight="65dp"
         sothree:umanoShadowHeight="4dp"
@@ -27,17 +28,20 @@
         sothree:umanoScrollableView="@+id/autoplay_or_queue_recycler_view"
         sothree:umanoOverlay="true">
 
+
         <!--FRAGMENT PLACEHOLDER WITH TOOLBAR-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/toolbar"
+            android:visibility="visible"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/ss"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize"
-                android:background="@color/white"
+                android:background="@color/orange"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:weightSum="3">
@@ -58,8 +62,8 @@
                     android:layout_marginRight="@dimen/_4sdp"
                     android:layout_weight="2.4"
                     android:text="Sermons and Chantings"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_16sdp" />
 
 
                 <!--<ImageView-->
@@ -85,7 +89,7 @@
 
                 android:id="@+id/shadow"
                 android:layout_width="match_parent"
-                android:layout_height="4dp"
+                android:layout_height="2dp"
                 android:background="@drawable/toolbar_drop_shadow" />
 
             <View
@@ -106,436 +110,164 @@
         <!--BOTTOM PLAYER CONTENT WITH PLAYLIST-->
 
 
+
         <include
             layout="@layout/layout_music_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <!--<RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#fafafa"
-            android:id="@+id/dragView"
-            android:visibility="gone"
-            >
-
-
-          &lt;!&ndash;  <FrameLayout
-                android:id="@+id/draggerView"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"/>
-
-            <FrameLayout
-                android:id="@+id/playerBgFrame"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="64dp" />&ndash;&gt;
-
-
-
-            <FrameLayout
-                android:layout_marginTop="2dp"
-                android:id="@+id/thumbnail_wrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/thumbnail"
-                    android:padding="8dp"
-                    android:src="@drawable/tamil"
-                    app:civ_border_overlay="true"
-                    app:civ_border_width="0dp"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp" />
-
-            </FrameLayout>
-
-
-            <RelativeLayout
-                android:layout_toLeftOf="@+id/pauseWrapper"
-                android:id="@+id/info_wrapper"
-                android:layout_marginLeft="64dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/title1"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:text=""
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:singleLine="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_below="@+id/title1"
-                    android:id="@+id/artist"
-                    android:textColor="@color/light_grey"
-                    android:text="Vedenta"
-                    android:maxLines="1"
-                    android:lines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_marginTop="6dp"
-                android:paddingRight="12dp"
-                android:paddingLeft="12dp"
-                android:layout_below="@+id/thumbnail_wrapper"
-                android:id="@+id/info_wrapper_below"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/title_second"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:text=""
-                    android:maxLines="1"
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_below="@+id/title_second"
-                    android:id="@+id/artist_second"
-                    android:textColor="@color/light_grey"
-                    android:text=""
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-                <TextView
-                    android:id="@+id/stream_duration"
-                    android:textColor="@color/black"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/artist_second"
-                    android:text="00:00/00:00 "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-            </RelativeLayout>
-
-            <FrameLayout
-                android:id="@+id/pauseWrapper"
-                android:layout_toLeftOf="@+id/nextWrapper"
-                android:padding="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:gravity="center"
-                    android:id="@+id/play_pause"
-                    android:src="@mipmap/ic_play_grey"
-                    android:layout_margin="0dp"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp" />
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/playlistWrapper"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-
-                &lt;!&ndash;<TextView&ndash;&gt;
-                &lt;!&ndash;android:gravity="center"&ndash;&gt;
-                &lt;!&ndash;android:id="@+id/playlistBtn"&ndash;&gt;
-                &lt;!&ndash;android:textColor="@color/black"&ndash;&gt;
-                &lt;!&ndash;android:text=""&ndash;&gt;
-                &lt;!&ndash;android:textSize="28sp"&ndash;&gt;
-                &lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;
-                &lt;!&ndash;android:layout_height="36dp" />&ndash;&gt;
-
-            </FrameLayout>
-
-
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/info_wrapper_below"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="0dp"
-                android:thumbTint="@color/seekBarColor"
-                android:progressDrawable="@drawable/seekbar_bg"
-                android:id="@+id/seekBar" />
-
-            <RelativeLayout
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="8dp"
-                android:id="@+id/autoplay_switch_wrapper"
-                android:layout_below="@+id/seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/autoplay_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content"
-                    android:checked="false"/>
-
-                <TextView
-                    android:id="@+id/repeatModeText"
-                    android:textColor="@color/black"
-                    android:text="No Repeat"
-                    android:textSize="12sp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content" />
-
-                &lt;!&ndash;<TextView&ndash;&gt;
-                &lt;!&ndash;android:id="@+id/repeatModeBtn"&ndash;&gt;
-                &lt;!&ndash;android:paddingLeft="12dp"&ndash;&gt;
-                &lt;!&ndash;android:paddingRight="12dp"&ndash;&gt;
-                &lt;!&ndash;android:textSize="24sp"&ndash;&gt;
-                &lt;!&ndash;android:textColor="@color/black"&ndash;&gt;
-                &lt;!&ndash;android:text=""&ndash;&gt;
-                &lt;!&ndash;android:layout_toLeftOf="@+id/repeatModeText"&ndash;&gt;
-                &lt;!&ndash;android:layout_centerVertical="true"&ndash;&gt;
-                &lt;!&ndash;android:layout_width="48sp"&ndash;&gt;
-                &lt;!&ndash;android:gravity="center"&ndash;&gt;
-                &lt;!&ndash;android:layout_height="48sp"&ndash;&gt;
-                &lt;!&ndash;/>&ndash;&gt;
-
-                <TextView
-
-                    android:layout_marginLeft="6dp"
-                    android:text="Autoplay"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:layout_toEndOf="@+id/autoplay_switch"
-                    android:id="@+id/textView" />
-
-
-            </RelativeLayout>
-
-            <FrameLayout
-                android:id="@+id/nextWrapper"
-                android:padding="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/playlistWrapper">
-
-
-                <ImageView
-                    android:gravity="center_vertical"
-                    android:id="@+id/nextBtn"
-                    android:src="@mipmap/ic_next_grey"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp" />
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/autoplay_switch_wrapper"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true">
-
-
-                <android.support.v7.widget.RecyclerView
-                    android:visibility="gone"
-                    android:id="@+id/autoplay_or_queue_recycler_view"
-                    android:padding="2dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-
-                <TextView
-                    android:id="@+id/playlistMessagePanel"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:text="No Item In Queue.Add and Enjoy !"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ProgressBar
-                    android:layout_gravity="center"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/auto_play_or_queue_progress_bar" />
-
-            </FrameLayout>
-        </RelativeLayout>-->
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <View
-        android:id="@+id/view"
+
+    <!--now hide the view-->
+    <!--<View-->
+    <!--android:id="@+id/view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:background="@color/light_grey"-->
+    <!--android:visibility="gone"/>-->
+    <LinearLayout
+        android:id="@+id/bottomLayoutblank"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/light_grey"
-        android:visibility="gone"/>
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:weightSum="4"
+        android:visibility="gone"
+        android:windowSoftInputMode="adjustPan"
+        android:fitsSystemWindows="true">
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:weightSum="4"
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/bottomLayout"-->
+        android:windowSoftInputMode="adjustPan"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/myLibraryLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/myLibrary"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/mylibrary_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Library"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/discoursesLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/discourses"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/discourse_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Discourses"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/search_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Search"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/accountLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/account"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/account_grey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Account"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/_8sdp" />
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/moreLayout"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/more"-->
+        <!--android:layout_width="@dimen/_30sdp"-->
+        <!--android:layout_height="@dimen/_20sdp"-->
+        <!--android:src="@drawable/more_grey" />-->
+
+        <!--<TextView-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/_50sdp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:background="@android:color/white"-->
-        <!--android:weightSum="4"-->
-        <!--android:windowSoftInputMode="adjustPan"-->
-        <!--android:fitsSystemWindows="true">-->
-
-        <!--<LinearLayout-->
-            <!--android:id="@+id/myLibraryLayout"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/myLibrary"-->
-                <!--android:layout_width="@dimen/_30sdp"-->
-                <!--android:layout_height="@dimen/_20sdp"-->
-                <!--android:src="@drawable/mylibrary_grey" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:text="My Library"-->
-                <!--android:textColor="@color/dark_grey"-->
-                <!--android:textSize="@dimen/_8sdp" />-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:text="More"-->
+        <!--android:textColor="@color/dark_grey"-->
+        <!--android:textSize="@dimen/_8sdp" />-->
         <!--</LinearLayout>-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/discoursesLayout"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/discourses"-->
-                <!--android:layout_width="@dimen/_30sdp"-->
-                <!--android:layout_height="@dimen/_20sdp"-->
-                <!--android:src="@drawable/discourse_grey" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:text="Discourses"-->
-                <!--android:textColor="@color/dark_grey"-->
-                <!--android:textSize="@dimen/_8sdp" />-->
-        <!--</LinearLayout>-->
-
-        <!--<LinearLayout-->
-            <!--android:id="@+id/searchLayout"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/search"-->
-                <!--android:layout_width="@dimen/_30sdp"-->
-                <!--android:layout_height="@dimen/_20sdp"-->
-                <!--android:src="@drawable/search_grey" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:text="Search"-->
-                <!--android:textColor="@color/dark_grey"-->
-                <!--android:textSize="@dimen/_8sdp" />-->
-        <!--</LinearLayout>-->
-
-        <!--<LinearLayout-->
-            <!--android:id="@+id/accountLayout"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/account"-->
-                <!--android:layout_width="@dimen/_30sdp"-->
-                <!--android:layout_height="@dimen/_20sdp"-->
-                <!--android:src="@drawable/account_grey" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:text="My Account"-->
-                <!--android:textColor="@color/dark_grey"-->
-                <!--android:textSize="@dimen/_8sdp" />-->
-        <!--</LinearLayout>-->
-
-        <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/moreLayout"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:gravity="center"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:orientation="vertical">&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/more"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="@dimen/_30sdp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="@dimen/_20sdp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:src="@drawable/more_grey" />&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:gravity="center"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:text="More"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textColor="@color/dark_grey"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textSize="@dimen/_8sdp" />&ndash;&gt;-->
-        <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
-
-    <!--</LinearLayout>-->
-
-    <android.support.design.widget.BottomNavigationView
-
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@color/orange"
-        app:itemTextColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_item_navigation" />
-
-
+    </LinearLayout>
 </RelativeLayout>
 
 

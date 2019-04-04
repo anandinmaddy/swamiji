@@ -25,6 +25,7 @@ import com.example.im037.sastraprakasika.Activity.FragmentInteractionListener;
 import com.example.im037.sastraprakasika.Activity.SpaceItemdecoration;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
@@ -84,6 +85,8 @@ public class DiscoursesNewFragment extends Fragment  {
     String parentId = "";
     String catId = "";
     String subId = "";
+    TextView titleContent,knowMoreTxt;
+    String titleTxt,contentTxt,contentImg;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -123,6 +126,7 @@ public class DiscoursesNewFragment extends Fragment  {
         content = view.findViewById(R.id.discoursesContent);
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
         discourseView = (RecyclerView) view.findViewById(R.id.discoursesRecyclerview);
+        discourseView.setNestedScrollingEnabled(false);
         Stetho.initializeWithDefaults(getActivity().getApplicationContext());
         content.setMaxLines(Integer.MAX_VALUE);
         homeView = (LinearLayout) view.findViewById(R.id.homeView);
@@ -131,14 +135,34 @@ public class DiscoursesNewFragment extends Fragment  {
         itemViewlayout = (ScrollView) view.findViewById(R.id.itemViewlayout);
         mShimmerViewContainer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmer();
+        titleContent = (TextView) view.findViewById(R.id.aboutTxt);
+        knowMoreTxt = (TextView) view.findViewById(R.id.knowMoreTxt);
 //        playerLayout.setVisibility(View.GONE);
 //
+        if(getArguments() != null && getArguments().getString("data1") != null){
+            contentTxt = getArguments().getString("data1");
+        }
+        if(getArguments() != null && getArguments().getString("data") != null){
+            parentId = getArguments().getString("data");
+        }
+        if(getArguments() != null && getArguments().getString("data3") != null){
+            contentImg = getArguments().getString("data3");
+            Picasso.get()
+                    .load(getArguments().getString("data3"))
+                    .placeholder(R.drawable.placeholder_default)
+                    .into(image1);
+        }
+        if(getArguments() != null && getArguments().getString("data4") != null){
+            titleTxt = getArguments().getString("data4");
+            content.setText(getArguments().getString("data4"));
+        }
 
-
-        if(getArguments().getString("data1") != null){
+        if(getArguments() != null && getArguments().getString("data1") != null){
             titleView.setText(getArguments().getString("data1"));
+            titleContent.setText(getArguments().getString("data1"));
         }else {
             titleView.setText("Discourses");
+            titleContent.setText("Discourses");
         }
         back.setVisibility(View.VISIBLE);
 
@@ -161,18 +185,24 @@ public class DiscoursesNewFragment extends Fragment  {
             }
         });
 
-        if(getArguments().getString("data") != null){
-            parentId = getArguments().getString("data");
-        }
-        if(getArguments().getString("data3") != null){
-            Picasso.get()
-                    .load(getArguments().getString("data3"))
-                    .placeholder(R.drawable.placeholder_default)
-                    .into(image1);
-        }
-        if(getArguments().getString("data4") != null){
-            content.setText(getArguments().getString("data4"));
-        }
+        knowMoreTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("data",titleTxt);
+                bundle.putString("data1",contentTxt);
+                bundle.putString("data2",contentImg);
+                bundle.putString("from","dashboard");
+
+                AboutDetailFragment fragment2 = new AboutDetailFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragment2.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
 
         content.setOnClickListener(new View.OnClickListener() {
@@ -242,7 +272,7 @@ public class DiscoursesNewFragment extends Fragment  {
                         db.discoursesNewModel().insertAll(discoursesNewModel);
                     }
 
-
+                    discoursesModels.clear();
                     discoursesModels.addAll(discoursesModelsNew);
                     discourseView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
                     discourseView.setAdapter(new CategoryRecyclerviewAdapter(getContext(), discoursesModels, parentID));
@@ -329,7 +359,7 @@ public class DiscoursesNewFragment extends Fragment  {
                     .load(discoursesModels.get(position).getImage_url())
                     .placeholder(R.drawable.placeholder_default)
                     .into(holder.topics_image);
-            Log.d("value",discoursesModels.get(position).getName());
+//            Log.d("value",discoursesModels.get(position).getName());
             String value=discoursesModels.get(position).getName();
 
 
@@ -361,6 +391,7 @@ public class DiscoursesNewFragment extends Fragment  {
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                     //    CommonActivity.startNewFragment(volumePageFragment,"home");
 

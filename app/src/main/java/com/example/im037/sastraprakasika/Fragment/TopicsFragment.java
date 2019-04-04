@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.Itopice_listener;
@@ -49,6 +50,7 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
     public static final String TAG = TopicsFragment.class.getSimpleName();
     ShimmerFrameLayout shimmerFrameLayout;
     TextView title;
+    ImageView back;
     DiscousesAppDatabase db;
 
     List<ListOfTopicsModels> listOfTopicsOffline = new ArrayList<>();
@@ -72,7 +74,8 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
         //  setRecyclerView();
 //        mostrarDatosFactura();
         System.out.println("library frag:::::");
-
+        back = (ImageView) getActivity().findViewById(R.id.back);
+        back.setVisibility(View.GONE);
         listOfTopicsOffline = db.listOfTopicsModels().getAll();
 
         if (listOfTopicsModels != null && listOfTopicsOffline.size() > 0){
@@ -219,9 +222,9 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
         TopicsDetailsFragment fragment2 = new TopicsDetailsFragment();
         FragmentManager fragmentManager = getFragmentManager();
         fragment2.setArguments(profileData);
-
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 /*
         Intent intent = new Intent(getContext(), Topics_detailed_items.class);

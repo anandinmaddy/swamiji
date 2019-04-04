@@ -4,6 +4,9 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments.dummy;
 import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.im037.sastraprakasika.Activity.Topics_detailed_items;
 import com.example.im037.sastraprakasika.Adapter.TopicsDetailedAdapter;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
+import com.example.im037.sastraprakasika.Fragment.TopicsFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.ListOfTopicsDetailed;
@@ -41,11 +46,12 @@ public class TopicsDetailsFragment extends Fragment {
     ArrayList<ListOfTopicsDetailed> listOfTopicsDetaileds = new ArrayList<>();
     ImageView imageView;
     ListView listView;
-    ImageView img_url;
+    ImageView img_url,back;
     TextView select_title;
     public static final String TAG = TopicsDetailsFragment.class.getSimpleName();
     ShimmerFrameLayout shimmerFrameLayout;
     DiscousesAppDatabase db;
+    String post_id;
     List<ListOfTopicsDetailed> listOfTopicsDetailedsList;
     public TopicsDetailsFragment() {
         // Required empty public constructor
@@ -62,6 +68,7 @@ public class TopicsDetailsFragment extends Fragment {
         img_url = (ImageView)view.findViewById(R.id.back3);
         select_title = (TextView)view.findViewById(R.id.titleview);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
+        back = getActivity().findViewById(R.id.back);
         shimmerFrameLayout.startShimmer();
         img_url.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +80,25 @@ public class TopicsDetailsFragment extends Fragment {
         });
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "ListOfTopicDetailed").allowMainThreadQueries().build();
+        back.setVisibility(View.VISIBLE);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back.setVisibility(View.GONE);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 0;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
-
-        select_title.setText(getArguments().getString("data"));
+        if(getArguments() != null){
+            select_title.setText(getArguments().getString("data"));
+            post_id = getArguments().getString("data2");
+        }
 
         Picasso.get()
                 .load(getArguments().getString("data4"))
@@ -103,7 +126,7 @@ public class TopicsDetailsFragment extends Fragment {
     private void callwebservice() {
         final ArrayList<ListOfTopicsDetailed> listOfTopicsJsonResponse = new ArrayList<>();
 
-        new WebServices(getContext(), TAG).getTopicsDetail(Session.getInstance(getContext(), TAG).getUserId(), "topics","1897", new VolleyResponseListerner() {
+        new WebServices(getContext(), TAG).getTopicsDetail(Session.getInstance(getContext(), TAG).getUserId(), "topics",post_id, new VolleyResponseListerner() {
 
             @Override
             public void onResponse(JSONObject response) throws JSONException {

@@ -157,6 +157,7 @@ public class PlayerService extends IntentService implements Player.EventListener
             case ACTION_TOGGLE:
                 togglePlay();
                 break;
+
             case ACTION_SEEKTO:
                 seekTo(intent.getExtras().getLong("seekto"));
                 break;
@@ -220,8 +221,64 @@ public class PlayerService extends IntentService implements Player.EventListener
     private void togglePlay() {
         if (exoPlayer.getPlayWhenReady()) {
             exoPlayer.setPlayWhenReady(false);
+            if (Constant.isfromPlayer.equalsIgnoreCase("topic")){
+                Constant.isplayTopics = false;
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("lecturer")){
+                Constant.isplayLectures = false;
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("download")){
+                Constant.isplayDownloads = false;
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("playlist")){
+                Constant.isplayPlaylist = false;
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("search")){
+                Constant.isplaySearch = false;
+
+            }
         } else {
             exoPlayer.setPlayWhenReady(true);
+            if (Constant.isfromPlayer.equalsIgnoreCase("topic")){
+                Constant.isplayTopics = true;
+                Constant.isplayLectures = false;
+                Constant.isplayDownloads = false;
+                Constant.isplayPlaylist = false;
+                Constant.isplaySearch = false;
+
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("lecturer")){
+                Constant.isplayTopics = false;
+                Constant.isplayLectures = true;
+                Constant.isplayDownloads = false;
+                Constant.isplayPlaylist = false;
+                Constant.isplaySearch = false;
+
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("download")){
+                Constant.isplayTopics = false;
+                Constant.isplayLectures = false;
+                Constant.isplayDownloads = true;
+                Constant.isplayPlaylist = false;
+                Constant.isplaySearch = false;
+
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("playlist")){
+                Constant.isplayTopics = false;
+                Constant.isplayLectures = false;
+                Constant.isplayDownloads = false;
+                Constant.isplayPlaylist = true;
+                Constant.isplaySearch = false;
+
+            }else if(Constant.isfromPlayer.equalsIgnoreCase("search")){
+                Constant.isplayTopics = false;
+                Constant.isplayLectures = false;
+                Constant.isplayDownloads = false;
+                Constant.isplayPlaylist = false;
+                Constant.isplaySearch = true;
+
+
+            }
         }
         changePlayPause(exoPlayer.getPlayWhenReady());
         updateNotiPlay(exoPlayer.getPlayWhenReady());
@@ -572,7 +629,11 @@ public class PlayerService extends IntentService implements Player.EventListener
                     GlobalBus.getBus().postSticky(Constant.arrayOfflineTopiclineSongs.get(Constant.playPos));
 
                 }else {
-                    GlobalBus.getBus().postSticky(Constant.arrayList_play.get(Constant.playPos));
+                    try {
+                        GlobalBus.getBus().postSticky(Constant.arrayList_play.get(Constant.playPos));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
                 if (notification == null) {
                     createNoti();

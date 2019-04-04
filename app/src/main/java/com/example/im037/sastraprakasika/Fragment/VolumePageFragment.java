@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.VolumeActivity;
 import com.example.im037.sastraprakasika.Activity.VolumeDetailsActivity;
+import com.example.im037.sastraprakasika.Adapter.Adapter_playlist_edit;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.DiscoursesNewFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
@@ -26,6 +27,7 @@ import com.example.im037.sastraprakasika.Fragment.NewFragments.VolumeDetailsFrag
 import com.example.im037.sastraprakasika.Fragment.dummy.DummyContent.DummyItem;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.VolumeModel;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
@@ -59,7 +61,7 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
     // RecyclerView recyclerView;
     ArrayList<VolumeModel> volumeArrayList = new ArrayList<>();
 
-    TextView desc;
+    //TextView desc;
     ArrayList<VolumeModel> arrayList = new ArrayList<>();
     List<VolumeModel> volumeModelsList;
 
@@ -70,10 +72,12 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
     VolumeAdapter volumeAdapter ;
     DiscousesAppDatabase db1;
     ShimmerFrameLayout mShimmerViewContainer;
-    TextView titleView;
+    TextView aboutTxt,knowMoreTxt,titleView;
     ImageView back;
     DiscousesAppDatabase db;
-
+    String backTitle,backImg;
+    String descStr;
+    String imgTitle,titleTxt;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -86,15 +90,24 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.content_volume, container, false);
         context = getActivity().getApplicationContext();
         img_view = (ImageView) view.findViewById(R.id.image1);
-        desc = (TextView) view.findViewById(R.id.description1);
+       aboutTxt = (TextView) view.findViewById(R.id.aboutTxt);
+        knowMoreTxt = (TextView) view.findViewById(R.id.knowMoreTxt);
+     //   desc = (TextView) view.findViewById(R.id.description1);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        titleView = (TextView) getActivity().findViewById(R.id.title);
+        recyclerView.setNestedScrollingEnabled(false);
+    //    titleView = (TextView) getActivity().findViewById(R.id.aboutTxt);
         back = (ImageView) getActivity().findViewById(R.id.back);
         db1= Room.databaseBuilder(context,
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
-        Picasso.get().load(getArguments().getString("data3")).placeholder(R.drawable.placeholder_default)
+        imgTitle = getArguments().getString("data3");
+       Picasso.get().load(imgTitle).placeholder(R.drawable.placeholder_default)
                 .into(img_view);
-        desc.setText(getArguments().getString("data4"));
+        descStr = getArguments().getString("data4");
+        titleTxt =getArguments().getString("data1");
+     //   desc.setText(descStr);img_view
+        //knowMoreTxt.setText(getArguments().getString("data4"));
+        titleView = (TextView) getActivity().findViewById(R.id.title);
+        titleView.setText(titleTxt);
         ParentID = getArguments().getString("parentid");
         catid = getArguments().getString("data");
         mShimmerViewContainer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
@@ -105,66 +118,84 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
         back.setVisibility(View.VISIBLE);
         db = Room.databaseBuilder(getContext(),
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
-        if(getArguments() != null){
-            titleView.setText(getArguments().getString("data1"));
-        }else {
-            titleView.setText("Vedanta Discouses");
-        }
 
+        aboutTxt.setText(titleTxt);
+
+        if(getArguments() != null){
+            backTitle = getArguments().getString("title");
+        }
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle profileData = new Bundle();
-                profileData.putString("data",ParentID);
-                profileData.putString("data3",getArguments().getString("data3"));
-                profileData.putString("data4",getArguments().getString("backCount"));
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    Log.i("MainActivity", "popping backstack");
+                    fm.popBackStack();
+                } else {
+                    Log.i("MainActivity", "nothing on backstack, calling super");
+                }
+            }
+        });
+     //   desc.setMaxLines(Integer.MAX_VALUE);
 
-                DiscoursesNewFragment fragment2 = new DiscoursesNewFragment();
+       knowMoreTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("data",descStr);
+                bundle.putString("data2",getArguments().getString("data3"));
+                bundle.putString("data1",aboutTxt.getText().toString());
+                bundle.putString("from","volume");
+
+                AboutDetailFragment fragment2 = new AboutDetailFragment();
                 FragmentManager fragmentManager = getFragmentManager();
-                back.setVisibility(View.GONE);
-                fragment2.setArguments(profileData);
+                fragment2.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+
                 fragmentTransaction.commit();
             }
         });
-        desc.setMaxLines(Integer.MAX_VALUE);
-
-
 
         new WebServices(getContext(), VolumeActivity.class.getSimpleName()).getCategory_list(ParentID, "",catid, new VolleyResponseListerner() {
             List<VolumeModel> volumeModels = null;
             @Override
             public void onResponse(JSONObject response) throws JSONException {
-                mShimmerViewContainer.stopShimmer();
-                mShimmerViewContainer.setVisibility(View.GONE);
+
                 if(response.optString("resultcode").equalsIgnoreCase("200")){
+                    mShimmerViewContainer.stopShimmer();
+                    mShimmerViewContainer.setVisibility(View.GONE);
                     db.volumeModel().deleteAll();
                     volumeModels = TypeConvertor.stringToNestedDataVolume(response.optJSONArray("data").toString());
                     try {
                         for (VolumeModel volumeModel : volumeModels){
                             db.volumeModel().insertAll(volumeModel);
                         }
+                        volumeArrayList.clear();
                         volumeArrayList.addAll(volumeModels);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
 
+
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(linearLayoutManager);
+
+                    VolumeAdapter volumeAdapter = new VolumeAdapter(context,ParentID, volumeArrayList);
+                    recyclerView.setAdapter(volumeAdapter);
+                    }
+
                 }
 
-            }
+                @Override
+                public void onError(String message, String title) {
 
-            @Override
-            public void onError(String message, String title) {
-
-            }
-        });
+                }
+            });
 
 
-        volumeAdapter = new VolumeAdapter(context,ParentID, volumeArrayList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        recyclerView.setAdapter(volumeAdapter);
         // Set the adapter
 
         return view;
@@ -257,6 +288,7 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
 
                   //  CommonMethod.changeActivityData5(context, VolumeDetailsActivity.class, parentID,arrayList.get(position).getParentid(), arrayList.get(position).getName(),arrayList.get(position).getImage_url(),arrayList.get(position).getDescription());
@@ -287,5 +319,8 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
         }
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

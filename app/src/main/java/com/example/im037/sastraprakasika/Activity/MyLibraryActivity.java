@@ -60,6 +60,8 @@ public class MyLibraryActivity extends CommonActivity  {
         common_shadow.setVisibility(View.GONE);
         common_view.setVisibility(View.VISIBLE);
         commonactivity_titleText=(TextView)findViewById(R.id.title) ;
+        commonactivity_titleText.setTextColor(getResources().getColor(R.color.white));
+
         commonactivity_linearlayout=(LinearLayout)findViewById(R.id.ss);
         back.setVisibility(View.GONE);
         //common_dragview=(RelativeLayout)findViewById(R.id.dragView);

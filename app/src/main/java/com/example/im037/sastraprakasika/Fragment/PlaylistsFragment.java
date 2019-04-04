@@ -78,6 +78,7 @@ public class PlaylistsFragment extends Fragment {
                 NewPlaylistFragment fragment2 = new NewPlaylistFragment();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

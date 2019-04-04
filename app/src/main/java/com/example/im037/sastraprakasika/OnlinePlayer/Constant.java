@@ -22,6 +22,13 @@ public class Constant {
     private static final long serialVersionUID = 1L;
     public static String isFromPage = "lecture";
     public static int lastPlayed = 0;
+    public static boolean backPress = false;
+    public static boolean isplayTopics = false;
+    public static boolean isplayLectures = false;
+    public static boolean isplayDownloads = false;
+    public static String isfromPlayer = "";
+    public static boolean isplayPlaylist = false;
+    public static boolean isplaySearch = false;
 
     private static String SERVER_URL = "";
 

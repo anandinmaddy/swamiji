@@ -1,5 +1,6 @@
 package com.example.im037.sastraprakasika.Adapter;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.im037.sastraprakasika.Fragment.DownloadsFragmentNew;
 import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.example.im037.sastraprakasika.OnlinePlayer.PlayerService;
@@ -21,18 +21,16 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Downloads_audio_list_adapter extends BaseAdapter {
+public class SongRecyclerViewAdapterNew extends BaseAdapter {
 
     //    ArrayList<ListOfLecturesListDetails> lect_det;
     ArrayList<ItemSong> mediaItems;
     Context context;
-    private IProcessFilter mCallback;
 
 
-    public Downloads_audio_list_adapter(ArrayList<ItemSong> media_det, Context context, IProcessFilter processCallback) {
+    public SongRecyclerViewAdapterNew(ArrayList<ItemSong> media_det, Context context) {
         this.mediaItems = media_det;
         this.context = context;
-        this.mCallback = processCallback;
     }
 
     static class ViewHolderItem{
@@ -44,10 +42,6 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         ImageView delete_play;
         LinearLayout nowPlaying_layout,textNowPlaying,musicPlayLayout;
 
-    }
-
-    public interface IProcessFilter {
-        void onProcessFilter(String b);
     }
 
 
@@ -75,14 +69,13 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         if (view == null) {
             viewHolder = new ViewHolderItem();
             view = LayoutInflater.from(context).
-                    inflate(R.layout.downloads_audio_list_items, viewGroup, false);
+                    inflate(R.layout.search_audio_list_items, viewGroup, false);
 
             viewHolder.song_img_view = (ImageView)view.findViewById(R.id.ablum_image_img);
             viewHolder.song_title_view = (TextView)view.findViewById(R.id.album_title_txt);
             viewHolder.song_artist = (TextView)view.findViewById(R.id.song_type_txt);
             viewHolder.song_dur = (TextView)view.findViewById(R.id.duration_txt);
             viewHolder.playicon_img = (ImageView)view.findViewById(R.id.play_icon_imgg);
-            viewHolder.delete_play = (ImageView)view.findViewById(R.id.iv_delete_downloads);
             viewHolder.nowPlaying_layout = (LinearLayout) view.findViewById(R.id.nowPlaying_layout);
             viewHolder.textNowPlaying = (LinearLayout) view.findViewById(R.id.textNowPlaying);
             viewHolder.musicPlayLayout = (LinearLayout) view.findViewById(R.id.musicPlayLayout);
@@ -91,12 +84,11 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) view.getTag();
         }
 
-        viewHolder.delete_play.setTag(i);
 
         // TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
 
 
-        if (Constant.playPos == i && Constant.isplayDownloads) {
+        if (Constant.playPos == i && Constant.isplaySearch) {
             viewHolder.textNowPlaying.setVisibility(View.GONE);
             viewHolder.nowPlaying_layout.setVisibility(View.VISIBLE);
         }else {
@@ -123,26 +115,7 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         viewHolder.song_artist.setText(items.getClassName());
         viewHolder.song_dur.setText(items.getDuration());
 
-        viewHolder.delete_play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Constant.arrayListOfflineSongs.size() > 0){
-                    String path = Constant.arrayListOfflineSongs.get(i).getDownloads();
-                    String fileName = Constant.arrayListOfflineSongs.get(i).getTitle();
-                    Constant.isplayLectures = true;
 
-                    if(path != null && path != ""){
-                        File file = new File(path);
-                        file.delete();
-                        notifyDataSetChanged();
-
-                        Toast.makeText(context, "Audio Deleted",Toast.LENGTH_SHORT).show();
-                        mCallback.onProcessFilter(fileName);
-                    }
-                }
-
-            }
-        });
 
         //song_start_letter.setText(items.getAlpha_letter());
 //        playicon_img.setOnClickListener(new View.OnClickListener() {
@@ -180,13 +153,11 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
                 Constant.playPos = i;
                 Constant.lastPosition = i;
                 Constant.arrayList_play.clear();
-                Constant.arrayList_play.addAll(Constant.arrayListOfflineSongs);
-                Constant.isfromPlayer = "download";
-
+                Constant.arrayList_play.addAll(Constant.arrayListLectureslineSongs);
                 Constant.isOnline = false;
                 Intent intent = new Intent(context, PlayerService.class);
-                intent.putExtra("from","lecture");
-                Constant.isplayDownloads = true;
+                intent.putExtra("from","search");
+                Constant.isplaySearch = true;
 
                 if (Constant.isPlayed && Constant.lastPlayed == i) {
                     intent.setAction(PlayerService.ACTION_TOGGLE);

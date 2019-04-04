@@ -136,8 +136,6 @@ public class WebServices {
     //    volleyClass.volleyPostDataSync(ConstantValues.PLAY_LIST, jsonObject, listerner);
 
     }
-
-
     public void deletePlayLists(String user_id,String player_id,VolleyResponseListerner listerner) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -149,6 +147,22 @@ public class WebServices {
             e.printStackTrace();
         }
         volleyClass.volleyPostData(ConstantValues.DELETE_PLAYLIST_SONG, jsonObject, listerner);
+        //    volleyClass.volleyPostDataSync(ConstantValues.PLAY_LIST, jsonObject, listerner);
+
+    }
+
+    public void deleteSong(String user_id,String player_id,String track_id,VolleyResponseListerner listerner) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", user_id);
+            jsonObject.put("player_id", player_id);
+            jsonObject.put("track_id", track_id);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        volleyClass.volleyPostData(ConstantValues.DELETESONGS, jsonObject, listerner);
         //    volleyClass.volleyPostDataSync(ConstantValues.PLAY_LIST, jsonObject, listerner);
 
     }

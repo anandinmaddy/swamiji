@@ -32,6 +32,10 @@ public class SearchModel{
 
 
 
+    @ColumnInfo(name = "description")
+    private String description;
+
+
     public SearchModel() {
 
     }
@@ -49,7 +53,13 @@ public class SearchModel{
 
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public String getPost_id() {
         return post_id;
     }

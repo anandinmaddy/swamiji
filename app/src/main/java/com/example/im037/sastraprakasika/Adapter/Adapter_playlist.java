@@ -104,7 +104,8 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
         //   MaterialProgressBar button_progress_2;
         //     CircleProgressView circleProgressView;
         ProgressBar circularProgressbar;
-        LinearLayout playListName;
+        LinearLayout playListName,playListSelection;
+
     }
 
 
@@ -139,7 +140,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
 
 
         });
-        holder.img_arrow.setOnClickListener(new View.OnClickListener() {
+        holder.playListName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.shimmerFrameLayout.setVisibility(View.VISIBLE);
@@ -171,13 +172,12 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
 
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     MyLibraryFragment fragment2 = new MyLibraryFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("from","playlist");
-                    fragment2.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Constant.currentTab = 3;
+                    Constant.backPress = true;
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
-
                     Toast.makeText(context,"Playlist deleted",Toast.LENGTH_SHORT).show();
 
                 }
@@ -203,6 +203,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
                 shimmerFrameLayout.setVisibility(View.GONE);
                 Constant.trackList.clear();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                    shimmerFrameLayout.setVisibility(View.GONE);
                     JSONArray contentArray = response.optJSONArray("data");
                     for (int i = 0; i < contentArray.length(); i++) {
                         JSONObject jsonObject = contentArray.optJSONObject(i);
@@ -218,6 +219,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
                 fragment2.setArguments(profileData);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
 

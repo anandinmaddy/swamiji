@@ -54,11 +54,11 @@
         <!--android:layout_weight="0.4"-->
         <!--/>-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="279dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="2dp"
+            android:layout_marginTop="3dp"
             android:layout_weight="1.9"
-            android:layout_marginTop="5dp"
             android:visibility="visible"
             android:orientation="vertical">
 
@@ -108,8 +108,8 @@
 
                 <ImageView
                     android:id="@+id/play_icon"
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:layout_weight="0"
                     android:layout_gravity="center"
 
@@ -130,7 +130,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_2sdp"
                     android:textSize="@dimen/_10sdp"
                     android:text="1" />
 
@@ -198,18 +197,7 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_delete_downloads"
-            android:layout_width="44dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_marginEnd="7dp"
-            android:background="@drawable/ripple"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="7dp"
-            android:src="@drawable/delete_icon_new" />
+
         <!--<ImageView-->
         <!--android:layout_marginLeft="5dp"-->
         <!--android:id="@+id/download_img"-->

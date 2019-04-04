@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Fragment.NewFragments.ClickEditFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.NewPlaylistFragment;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.PlayList;
@@ -39,12 +42,14 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
     Context context;
     ArrayList<ItemSong> arrayListSong = new ArrayList();
     String playerId;
+    FragmentManager fragentManager;
     public static final String TAG = ClickEditFragment.class.getSimpleName();
 
-    public Adapter_playlist_edit(ArrayList title_images, String playerId, Context context) {
+    public Adapter_playlist_edit(ArrayList title_images, String playerId, Context context, FragmentManager fragentManager) {
         this.arrayListSong = title_images;
         this.playerId = playerId;
         this.context = context;
+        this.fragentManager = fragentManager;
     }
 
     @NonNull
@@ -57,8 +62,13 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
     public void onBindViewHolder(@NonNull Edit_view holder, final int position) {
 
         holder.title_imge_edit.setText(arrayListSong.get(position).getTitle());
-        Picasso.get().load(arrayListSong.get(position).getImageBig()).placeholder(R.drawable.placeholder_default)
-                .into(holder.song_imge_edit);
+        try {
+            Picasso.get().load(arrayListSong.get(position).getImageBig()).placeholder(R.drawable.placeholder_default)
+                    .into(holder.song_imge_edit);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         //holder.song_class_edit.setText((CharSequence) class_no.get(position));
         holder.song_dur_edit.setText(arrayListSong.get(position).getDuration());
 
@@ -80,7 +90,7 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
             db = Room.databaseBuilder(context,
                     DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
 
-            new WebServices(context, TAG).deletePlayLists(Session.getInstance(context, TAG).getUserId(),playerId, new VolleyResponseListerner() {
+            new WebServices(context, TAG).deleteSong(Session.getInstance(context, TAG).getUserId(),playerId,trackId, new VolleyResponseListerner() {
                 List<PlayList> playLists ;
 
                 @Override

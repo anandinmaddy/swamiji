@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +42,7 @@ public class NewPlaylistFragment extends Fragment {
     EditText playListTitle;
     LinearLayout addLayout;
     String title;
+    ImageView back;
 
     //TextView titleView;
    // ImageView back;
@@ -63,12 +66,13 @@ public class NewPlaylistFragment extends Fragment {
         playListTitle = (EditText) view.findViewById(R.id.album_image_title_next_edit);
         cancel_txt = (TextView) view.findViewById(R.id.cancel_newplaylist);
         newplaylist_txt = (TextView) view.findViewById(R.id.new_playlist);
-        done_txt = (TextView) view.findViewById(R.id.done_playlist);
+        back = (ImageView) getActivity().findViewById(R.id.back);
+        done_txt = (TextView) getActivity().findViewById(R.id.pageAction);
         addLayout = view.findViewById(R.id.addPlaylist);
        // titleView = getActivity().findViewById(R.id.title);
      //   back = getActivity().findViewById(R.id.back);
-
-
+        done_txt.setVisibility(View.VISIBLE);
+        done_txt.setText("Done");
        /* back.setVisibility(View.GONE);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +87,20 @@ public class NewPlaylistFragment extends Fragment {
             }
         });*/
         title = playListTitle.getText().toString();
-
+        back.setVisibility(View.VISIBLE);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back.setVisibility(View.GONE);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 3;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         done_txt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +117,7 @@ public class NewPlaylistFragment extends Fragment {
                     fragment2.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
 
                 }
@@ -120,6 +138,7 @@ public class NewPlaylistFragment extends Fragment {
             }
         });
 
+
         addLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +153,7 @@ public class NewPlaylistFragment extends Fragment {
                     fragment2.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
 
                     /*
@@ -197,10 +217,28 @@ public class NewPlaylistFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        done_txt.setVisibility(View.GONE);
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        done_txt.setVisibility(View.VISIBLE);
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        MyLibraryFragment fragment2 = new MyLibraryFragment();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Constant.currentTab = 3;
+        Constant.backPress = true;
+        fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 }

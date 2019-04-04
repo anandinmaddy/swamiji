@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,7 +42,8 @@ import java.util.List;
 public class MyLectureFragment extends Fragment {
 
     ListView lectureList;
-    TextView cancel, done, new_playlist;
+    TextView done, new_playlist;
+    ImageView back;
     createPlaylistAdapter adapter;
     String title;
     String playerId = "";
@@ -55,6 +57,7 @@ public class MyLectureFragment extends Fragment {
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,10 +68,10 @@ public class MyLectureFragment extends Fragment {
 
         lectureList = view.findViewById(R.id.lectureList);
 
-        cancel = view.findViewById(R.id.cancel_newplaylist);
-        done = view.findViewById(R.id.done_playlist);
+        done = getActivity().findViewById(R.id.pageAction);
         new_playlist = view.findViewById(R.id.new_playlist);
         playListSongs = db.itemSongDao().getAll();
+        back = (ImageView) getActivity().findViewById(R.id.back);
         Constant.playListSongsList.clear();
         Constant.playListSongsList.addAll(playListSongs);
         if (getArguments() != null){
@@ -82,16 +85,21 @@ public class MyLectureFragment extends Fragment {
         }
         adapter = new createPlaylistAdapter(Constant.playListSongsList, getActivity());
         lectureList.setAdapter(adapter);
-        cancel.setOnClickListener(new View.OnClickListener() {
+        done.setVisibility(View.VISIBLE);
+        done.setText("Done");
+
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewPlaylistFragment fragment2 = new NewPlaylistFragment();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.commit();
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    Log.i("MainActivity", "popping backstack");
+                    fm.popBackStack();
+                } else {
+                    Log.i("MainActivity", "nothing on backstack, calling super");
+                }
             }
         });
-
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,13 +112,11 @@ public class MyLectureFragment extends Fragment {
                     callWebservice();
                 }
                 MyLibraryFragment fragment2 = new MyLibraryFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("from","playlist");
-                bundle.putString("title",new_playlist.getText().toString());
-                FragmentManager fragmentManager = getFragmentManager();
-                fragment2.setArguments(bundle);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 3;
+                Constant.backPress = true;
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
 
@@ -175,4 +181,16 @@ public class MyLectureFragment extends Fragment {
                 }
             });
         }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        done.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        done.setVisibility(View.VISIBLE);
+    }
 }

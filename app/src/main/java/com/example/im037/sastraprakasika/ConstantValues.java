@@ -14,6 +14,8 @@ public class ConstantValues {
     public static String PLAY_LIST =SERVER_URL+"view_playlist";
     public static String CREATE_PLAYLIST =SERVER_URL+"create_playlist";
 
+    public static String DELETESONGS=SERVER_URL+"deletesongs";
+
     public static String ABOUTSASTRA=SERVER_URL+"pagedetails";
     public static String DEVICE_UPDATE=SERVER_URL+"device_update";
     public static String PROFILEUPDATE=SERVER_URL+"profile_update";

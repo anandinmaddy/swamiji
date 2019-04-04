@@ -33,6 +33,11 @@ public class DiscoursesModel {
     @ColumnInfo(name = "volumecount")
     String volumecount;
 
+
+
+    @ColumnInfo(name = "skip")
+    boolean skip;
+
     public DiscoursesModel(){
         return;
     }
@@ -46,6 +51,15 @@ public class DiscoursesModel {
         this.topiccount = topic_cnt;
         this.trackcount = track_cnt;
       }
+
+    public boolean getSkip() {
+        return skip;
+    }
+
+    public void setSkip(boolean skip) {
+        this.skip = skip;
+    }
+
     public int getId() {
         return id;
     }

@@ -27,6 +27,7 @@ import com.example.im037.sastraprakasika.Activity.SpaceItemdecoration;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.DiscoursesNewFragment;
+import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
@@ -79,7 +80,7 @@ public class DashBoardNewFragment extends Fragment  {
     LinearLayout homeView;
     ShimmerFrameLayout mShimmerViewContainer;
     ScrollView itemViewlayout;
-    TextView titleView;
+    TextView titleView,knowMoreTxt;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -127,9 +128,28 @@ public class DashBoardNewFragment extends Fragment  {
         mShimmerViewContainer.startShimmer();
 //        playerLayout.setVisibility(View.GONE);
 //
+        knowMoreTxt = (TextView) view.findViewById(R.id.knowMoreTxt);
         titleView.setVisibility(View.VISIBLE);
         titleView.setTypeface(null, Typeface.BOLD);
         titleView.setText("Discourses");
+        titleView.setTextColor(getResources().getColor(R.color.white));
+
+        knowMoreTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("from","home");
+                AboutDetailFragment fragment2 = new AboutDetailFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragment2.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+
+                fragmentTransaction.commit();
+            }
+        });
+
 
         content.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,13 +178,13 @@ public class DashBoardNewFragment extends Fragment  {
             mShimmerViewContainer.stopShimmer();
             mShimmerViewContainer.setVisibility(View.GONE);
             itemViewlayout.setVisibility(View.VISIBLE);
+            discoursesModels.clear();
             discoursesModels.addAll(discoursesModelsList);
             discourseView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
             discourseView.setAdapter(new CategoryRecyclerviewAdapter(getContext(), discoursesModels,parentID));
 
         }else{
             callWebservice();
-
         }
 
         //SetAboutDetail();
@@ -189,7 +209,7 @@ public class DashBoardNewFragment extends Fragment  {
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     SpaceItemdecoration decoration = new SpaceItemdecoration(16);
                     discourseView.addItemDecoration(decoration);
-                    db.userDao().getAll();
+                    db.userDao().deleteAll();
                     String jsonString = response.toString(); //http request
                     DiscoursesModel data = new DiscoursesModel();
                     Gson gson = new Gson();
@@ -199,7 +219,7 @@ public class DashBoardNewFragment extends Fragment  {
                         db.userDao().insertAll(discoursesModel);
                     }
 
-
+                    discoursesModels.clear();
                     discoursesModels.addAll(discoursesModelsNew);
                     discourseView.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
                     discourseView.setAdapter(new CategoryRecyclerviewAdapter(getActivity().getApplicationContext(), discoursesModels, parentID));
@@ -298,22 +318,38 @@ public class DashBoardNewFragment extends Fragment  {
                 @Override
                 public void onClick(View v) {
                   //  if (null != mListener) {
-                        Bundle profileData = new Bundle();
-                    profileData.putString("data",discoursesModels.get(position).getParentid());
-                    profileData.putString("data1",discoursesModels.get(position).getName());
-                    profileData.putString("data3",discoursesModels.get(position).getImage_url());
-                    profileData.putString("data4",discoursesModels.get(position).getDescription());
-                    profileData.putString("data5",discoursesModels.get(position).getTopiccount());
-                    profileData.putString("data6",discoursesModels.get(position).getVolumecount());
+
+                    Bundle profileData = new Bundle();
 
                     //    mListener.onFragmentInteraction(PlayerConstants.VOLUME_FRAGMENT, profileData);
 
                       //  CommonActivity.startNewFragment(volumePageFragment, "volumeFragment");
-                    DiscoursesNewFragment fragment2 = new DiscoursesNewFragment();
+                    Fragment fragment2 ;
+
+                    if (discoursesModels.get(position).getSkip()) {
+                        profileData.putString("data","");
+                        profileData.putString("parentid",discoursesModels.get(position).getParentid());
+
+                        profileData.putString("data1",discoursesModels.get(position).getName());
+                        profileData.putString("data3",discoursesModels.get(position).getImage_url());
+
+
+                        profileData.putString("data4",discoursesModels.get(position).getDescription());
+                        fragment2 = new VolumePageFragment();
+                    }else {
+                        profileData.putString("data",discoursesModels.get(position).getParentid());
+                        profileData.putString("data1",discoursesModels.get(position).getName());
+                        profileData.putString("data3",discoursesModels.get(position).getImage_url());
+                        profileData.putString("data4",discoursesModels.get(position).getDescription());
+                        profileData.putString("data5",discoursesModels.get(position).getTopiccount());
+                        profileData.putString("data6",discoursesModels.get(position).getVolumecount());
+                        fragment2 = new DiscoursesNewFragment();
+                    }
                     FragmentManager fragmentManager = getFragmentManager();
                     fragment2.setArguments(profileData);
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                     fragmentTransaction.commit();
                     //    CommonActivity.startNewFragment(volumePageFragment,"home");

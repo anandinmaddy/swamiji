@@ -32,6 +32,7 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
     ArrayList<ItemSong> arrayListSong = new ArrayList();
     Context context;
 
+
     public Adapter_Playlist_Next(ArrayList<ItemSong> arrayListSong,Context context) {
         this.arrayListSong = arrayListSong;
      //   this.imageview_titles = imageview_title;
@@ -51,36 +52,25 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
 
 
         holder.title_imge.setText(arrayListSong.get(position).getTitle());
-        Picasso.get().load(arrayListSong.get(position).getImageBig()).placeholder(R.drawable.placeholder_default)
-                .into(holder.song_imge);
+        try {
+            Picasso.get().load(arrayListSong.get(position).getImageBig()).placeholder(R.drawable.placeholder_default)
+                    .into(holder.song_imge);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
        // holder.song_class.setText(arrayListSong.get(position).getCatName());
         holder.song_dur.setText(arrayListSong.get(position).getDuration());
 
-
-        if (arrayListSong.size() <=0){
-
+        if (Constant.playPos == position && Constant.isplayPlaylist) {
+            holder.textNowPlaying.setVisibility(View.GONE);
+            holder.nowPlaying_layout.setVisibility(View.VISIBLE);
+        }else {
+            holder.nowPlaying_layout.setVisibility(View.GONE);
+            holder.textNowPlaying.setVisibility(View.VISIBLE);
         }
 
 
-        if (PlayerService.getIsPlayling() && Constant.playPos == position){
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                holder.play_icon_next.setImageResource(android.R.color.transparent);
-                holder.play_icon_next.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause_grey_web));
-            } else {
-                holder.play_icon_next.setImageResource(android.R.color.transparent);
-                holder.play_icon_next.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_pause_grey_web));
-            }
-
-            //  viewHolder.playlist_track.setVisibility( View.VISIBLE );
-        }else{
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                holder.play_icon_next.setImageResource(android.R.color.transparent);
-                holder.play_icon_next.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play_grey_web));
-            } else {
-                holder.play_icon_next.setImageResource(android.R.color.transparent);
-                holder.play_icon_next.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_play_grey_web));
-            }
-        }
 
 
         holder.songView.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +83,8 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
                // playerPosition = position;
                 Constant.arrayList_play.clear();
                 Constant.arrayList_play.addAll(arrayListSong);
+                Constant.isfromPlayer = "playlist";
+                Constant.isplayPlaylist = true;
 
                 Constant.isOnline = false;
                // mCallback.onProcessFilter(false);
@@ -142,6 +134,10 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
         @BindView(R.id.songView)
         LinearLayout songView;
 
+        @BindView(R.id.textNowPlaying)
+        LinearLayout textNowPlaying;
+        @BindView(R.id.nowPlaying_layout)
+        LinearLayout nowPlaying_layout;
         public Custom_view(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

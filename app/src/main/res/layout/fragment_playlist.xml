@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="vertical"
             app:shimmer_duration="800"
             >
@@ -180,6 +180,8 @@ android:visibility="gone"
         android:id="@+id/playListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:scrollbars="none"
         android:layout_marginBottom="90dp">
 
 

@@ -132,7 +132,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         title = getActivity().findViewById(R.id.title);
         title.setText("My Library");
 
-       title.setTextColor(getResources().getColor(R.color.black));
+       title.setTextColor(getResources().getColor(R.color.white));
         lect_det = new ArrayList<ItemSong>();
         for (int i = 0; i < img_url.length; i++) {
             ItemSong listOfLecturesListDetails = new ItemSong();
@@ -176,7 +176,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
 
             listView_song.setAdapter(lectures_audio_list_adapter);
-            listView_song.setSelection(Constant.downloadPosition);
+            listView_song.smoothScrollToPosition(Constant.downloadPosition);
 
             //   lectures_audio_list_adapter.notifyDataSetChanged();
         }else {
@@ -489,6 +489,8 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         if (b){
             MyLibraryFragment fragment2 = new MyLibraryFragment();
             Bundle bundle = new Bundle();
+            Constant.currentTab = 1;
+            Constant.backPress = true;
             bundle.putString("from","lecture");
             FragmentManager fragmentManager = getFragmentManager();
             fragment2.setArguments(bundle);

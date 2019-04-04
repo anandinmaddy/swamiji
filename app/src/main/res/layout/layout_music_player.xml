@@ -33,7 +33,6 @@
             <include
                 android:id="@+id/rl_min_header"
                 layout="@layout/layout_music_min_header"
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
@@ -43,7 +42,6 @@
                 android:id="@+id/ll_max_header"
                 layout="@layout/now_playing"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"
                 android:visibility="gone" />
 
@@ -109,7 +107,6 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="20dp"
                     android:layout_above="@+id/bottom_palyLayout"
-                    android:background="@drawable/rounded_image"
                   />
 
 

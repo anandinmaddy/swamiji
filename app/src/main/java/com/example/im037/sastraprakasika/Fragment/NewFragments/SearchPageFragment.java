@@ -4,7 +4,9 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -19,20 +21,27 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.SearchActivity;
+import com.example.im037.sastraprakasika.Adapter.Downloads_audio_list_adapter;
 import com.example.im037.sastraprakasika.Adapter.SongRecyclerViewAdapter;
+import com.example.im037.sastraprakasika.Adapter.SongRecyclerViewAdapterNew;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.SearchModel;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
+import com.example.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,9 +71,13 @@ public class SearchPageFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     RecyclerView searchRecyclerview;
+    ListView searchLinearview;
+
     Spinner searchSpin;
     EditText searchBar;
     static DiscousesAppDatabase db;
+    boolean isDiscourseSelected, isLibrarySelected;
+    boolean isLibAvailable;
 
 
     //  @BindView( R.id.image_close )
@@ -74,11 +87,14 @@ public class SearchPageFragment extends Fragment {
     private static final String TAG= SearchActivity.class.getSimpleName();
     public ArrayList<SearchModel> arrayList=new ArrayList<>();
     SongRecyclerViewAdapter adapter;
+    SongRecyclerViewAdapterNew adapterNew = null;
+
     ImageView back;
     LinearLayout main_layout;
     TextView titleView;
-    TextView noSearchResult;
+    TextView noSearchResult,libraryTxt,discoursesTx;
     private OnFragmentInteractionListener mListener;
+    private TabLayout tablayout;
 
     public SearchPageFragment() {
         // Required empty public constructor
@@ -126,12 +142,16 @@ public class SearchPageFragment extends Fragment {
                 DiscousesAppDatabase.class, "ListOfTopics").allowMainThreadQueries().build();
 
         searchRecyclerview = (RecyclerView) view.findViewById(R.id.searchRecyclerview) ;
+        searchLinearview = (ListView) view.findViewById(R.id.searchLinearview) ;
+
         searchSpin = (Spinner) view.findViewById(R.id.search_spin);
         searchBar = (EditText) view.findViewById(R.id.search_bar);
         back = getActivity().findViewById(R.id.back);
         main_layout = view.findViewById(R.id.mainSearch);
         noSearchResult = view.findViewById(R.id.noresult);
         back.setVisibility(View.GONE);
+        discoursesTx = view.findViewById(R.id.discoursesTx);
+        libraryTxt = view.findViewById(R.id.libraryTxt);
 //        ButterKnife.bind(getActivity());
         searchRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
@@ -168,11 +188,53 @@ public class SearchPageFragment extends Fragment {
                 CommonMethod.hideKeyboardNew(getActivity(), v);
             }
         });
+
+
+        libraryTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDiscourseSelected = false;
+                isLibrarySelected = true;
+                final int sdk = android.os.Build.VERSION.SDK_INT;
+                if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    libraryTxt.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.orange) );
+                    discoursesTx.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.txtview_border) );
+                } else {
+                    libraryTxt.setBackground(ContextCompat.getDrawable(getContext(), R.color.orange));
+                    discoursesTx.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.txtview_border));
+                }
+                libraryTxt.setTextColor(getResources().getColor(R.color.white));
+                discoursesTx.setTextColor(getResources().getColor(R.color.orange));
+                showLibraryUI();
+
+
+
+            }
+        });
+
+        discoursesTx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDiscourseSelected = true;
+                isLibrarySelected = false;
+                final int sdk = android.os.Build.VERSION.SDK_INT;
+                if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    discoursesTx.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.orange) );
+                    libraryTxt.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.txtview_border) );
+                } else {
+                    discoursesTx.setBackground(ContextCompat.getDrawable(getContext(), R.color.orange));
+                    libraryTxt.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.txtview_border));
+                }
+                discoursesTx.setTextColor(getResources().getColor(R.color.white));
+                libraryTxt.setTextColor(getResources().getColor(R.color.orange));
+                showDiscourseUI();
+            }
+        });
        // searchSpin.setOnItemSelectedListener(SearchPageFragment.this);
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
-        categories.add("All");
+        categories.add("Discourses");
         categories.add("Library");
 
 
@@ -188,6 +250,35 @@ public class SearchPageFragment extends Fragment {
         type = searchSpin.getSelectedItem().toString().toLowerCase();
         return view;
     }
+
+    private void showLibraryUI() {
+        if(isLibAvailable){
+            if (Constant.arrayListLectureslineSongs.size() > 0 ){
+                noSearchResult.setVisibility(View.GONE);
+                searchRecyclerview.setVisibility(View.GONE);
+                searchLinearview.setVisibility(View.VISIBLE);
+                adapterNew = new SongRecyclerViewAdapterNew(Constant.arrayListLectureslineSongs, getActivity());
+                searchLinearview.setAdapter(adapterNew);
+            }else {
+                searchLinearview.setVisibility(View.GONE);
+                searchRecyclerview.setVisibility(View.GONE);
+                noSearchResult.setVisibility(View.VISIBLE);
+            }
+        }else {
+            searchLinearview.setVisibility(View.GONE);
+            searchRecyclerview.setVisibility(View.GONE);
+            noSearchResult.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showDiscourseUI() {
+        noSearchResult.setVisibility(View.GONE);
+        searchLinearview.setVisibility(View.GONE);
+        searchRecyclerview.setVisibility(View.VISIBLE);
+        adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
+        searchRecyclerview.setAdapter(adapter);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -298,23 +389,76 @@ public class SearchPageFragment extends Fragment {
                 System.out.println("search response:::: "+response);
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     arrayList.clear();
-                    JSONArray jsonArray = response.optJSONArray("data");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        db.searchModelDao().deleteAll();
-                        SearchModel model = new SearchModel();
+                    JSONObject jsonObject = response.optJSONObject("data");
 
+                    JSONArray jsonArrayDiscourses = jsonObject.optJSONArray("alldiscourses");
+                    JSONArray wholelibrary = jsonObject.optJSONArray("library");
+                    db.itemSongDao().deleteAll();
+                    Constant.arrayListLectureslineSongs.clear();
+                        for (int i = 0; i < wholelibrary.length(); i++) {
+                            if (wholelibrary.optJSONObject(i) != null && wholelibrary.optJSONObject(i).optString("title")!= null) {
+                                isLibAvailable = true;
+                                JSONArray jsonArrayLibrary = wholelibrary.getJSONObject(i).getJSONArray("tracks");
+                            for (int j = 0; j < jsonArrayLibrary.length(); j++) {
 
-                        // model.setParentid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("parentid"));
-                        model.setTitle(jsonArray.optJSONObject(i).optString("title"));
-                        model.setPost_id(jsonArray.optJSONObject(i).optString("post_id"));
-                        // model.setSubid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("subid"));
-                        // model.setType(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("type"));
-                        // model.setTime(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("time"));
-                        // model.setImage_url(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("image_url"));*/
-                        arrayList.add(model);
+                                SearchModel model = new SearchModel();
+                                if (jsonArrayLibrary.optJSONObject(j) != null && jsonArrayLibrary.optJSONObject(j).optString("title") != null) {
+                                    ItemSong itemSong = new ItemSong();
 
-                        db.searchModelDao().insertAll(model);
+                                    itemSong.setUrl(jsonArrayLibrary.optJSONObject(j).optString("mp3"));
+                                    itemSong.setTitle(jsonArrayLibrary.optJSONObject(j).optString("title"));
+                                    itemSong.setDuration(jsonArrayLibrary.optJSONObject(j).optString("time"));
+                                    itemSong.setTrackId(jsonArrayLibrary.optJSONObject(j).optString("track_id"));
+                                    itemSong.setClassName(jsonArrayLibrary.optJSONObject(j).optString("track_id"));
+
+                                    db.itemSongDao().insertAll(itemSong);
+                                    Constant.arrayListLectureslineSongs.add(itemSong);
+                                } else {
+                                    searchRecyclerview.setVisibility(View.GONE);
+                                    noSearchResult.setVisibility(View.VISIBLE);
+                                    noSearchResult.setText("No Result Found !");
+                                }
+                            }
+                        }else {
+                                isLibAvailable = false;
+
+                              /*  searchRecyclerview.setVisibility(View.GONE);
+                                noSearchResult.setVisibility(View.VISIBLE);
+                                noSearchResult.setText("No Result Found !");*/
+                            }
                     }
+
+
+                    for (int i = 0; i < jsonArrayDiscourses.length(); i++) {
+                            db.searchModelDao().deleteAll();
+                            SearchModel model = new SearchModel();
+                            if (jsonArrayDiscourses.optJSONObject(i) != null && jsonArrayDiscourses.optJSONObject(i).optString("title")!= null){
+                                model.setTitle(jsonArrayDiscourses.optJSONObject(i).optString("title"));
+                                model.setPost_id(jsonArrayDiscourses.optJSONObject(i).optString("post_id"));
+                                model.setParentid(jsonArrayDiscourses.optJSONObject(i).optString("parentid"));
+                                model.setSubid(jsonArrayDiscourses.optJSONObject(i).optString("subid"));
+                                model.setImage_url(jsonArrayDiscourses.optJSONObject(i).optString("image_url"));
+                                model.setDescription(jsonArrayDiscourses.optJSONObject(i).optString("description"));
+                                // model.setSubid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("subid"));
+                                // model.setType(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("type"));
+                                // model.setTime(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("time"));
+                                // model.setImage_url(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("image_url"));*/
+                                arrayList.add(model);
+
+                                db.searchModelDao().insertAll(model);
+                            }else {
+                                searchRecyclerview.setVisibility(View.GONE);
+                                noSearchResult.setVisibility(View.VISIBLE);
+                                noSearchResult.setText("No Result Found !");
+                            }
+                        }
+
+
+
+
+                            // model.setParentid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("parentid"));
+
+
                     if (arrayList.size() > 0 ){
                         noSearchResult.setVisibility(View.GONE);
                         searchRecyclerview.setVisibility(View.VISIBLE);

@@ -21,6 +21,7 @@ import com.example.im037.sastraprakasika.Activity.Topics_detailed_items;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
 import com.example.im037.sastraprakasika.Model.ListOfTopicsModels;
 import com.example.im037.sastraprakasika.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
     FragmentManager fragmentManager;
     Context context;
     ArrayList<ListOfTopicsModels> listOfTopicsModels;
-
 
 
     public TopicsRecyclerviewAdapter(Context context, ArrayList<ListOfTopicsModels> listOfTopicsModels, FragmentManager fragmentManager) {
@@ -64,6 +64,7 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
                 .placeholder(R.drawable.placeholder_song)
                 .into(holder.topics_image);
 
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +82,7 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 /*
 

@@ -80,14 +80,14 @@
                 <TextView
                     android:textSize="@dimen/_10sdp"
                     android:id="@+id/time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Volumes - " />
                 <TextView
                     android:textSize="@dimen/_10sdp"
 
                     android:id="@+id/volume_no"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="10" />
 
