@@ -1,6 +1,7 @@
 package com.example.im037.sastraprakasika.Fragment;
 
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,17 +12,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.DiscoursesNewFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AboutDetailFragment extends Fragment {
+public class AboutDetailFragment extends Fragment implements NetworkStateReceiverListener {
 
     ImageView back,contentImg;
 
@@ -29,6 +36,10 @@ public class AboutDetailFragment extends Fragment {
     Fragment fragment2 ;
     CardView headerCard;
     ImageView swamiJiImg;
+    LinearLayout offlineViewer;
+    TextView offlineLink;
+    ScrollView fullview;
+
 
     public AboutDetailFragment() {
         // Required empty public constructor
@@ -48,6 +59,9 @@ public class AboutDetailFragment extends Fragment {
         headerCard = (CardView) view.findViewById(R.id.headerCard);
         swamiJiImg = (ImageView) view.findViewById(R.id.swamijiImg);
         back.setVisibility(View.VISIBLE);
+        offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        fullview = view.findViewById(R.id.fullview);
 
         if(getArguments() != null && getArguments().getString("data") != null){
             titleTxt.setText(getArguments().getString("data"));
@@ -77,6 +91,21 @@ public class AboutDetailFragment extends Fragment {
             }
         }
 
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,4 +123,24 @@ public class AboutDetailFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+        fullview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+        fullview.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 }

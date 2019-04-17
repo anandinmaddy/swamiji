@@ -61,7 +61,7 @@
                     android:id="@+id/album_image_playlist"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/tamil"
+                    android:src="@drawable/vedanta"
                     android:layout_weight="0.4"
                     />
             </android.support.v7.widget.CardView>
@@ -73,11 +73,11 @@
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.3"
+                android:layout_weight="1.8"
                 android:orientation="vertical"
                 android:layout_gravity="center"
                 >
-                <TextView
+                <me.grantland.widget.AutofitTextView
 
                     android:id="@+id/album_image_title"
                     android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.3"
+                android:layout_weight="0.3"
                 android:orientation="vertical"
                 android:layout_gravity="center"
                 >

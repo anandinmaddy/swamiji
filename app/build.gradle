@@ -59,8 +59,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
     //add  me
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.labo.kaji:relativepopupwindow:0.3.1'
     implementation 'com.h6ah4i.android.widget.verticalseekbar:verticalseekbar:0.7.2'
     implementation 'com.facebook.stetho:stetho:1.5.0'
@@ -73,6 +73,9 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
     implementation 'me.biubiubiu.justifytext:library:1.1'
+    implementation 'me.grantland:autofittextview:0.2.1'
+    implementation 'com.android.billingclient:billing:1.2.2'
+
 
 
 

@@ -49,6 +49,7 @@ public class CommonMethod {
 //        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
         context.overridePendingTransition( R.anim.fade_in, R.anim.fade_out);
+
     }
     public static void changeActivityData(Context context,Class<?>c,String data){
         Intent i=new Intent(context,c);

@@ -1,6 +1,7 @@
 package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Adapter_Playlist_Next;
@@ -20,6 +22,8 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.json.JSONArray;
@@ -34,7 +38,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlayListDetailFragment extends Fragment {
+public class PlayListDetailFragment extends Fragment implements NetworkStateReceiverListener {
     ImageView imageView,back;
     TextView txtview,nosongs;
     RecyclerView recyclerView;
@@ -43,6 +47,8 @@ public class PlayListDetailFragment extends Fragment {
     ShimmerFrameLayout shimmerFrameLayout;
     String player_id = "";
     TextView pageAction;
+    TextView offlineLink;
+    LinearLayout offlineViewer;
     public static final String TAG = PlayListDetailFragment.class.getSimpleName();
 
     ArrayList titleImages_next = new ArrayList<>(Arrays.asList("An Overview Of Yoga", "Intoduction into Human Pursuits","Right Action and Attribute"));
@@ -67,6 +73,9 @@ public class PlayListDetailFragment extends Fragment {
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         nosongs = (TextView) view.findViewById(R.id.nosongs);
         pageAction = (TextView) getActivity().findViewById(R.id.pageAction);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
+
         if (getArguments()!= null && getArguments().getString("data") != null){
             txtview.setText(getArguments().getString("data"));
             player_id =getArguments().getString("player_id");
@@ -75,6 +84,23 @@ public class PlayListDetailFragment extends Fragment {
             txtview.setText("Playlist");
 
         }
+
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
 
         shimmerFrameLayout.startShimmer();
 
@@ -212,10 +238,26 @@ public class PlayListDetailFragment extends Fragment {
         super.onPause();
         pageAction.setVisibility(View.GONE);
     }
-
     @Override
     public void onResume() {
         super.onResume();
         pageAction.setVisibility(View.VISIBLE);
+
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
     }
+
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
+
 }

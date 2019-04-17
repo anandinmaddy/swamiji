@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -76,6 +77,9 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     LinearLayout layout_mediaLayout;
     //add new
     LinearLayout layout_desc_below;
+    LinearLayout offlinePageView;
+    private FrameLayout frameLayout;
+
     static LinearLayout st_linearLayoutPlayingSong;
     //    ListView mediaListView;
     //ProgressBar progressBar;
@@ -120,7 +124,18 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
 
+        offlinePageView = getActivity().findViewById(R.id.offlineViewer);
+        frameLayout = (FrameLayout) getActivity().findViewById(R.id.commonActivityFrameLayout);
+
+
         init();
+
+        if(getArguments() != null){
+            if(getArguments().getBoolean("offline")){
+                offlinePageView.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+            }
+        }
 
         //lect_det = new ArrayList<ListOfLecturesListDetails>();
 //        for (int i = 0; i < img_url.length; i++) {
@@ -144,34 +159,6 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     }
 
 
-    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
-            final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        (Activity) context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    showDialog("External storage", context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                } else {
-                    ActivityCompat
-                            .requestPermissions(
-                                    (Activity) context,
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-    }
 
 
     public void showDialog(final String msg, final Context context,
@@ -199,10 +186,10 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
             txt_playingSong.setSelected(true);
             //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             shimmerFrameLayout.startShimmer();
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
             ArrayList<ItemSong> offlineSongs = new ArrayList<>();
             HashMap<String,String> downloadedFile = downloadFiles();
 
-            if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
                 if (PlayerConstants.SONGS_LIST.size() <= 0) {
 
                     List<ItemSong> itemSongs = db.itemSongDao().getAll();
@@ -228,14 +215,13 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
                     }else{
                     //    callWebservice();
                     }*/
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
+
                     //loadUrlData();
 
                 }
 
             }
-        }
+
 
     private HashMap<String, String> downloadFiles() {
 
@@ -479,15 +465,16 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         ArrayList<ItemSong> onlyOffline = new ArrayList<>();
         Constant.arrayListOfflineSongs.clear();
         List<ItemSong> itemSongs = db.itemSongDao().getAll();
-
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
         for(int i=0; i<itemSongs.size(); i++) {
             ItemSong offlineSong = itemSongs.get(i);
-            if (offlineSong.getDownloads() != null && !offlineSong.getDownloads().equals("")){
+            if ((offlineSong.getDownloads() != null && !offlineSong.getDownloads().equals("")) && (offlineSong.getUserRating().equalsIgnoreCase("") || offlineSong.getUserRating().equalsIgnoreCase("false"))){
                 Constant.arrayListOfflineSongs.add(offlineSong);
             }
         }
             if (Constant.arrayListOfflineSongs.size() <= 0){
-                noSongsFound.setVisibility(View.VISIBLE);
+                noSongsFound.setVisibility(View.GONE);
                 listView_song.setVisibility(View.GONE);
             }else{
                 noSongsFound.setVisibility(View.GONE);
@@ -495,6 +482,8 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
             }
             downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.arrayListOfflineSongs, getActivity(),this);
             listView_song.setAdapter(downloads_audio_list_adapter);
+        listView_song.smoothScrollToPosition(Constant.downloadPosition);
+
 
     }
 

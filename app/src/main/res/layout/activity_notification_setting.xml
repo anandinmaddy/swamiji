@@ -5,13 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_smoke"
+    android:visibility="visible"
+    android:id="@+id/fullview"
     android:fillViewport="true"
     tools:context=".Activity.NotificationSettingActivity">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="60dp">
+
 
         <RelativeLayout
             android:id="@+id/allow_noti_layout"

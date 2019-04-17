@@ -2,6 +2,7 @@ package com.example.im037.sastraprakasika.Fragment;
 
 import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Adapter.Adapter_playlist;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.NewPlaylistFragment;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.PlayList;
@@ -25,6 +27,8 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.TypeConvertor;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -36,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class PlaylistsFragment extends Fragment {
+public class PlaylistsFragment extends Fragment implements NetworkStateReceiverListener {
 
     LinearLayout linearLayout;
     ArrayList titleImages = new ArrayList<>(Arrays.asList("Bhagavad-gita","Upanished"));
@@ -45,6 +49,8 @@ public class PlaylistsFragment extends Fragment {
     TextView titleView;
     DiscousesAppDatabase db;
     List<PlayList> playLists;
+    TextView offlineLink;
+    LinearLayout offlineViewer;
     public static final String TAG = PlaylistsFragment.class.getSimpleName();
 
     ArrayList<ArrayList<ItemSong>> playList = new ArrayList<ArrayList<ItemSong>>();
@@ -61,10 +67,29 @@ public class PlaylistsFragment extends Fragment {
        // titleView.setVisibility(View.GONE);
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
 
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         shimmerFrameLayout.startShimmer();
+
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
 
         for(Map.Entry<String, ArrayList<ItemSong>> listEntry : Constant.playListMap.entrySet()){
             playList.add(listEntry.getValue());
@@ -83,7 +108,24 @@ public class PlaylistsFragment extends Fragment {
             }
         });
 
-        callWebservice();
+        playLists = db.playListDao().getAll();
+
+        if (playLists.size() > 0){
+            shimmerFrameLayout.stopShimmer();
+            shimmerFrameLayout.setVisibility(View.GONE);
+            Constant.playListArray.clear();
+            Constant.playListArray.addAll(playLists);
+            RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.playListRecyclerView);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            Adapter_playlist adapter_playlist = new Adapter_playlist(Constant.playListArray,getActivity(),getFragmentManager());
+            recyclerView.setAdapter(adapter_playlist); // set the Adapter to RecyclerView
+            recyclerView.invalidate();
+        }else {
+            callWebservice();
+        }
+
+
 
 
         return view;
@@ -109,6 +151,12 @@ public class PlaylistsFragment extends Fragment {
                             e.printStackTrace();
                         }
 
+                        Constant.playListArray.clear();
+                        playLists = db.playListDao().getAll();
+
+                        if (playLists.size() > 0){
+                            Constant.playListArray.addAll(playLists);
+                        }
 
                         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.playListRecyclerView);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -117,12 +165,6 @@ public class PlaylistsFragment extends Fragment {
                         recyclerView.setAdapter(adapter_playlist); // set the Adapter to RecyclerView
                         recyclerView.invalidate();
                         Constant.playListSongs1.size();
-                        Constant.playListArray.clear();
-                        playLists = db.playListDao().getAll();
-
-                        if (playLists.size() > 0){
-                            Constant.playListArray.addAll(playLists);
-                        }
 
 
                     }
@@ -137,6 +179,31 @@ public class PlaylistsFragment extends Fragment {
             });
 
         }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+            connectivityReceiver.addListener(this);
+            getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
 
 
 }

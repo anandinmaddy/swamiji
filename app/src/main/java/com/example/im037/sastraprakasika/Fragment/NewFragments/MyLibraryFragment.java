@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,7 +46,7 @@ public class MyLibraryFragment extends Fragment  {
     private TabLayout tablayout;
     private ViewPager viewpager;
     ShimmerFrameLayout shimmerFrameLayout;
-    private  String title[]={"Topics","Lectures","Download","Playlists"};
+    private  String title[]={"Topics","Lectures","Downloads","Playlists"};
  //   private TextView titleView;
     private FragmentAdapter adapter;
     private String TAG="";
@@ -78,6 +79,7 @@ public class MyLibraryFragment extends Fragment  {
         if(getArguments() != null){
             passvalue = getArguments().getString( "from" );
         }
+
 
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.startShimmer();
@@ -134,6 +136,34 @@ public class MyLibraryFragment extends Fragment  {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Constant.currentTab = tab.getPosition();
+                if (Constant.currentTab == 2 && Constant.downloadCompleted){
+                    Constant.downloadCompleted = false;
+                    MyLibraryFragment fragment2 = new MyLibraryFragment();
+                    Bundle bundle = new Bundle();
+                    Constant.currentTab = 2;
+                    Constant.backPress = true;
+                    bundle.putString("from","lecture");
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragment2.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
+                }
+                if (Constant.currentTab == 2 && Constant.isFirstTime){
+                    Constant.downloadCompleted = false;
+                    MyLibraryFragment fragment2 = new MyLibraryFragment();
+                    Bundle bundle = new Bundle();
+                    Constant.currentTab = 2;
+                    Constant.backPress = true;
+                    bundle.putString("from","lecture");
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragment2.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
+                    Constant.isFirstTime = false;
+                }
             }
 
             @Override
@@ -143,7 +173,7 @@ public class MyLibraryFragment extends Fragment  {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Constant.currentTab = tab.getPosition();
+            //    Constant.currentTab = tab.getPosition();
             }
         });
 

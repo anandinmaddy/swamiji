@@ -54,6 +54,7 @@
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowDisablePreview">true</item>
         <item name="colorAccent">@color/orange</item>
         <!--<item name="android:windowFullscreen">true</item>-->
     </style>
@@ -126,8 +127,12 @@
     </style>
 
     <style name="customTab" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="YourTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

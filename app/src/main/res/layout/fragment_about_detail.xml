@@ -5,12 +5,60 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.AboutDetailFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:id="@+id/offlineViewer"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+
+            android:layout_gravity="center"
+            android:background="@drawable/network_offline"/>
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="No Internet connetion Please check your \n          connection and try again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlinePageLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:text="Try Again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlineLectureLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:text="Offline lectures "/>
+    </LinearLayout>
 
     <!-- TODO: Update blank fragment layout -->
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:visibility="visible"
+    android:id="@+id/fullview"
     android:layout_marginBottom="50dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

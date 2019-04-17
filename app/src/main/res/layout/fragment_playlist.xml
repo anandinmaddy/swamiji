@@ -6,6 +6,50 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:id="@+id/offlineViewer"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/network_offline"/>
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="No Internet connetion Please check your \n          connection and try again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlinePageLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:text="Try Again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlineLectureLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:text="Offline lectures "/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,7 +133,7 @@ android:visibility="gone"
         android:id="@+id/playlist_layout_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="@dimen/_5sdp"
         android:orientation="horizontal">
 
@@ -182,7 +226,7 @@ android:visibility="gone"
         android:layout_height="match_parent"
         android:focusable="true"
         android:scrollbars="none"
-        android:layout_marginBottom="90dp">
+        android:layout_marginBottom="50dp">
 
 
     </android.support.v7.widget.RecyclerView>

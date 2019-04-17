@@ -2,6 +2,7 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,11 +24,14 @@ import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.VolumeDetailsModel;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Readmore.ReadMoreTextView;
 import com.example.im037.sastraprakasika.SingletonClass.GetData;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.Selected;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
@@ -43,7 +48,7 @@ import butterknife.BindView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VolumeDetailsFragment extends Fragment {
+public class VolumeDetailsFragment extends Fragment implements NetworkStateReceiverListener {
 
     Context context;
     ImageView image;
@@ -59,6 +64,8 @@ public class VolumeDetailsFragment extends Fragment {
     ImageView back;
     TextView titleView,knowMoretxt,pageTitle;
     String title,desc,imagetxt;
+    LinearLayout offlineViewer;
+    TextView offlineLink;
 
     public VolumeDetailsFragment() {
         // Required empty public constructor
@@ -80,6 +87,9 @@ public class VolumeDetailsFragment extends Fragment {
         description = view.findViewById(R.id.description);
         mShimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmer();
+        offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+
         setCatergory();
         back.setVisibility(View.VISIBLE);
 
@@ -92,6 +102,23 @@ public class VolumeDetailsFragment extends Fragment {
         }else {
             titleView.setText("Introduction to Vedanta");
         }
+
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,4 +228,24 @@ public class VolumeDetailsFragment extends Fragment {
         });
     }
 
+
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 }

@@ -7,6 +7,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -30,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.im037.sastraprakasika.Adapter.Lectures_audio_list_adapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
@@ -45,6 +47,8 @@ import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.mediacontrols.Controls;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.mediautil.MediaItem;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
 import com.example.im037.sastraprakasika.mediautil.UtilFunctions;
@@ -60,10 +64,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.View.VISIBLE;
 
-public class LecturesFragment_Audioplay extends Fragment implements Lectures_audio_list_adapter.IProcessFilter {
+public class LecturesFragment_Audioplay extends Fragment implements Lectures_audio_list_adapter.IProcessFilter, NetworkStateReceiverListener {
 
     Methods methods;
 
@@ -93,6 +98,9 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
     List<ItemSong> itemSongList = new ArrayList<>();
     List<ItemSong> itemSongListNew = new ArrayList<>();
+    TextView offlineLink;
+    LinearLayout offlineViewer;
+
 
     private static final int MY_PERMISSIONS_REQUEST_MULTIPLE = 1100;
 
@@ -129,6 +137,24 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
         context = getContext();
        init();
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
         title = getActivity().findViewById(R.id.title);
         title.setText("My Library");
 
@@ -142,14 +168,17 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
             listOfLecturesListDetails.setDuration(song_dur[i]);
             listOfLecturesListDetails.setUrl(img_url[i]);
             lect_det.add(listOfLecturesListDetails);
-
         }
 
-
-            itemSongList = db.itemSongDao().getAll();
-
+        itemSongList = db.itemSongDao().getAll();
             for (ItemSong itemSong : itemSongList){
-                String isOfflinevideo = readFileNames(itemSong.getTitle());
+                String isOfflinevideo = readFileNames(itemSong.getTitle(),itemSong.getUserRating());
+                if (itemSong.getUserRating() != null && !itemSong.getUserRating().equalsIgnoreCase("") && itemSong.getUserRating().equalsIgnoreCase("true") && isOfflinevideo != null && !isOfflinevideo.isEmpty()){
+                        File file = new File(isOfflinevideo);
+                        file.delete();
+                    db.itemSongDao().updateRat("false",itemSong.getTitle());
+
+                }else
                 if (isOfflinevideo != null && !isOfflinevideo.isEmpty()){
                     db.itemSongDao().update(isOfflinevideo,itemSong.getTitle());
                 }
@@ -160,10 +189,10 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
         listView_song = (ListView) view.findViewById(R.id.listViewMusicSong_list);
 
-        shimmerFrameLayout.stopShimmer();
-        shimmerFrameLayout.setVisibility(View.GONE);
 
         if (itemSongListNew != null && itemSongListNew.size() > 0){
+            shimmerFrameLayout.stopShimmer();
+            shimmerFrameLayout.setVisibility(View.GONE);
             Constant.arrayList_play.clear();
             Constant.arrayList_play.addAll(itemSongListNew);
             Constant.arrayListLectureslineSongs.clear();
@@ -173,10 +202,9 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
             Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayListLectureslineSongs, getActivity(),this);
         //    listView_song.smoothScrollToPosition(Constant.lastPosition);
-
-
             listView_song.setAdapter(lectures_audio_list_adapter);
-            listView_song.smoothScrollToPosition(Constant.downloadPosition);
+            listView_song.setSelection(Constant.downloadPosition);
+            lectures_audio_list_adapter.notifyDataSetChanged();
 
             //   lectures_audio_list_adapter.notifyDataSetChanged();
         }else {
@@ -229,6 +257,16 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                 callWebservice();
            // }
             setListItems();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+//            init();
+        } else {
+          //  init();
         }
     }
 
@@ -306,13 +344,13 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
      //   listView_song.smoothScrollToPosition(Constant.lastPosition);
 
         try {
+
             listView_song.setAdapter(lectures_audio_list_adapter);
+            listView_song.setSelection(Constant.downloadPosition);
+
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        listView_song.setSelection(Constant.downloadPosition);
-
 
     }
 
@@ -478,13 +516,11 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
 
     @Override
-    public void onProcessFilter(boolean b) {
+    public void onProcessFilter(boolean b, ArrayList<ItemSong> mediaItems) {
         // Process the filter after download
         Log.d("rest","res");
-        listView_song.invalidateViews();
 
-
-        //listView_song.setSelection(Constant.lastPlayed);
+        //listView_song.smoothScrollToPosition(Constant.lastPlayed);
 
         if (b){
             MyLibraryFragment fragment2 = new MyLibraryFragment();
@@ -500,8 +536,11 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         }else {
             Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
 
-            listView_song.setAdapter(lectures_audio_list_adapter);
+            if (lectures_audio_list_adapter == null){
+                listView_song.setAdapter(lectures_audio_list_adapter);
+            }
             listView_song.setSelection(Constant.downloadPosition);
+
 
         }
 
@@ -526,10 +565,24 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
      //   lectures_audio_list_adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+      //  onProcessFilter(true);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        try {
+            ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+            connectivityReceiver.addListener(this);
+            getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
   /*      lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayList_play, getActivity(),this);
         lectures_audio_list_adapter.notifyDataSetChanged();
@@ -652,7 +705,6 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                     public void run() {
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.setVisibility(View.GONE);
-                        Constant.arrayListOfflineSongs.clear();
                         System.out.println("library respon:::: " + response);
                         if (response.optString("resultcode").equalsIgnoreCase("200")) {
 
@@ -684,14 +736,13 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                                         itemSong.setDuration(jsonObject.optString("time"));
                                         itemSong.setTrackId(jsonObject.optString("track_id"));
                                         itemSong.setClassName(jsonObject.optString("classname"));
-                                        itemSong.setImageBig(image_url);
-                                        itemSong.setImageSmall(image_url);
-                                         String isOfflinevideo = readFileNames(jsonObject.optString("title"));
+                                        itemSong.setImageBig(jsonObject.optString("image_url"));
+                                        itemSong.setImageSmall(jsonObject.optString("image_url"));
+                                        itemSong.setUserRating("false");
+                                         String isOfflinevideo = readFileNames(jsonObject.optString("title"),jsonObject.optString("avgRating"));
                                          if (isOfflinevideo != null && isOfflinevideo != ""){
                                              itemSong.setDownloads(isOfflinevideo);
                                          }
-
-
 
                                         db.itemSongDao().insertAll(itemSong);
                                         Constant.arrayListLectureslineSongs.add(itemSong);
@@ -743,7 +794,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
 
 
-    private String readFileNames(String title) {
+    private String readFileNames(String title,String rating) {
             HashMap<String,String> downloadSongs = new HashMap<String, String>();
             try {
                 File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
@@ -773,6 +824,17 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
             }
             return null;
     }
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
+
 
 }
 

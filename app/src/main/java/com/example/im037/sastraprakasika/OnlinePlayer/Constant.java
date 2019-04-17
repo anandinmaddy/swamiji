@@ -29,6 +29,10 @@ public class Constant {
     public static String isfromPlayer = "";
     public static boolean isplayPlaylist = false;
     public static boolean isplaySearch = false;
+    public static boolean refreshLecture = false;
+    public static boolean downloadCompleted = false;
+    public static boolean isFirstTime = true;
+    public static ArrayList<ItemSong> wholeMediaList = new ArrayList<>();
 
     private static String SERVER_URL = "";
 

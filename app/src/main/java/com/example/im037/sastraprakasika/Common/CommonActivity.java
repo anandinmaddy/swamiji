@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -53,6 +54,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.im037.sastraprakasika.Activity.MyLibraryActivity;
+import com.example.im037.sastraprakasika.Fragment.DownloadsFragment;
+import com.example.im037.sastraprakasika.Fragment.DownloadsFragmentNew;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyAccountFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
@@ -68,6 +71,8 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.mediautil.MediaItem;
 import com.example.im037.sastraprakasika.mediautil.PlayerConstants;
 import com.example.im037.sastraprakasika.utils.DBHelper;
@@ -101,12 +106,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 
-public class CommonActivity extends AppCompatActivity  {
+public class CommonActivity extends AppCompatActivity   {
     private static final String ACTION = "com.android.activity.SEND_DATA";
     private static String TAG = "CommonActivity";
     private static FrameLayout frameLayout;
     private LinearLayout backgroundLinear;
-
+    private ConnectivityReceiver connectivityReceiver;
     private ActionBarDrawerToggle toggle;
     private ImageView back, notification;
     private static AVLoadingIndicatorView commonProgressBar;
@@ -133,7 +138,6 @@ public class CommonActivity extends AppCompatActivity  {
     AudioManager am;
     RelativeLayout rl_min_header;
     LinearLayout ll_max_header;
-
     RatingBar ratingBar;
     SeekBar seekBar_music, seekbar_min;
     View view_playlist, view_download, view_rate;
@@ -198,7 +202,6 @@ public class CommonActivity extends AppCompatActivity  {
         methods = new Methods(this);
         dbHelper = new DBHelper(this);
         layoutBackground = findViewById(R.id.ss);
-
         iv_music_bg = findViewById(R.id.iv_music_bg);
         iv_music_play = findViewById(R.id.iv_music_play);
         iv_music_next = findViewById(R.id.iv_music_next);
@@ -249,7 +252,13 @@ public class CommonActivity extends AppCompatActivity  {
 
         this.registerReceiver(this.yourReceiver, theFilter);
 
-
+        myLibraryImg.setImageResource(R.drawable.mylibrary_grey);
+        discoursesImg.setImageResource(R.drawable.discourse_orange);
+        searchImg.setImageResource(R.drawable.search_grey);
+        myAccountImg.setImageResource(R.drawable.account_grey);
+        DashBoardNewFragment dashBoardNewFragment = new DashBoardNewFragment();
+        //  volumePageFragment.setArguments(profileData);
+        startNewFragment(dashBoardNewFragment,"home");
 
 
      //   iv_max_fav.setOnClickListener();
@@ -328,6 +337,7 @@ public class CommonActivity extends AppCompatActivity  {
         });
 
         am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
 
 
         iv_music_downloads.setOnClickListener(new View.OnClickListener() {
@@ -512,6 +522,7 @@ public class CommonActivity extends AppCompatActivity  {
     protected void onResume() {
         isHomeActivityRunning = true;
         super.onResume();
+
 
     }
 
@@ -1213,11 +1224,6 @@ public class CommonActivity extends AppCompatActivity  {
 
         if (Constant.isOnline) {
 
-          /*  Picasso.get()
-                    .load(itemSong.getImageSmall())
-                    .placeholder(R.drawable.ic_music)
-                    .into(iv_max_song);*/
-
 
             if (ratingBar.getVisibility() == View.GONE) {
               //  ratingBar.setVisibility(View.VISIBLE);
@@ -1420,6 +1426,7 @@ public class CommonActivity extends AppCompatActivity  {
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
 
     private class ImagePagerAdapter extends PagerAdapter {
 
@@ -1730,6 +1737,8 @@ public class CommonActivity extends AppCompatActivity  {
 
 
     }
+
+
 
 
 

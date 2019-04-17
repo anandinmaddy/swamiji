@@ -1,13 +1,17 @@
 package com.example.im037.sastraprakasika.Activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
@@ -17,11 +21,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
@@ -34,6 +41,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -76,6 +84,11 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout userLayout;
     @BindView(R.id.passwdLayout)
     TextInputLayout passwdLayout;
+    @BindView(R.id.shimmer_view_container)
+    ProgressBar shimmerFrameLayout;
+    @BindView(R.id.fullview)
+    ScrollView fullview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void googleLogin() {
+
         Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -172,6 +186,8 @@ public class LoginActivity extends AppCompatActivity {
                     Uri uri = acct.getPhotoUrl();
                     photo = uri.toString();
                 }
+                mGoogleApiClient.clearDefaultAccountAndReconnect();
+
 
                 callSocialWebService(email_id, name, "gmail", photo);
 
@@ -232,19 +248,21 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void callSocialWebService(String email, String name, String type, String photo) {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
         new WebServices(LoginActivity.this, TAG).socialLogin(email, name, type, new VolleyResponseListerner() {
             @Override
             public void onResponse(JSONObject response) throws JSONException {
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                    shimmerFrameLayout.setVisibility(View.GONE);
+                    mGoogleApiClient.disconnect();
                     Session.getInstance(LoginActivity.this, TAG).createSession(
                             response.getJSONObject("data").optString("first_name"),
                             response.getJSONObject("data").optString("user_email"),
                             response.getJSONObject("data").optString("token"),
                             response.getJSONObject("data").optString("ID"),"");
 //                    startService(new Intent(LoginActivity.this, RegistrationIntentService.class));
-                    CommonMethod.changeActivity(LoginActivity.this, DashBoardActivity.class);
+                    startActivity(new Intent(LoginActivity.this, DashBoardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     finish();
-
                 } else if (response.getString("resultcode").equalsIgnoreCase("400")) {
                     CommonMethod.showSnackbar(facebook, response, LoginActivity.this);
                 }
@@ -265,54 +283,86 @@ public class LoginActivity extends AppCompatActivity {
                 userLayout.setError(null);
                 break;
             case R.id.forgotPasswd:
-                CommonMethod.changeActivity(LoginActivity.this, ForgotPasswd.class);
+                if (isNetworkConnected()){
+                    CommonMethod.changeActivity(LoginActivity.this, ForgotPasswd.class);
+                }else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.err_internet_not_conn), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.login:
-                View view1 = LoginActivity.this.getCurrentFocus();
-                if (view1 != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-
-                if (CommonMethod.emailValidation(userId, userLayout, "Enter a valid email address"))
-                    if (CommonMethod.checkEmpty(password, passwdLayout, "Enter the password")) {
-                        new WebServices(LoginActivity.this, TAG).login(userId.getText().toString().trim(), password.getText().toString().trim(), new VolleyResponseListerner() {
-                            @Override
-                            public void onResponse(JSONObject response) throws JSONException {
-                                if (response.optString("resultcode").equalsIgnoreCase("200")) {
-                                    Session.getInstance(LoginActivity.this, TAG).createSession(
-                                            response.getJSONObject("data").optString("first_name"),
-                                            response.getJSONObject("data").optString("user_email"),
-                                            response.getJSONObject("data").optString("token"),
-                                            response.getJSONObject("data").optString("ID"),"");
-//                    startService(new Intent(LoginActivity.this, RegistrationIntentService.class));
-                                    CommonMethod.showSnackbar(facebook, response.optString("resultmessage"), LoginActivity.this);
-                                    CommonMethod.changeActivity(LoginActivity.this, DashBoardActivity.class);
-                                    finish();
-
-                                } else if (response.getString("resultcode").equalsIgnoreCase("400")) {
-                                    CommonMethod.showSnackbar(facebook, response.optString("resultmessage"), LoginActivity.this);
-                                }
-                            }
-
-                            @Override
-                            public void onError(String message, String title) {
-
-                            }
-                        });
+                if (isNetworkConnected()){
+                    shimmerFrameLayout.setVisibility(View.VISIBLE);
+                    View view1 = LoginActivity.this.getCurrentFocus();
+                    if (view1 != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
+
+                    if (CommonMethod.emailValidation(userId, userLayout, "Enter a valid email address"))
+                        if (CommonMethod.checkEmpty(password, passwdLayout, "Enter the password")) {
+                            new WebServices(LoginActivity.this, TAG).login(userId.getText().toString().trim(), password.getText().toString().trim(), new VolleyResponseListerner() {
+                                @Override
+                                public void onResponse(JSONObject response) throws JSONException {
+                                    if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                                        shimmerFrameLayout.setVisibility(View.GONE);
+                                        Session.getInstance(LoginActivity.this, TAG).createSession(
+                                                response.getJSONObject("data").optString("first_name"),
+                                                response.getJSONObject("data").optString("user_email"),
+                                                response.getJSONObject("data").optString("token"),
+                                                response.getJSONObject("data").optString("ID"),"");
+//                    startService(new Intent(LoginActivity.this, RegistrationIntentService.class));
+                                        CommonMethod.showSnackbar(facebook, response.optString("resultmessage"), LoginActivity.this);
+                                        CommonMethod.changeActivity(LoginActivity.this, DashBoardActivity.class);
+                                        Fragment fragment = new DashBoardNewFragment();
+                                    /*    getSupportFragmentManager().beginTransaction()
+                                                .replace(R.id.fullview, fragment, fragment.getClass().getSimpleName())
+                                                .commit();*/
+                                        finish();
+
+                                    } else if (response.getString("resultcode").equalsIgnoreCase("400")) {
+                                        CommonMethod.showSnackbar(facebook, response.optString("resultmessage"), LoginActivity.this);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(String message, String title) {
+
+                                }
+                            });
+                        }
+                }else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.err_internet_not_conn), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.facebook:
-                facebookLogin();
+                if (isNetworkConnected()){
+                    facebookLogin();
+                }else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.err_internet_not_conn), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.google:
-                googleLogin();
+                if (isNetworkConnected()){
+                    googleLogin();
+                }else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.err_internet_not_conn), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.signup:
-                CommonMethod.changeActivity(LoginActivity.this, SendOtpActivity.class);
+                if (isNetworkConnected()){
+                    CommonMethod.changeActivity(LoginActivity.this, SendOtpActivity.class);
+                }else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.err_internet_not_conn), Toast.LENGTH_SHORT).show();
+                }
                 break;
 
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
 }

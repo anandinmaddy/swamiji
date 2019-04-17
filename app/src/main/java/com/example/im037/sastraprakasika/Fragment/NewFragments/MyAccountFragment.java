@@ -2,6 +2,7 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,11 +30,17 @@ import com.example.im037.sastraprakasika.Fragment.HelpSupportFragment;
 import com.example.im037.sastraprakasika.Fragment.NotificationSettingFragment;
 import com.example.im037.sastraprakasika.Fragment.PrivacyPolicyFragment;
 import com.example.im037.sastraprakasika.Model.ProfileModel;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +51,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyAccountFragment extends Fragment {
+public class MyAccountFragment extends Fragment implements NetworkStateReceiverListener {
     ArrayList<ProfileModel> profilelist = new ArrayList<>();
     ArrayList<ProfileModel.ProfileDetailsModel> profileDetaillist = new ArrayList<>();
     String TAG = MyAccountFragment.class.getSimpleName();
@@ -67,6 +74,9 @@ public class MyAccountFragment extends Fragment {
     ImageView emailEdit;
     ImageView mobileEdit;
     String namechangedValue, mobileNumUpdated;
+    LinearLayout offlineViewer;
+    TextView offlineLink;
+    LinearLayout fullview;
     public static boolean namechanged = false;
     EditText input, input1;
     LinearLayout notificationLayout,helpSupportLayout,privacypolicyLayout;
@@ -98,9 +108,11 @@ public class MyAccountFragment extends Fragment {
         logout = (TextView) view.findViewById(R.id.logout);
         profileHeading.setVisibility(View.VISIBLE);
         notificationLayout = view.findViewById(R.id.notificationLayout);
-
+        offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
         helpSupportLayout = view.findViewById(R.id.helpSupportLayout);
         privacypolicyLayout = view.findViewById(R.id.privacypolicyLayout);
+        fullview = (LinearLayout) view.findViewById(R.id.fullview);
 
         notificationLayout = view.findViewById(R.id.notificationLayout);
             account = getActivity().findViewById( R.id.account );
@@ -125,12 +137,37 @@ public class MyAccountFragment extends Fragment {
             logout.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CommonActivity.setSelected( Selected.DISCOURSES );
+
+                    DashBoardNewFragment fragment2 = new DashBoardNewFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    back.setVisibility(View.GONE);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
                     Session.getInstance( getActivity().getApplicationContext(), TAG ).logout();
                     CommonMethod.clearAllPreviousActivity( getActivity().getApplicationContext(), LoginActivity.class );
                    // finish();
                 }
             } );
-            nameEdit.setOnClickListener( new View.OnClickListener() {
+
+            offlineLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("offline",true);
+                    MyLibraryFragment fragment2 = new MyLibraryFragment();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    Constant.currentTab = 2;
+                    Constant.backPress = true;
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+            });
+
+
+        nameEdit.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Show();
@@ -297,6 +334,28 @@ public class MyAccountFragment extends Fragment {
 
     public void setProfileUpdate() {
 
+    }
+
+    @Override
+    public void networkAvailable() {
+        fullview.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        fullview.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fullview.setVisibility(View.GONE);
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
 

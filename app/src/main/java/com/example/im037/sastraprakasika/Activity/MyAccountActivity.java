@@ -21,6 +21,11 @@ import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
 import com.example.im037.sastraprakasika.utils.Selected;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,6 +101,21 @@ public class MyAccountActivity extends CommonActivity {
             @Override
             public void onClick(View v) {
                 Session.getInstance( getApplicationContext(), TAG ).logout();
+                try {
+                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestEmail()
+                            .requestProfile()
+                            .build();
+                    GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                            .build();
+                    mGoogleApiClient.clearDefaultAccountAndReconnect();
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 CommonMethod.clearAllPreviousActivity( MyAccountActivity.this, LoginActivity.class );
                 finish();
             }

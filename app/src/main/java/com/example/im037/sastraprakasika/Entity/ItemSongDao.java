@@ -23,6 +23,11 @@ public interface ItemSongDao {
     @Query("UPDATE ItemSong SET downloads=:download WHERE title = :title")
     void update(String download,String title);
 
+    @Query("UPDATE ItemSong SET userRating=:download WHERE title = :title")
+    void updateRat(String download,String title);
+
+    @Query("select userRating from ItemSong WHERE title = :title")
+    String getRating(String title);
 
 
 

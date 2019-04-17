@@ -8,12 +8,56 @@
     android:orientation="vertical"
   >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/offlineViewer"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:background="@drawable/network_offline"/>
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="No Internet connetion Please check your \n          connection and try again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlinePageLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:text="Try Again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlineLectureLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:text="Offline lectures "/>
+    </LinearLayout>
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical"
         app:shimmer_duration="800"
         >
@@ -36,6 +80,7 @@
         android:id="@+id/tablayout"
         style="@style/customTab"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="@dimen/_40sdp"
         app:tabTextAppearance="@style/customTab"
         android:background="@android:color/transparent"

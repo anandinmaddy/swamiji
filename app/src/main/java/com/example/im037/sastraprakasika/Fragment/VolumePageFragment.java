@@ -2,6 +2,7 @@ package com.example.im037.sastraprakasika.Fragment;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ import com.example.im037.sastraprakasika.Adapter.Adapter_playlist_edit;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.DiscoursesNewFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.VolumeDetailsFragment;
 import com.example.im037.sastraprakasika.Fragment.dummy.DummyContent.DummyItem;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
@@ -31,6 +34,8 @@ import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.TypeConvertor;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
@@ -49,7 +54,7 @@ import butterknife.ButterKnife;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class VolumePageFragment extends Fragment implements View.OnClickListener {
+public class VolumePageFragment extends Fragment implements View.OnClickListener, NetworkStateReceiverListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -78,6 +83,10 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
     String backTitle,backImg;
     String descStr;
     String imgTitle,titleTxt;
+    LinearLayout offlineViewer;
+    TextView offlineLink;
+
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -111,6 +120,10 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
         ParentID = getArguments().getString("parentid");
         catid = getArguments().getString("data");
         mShimmerViewContainer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
+        offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+
+
         mShimmerViewContainer.startShimmer();
         if(db1 != null){
             volumeModelsList = db1.volumeModel().getAll();
@@ -154,6 +167,21 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.addToBackStack(null);
 
+                fragmentTransaction.commit();
+            }
+        });
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -224,7 +252,17 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
 
     }
 
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
 
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.setVisibility(View.GONE);
+    }
 
 
     /**
@@ -322,5 +360,11 @@ public class VolumePageFragment extends Fragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
+
+
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
     }
 }

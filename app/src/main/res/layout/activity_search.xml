@@ -11,66 +11,151 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:id="@+id/offlineViewer"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/network_offline"/>
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="No Internet connetion Please check your \n          connection and try again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlinePageLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:text="Try Again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlineLectureLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:text="Offline lectures "/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="4">
+        android:padding="@dimen/_2sdp"
+        android:weightSum="2">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.70"
+            android:background="@drawable/spinner_corner"
+            >
 
         <Spinner
             android:id="@+id/search_spin"
             style="@style/Widget.AppCompat.DropDownItem.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:background="@drawable/spinner_corner"
-            android:popupBackground="@drawable/editicon"
+            android:layout_height="match_parent"
+            android:minHeight="@dimen/_25sdp"
+            android:visibility="visible"
+            android:spinnerMode="dropdown"
             />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                />
+
+        </LinearLayout>
+
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="35dp"
+    android:layout_weight="1.30"
+    android:weightSum="1"
+    android:layout_marginLeft="@dimen/_2sdp"
+    android:layout_marginBottom="@dimen/_20sdp"
+    android:background="@drawable/search_editcorner"
+    >
+    <ImageView
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.2"
+        android:layout_marginTop="@dimen/_1sdp"
+        android:background="@drawable/search48"
+        />
 
         <EditText
 
-            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
             android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:background="@drawable/search_editcorner"
-            android:drawableLeft="@drawable/search_grey"
-            android:drawableRight="@drawable/ic_search_close"
             android:ems="10"
-            android:layout_weight="3"
+            android:layout_weight="0.6"
+
+            android:imeOptions="actionDone"
             android:hint="@string/search_text"
             android:inputType="textPersonName"
             android:minHeight="@dimen/_25sdp"
-          />
+            />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clearTxt"
+        android:layout_weight="0.2"
+        android:layout_gravity="end"
+        android:background="@drawable/ic_search_close"
+       />
 
+</LinearLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/search_tab" />
+
+    <include layout="@layout/search_tab"
+        android:visibility="gone"/>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/searchRecyclerview"
         android:layout_width="match_parent"
         android:visibility="visible"
-        android:layout_height="wrap_content"/>
+        android:layout_marginBottom="50dp"
+        android:layout_height="match_parent"/>
 
     <ListView
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:id="@+id/searchLinearview"
-
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:scrollbars="none"
         android:visibility="gone"
         android:background="@android:color/transparent"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="30dp"
         />
 
 
@@ -78,24 +163,21 @@
         android:id="@+id/linearLayoutPlayingSong_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
         android:gravity="center"
+        android:layout_marginTop="@dimen/_30sdp"
         android:orientation="vertical">
-        <View
-            android:id="@+id/view_primary1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/primary_noti_content_layout"
-            android:background="@color/mild_grey" />
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <me.grantland.widget.AutofitTextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/noresult"
+        android:singleLine="true"
         android:textSize="@dimen/_15sdp"
-        android:padding="@dimen/_5sdp"
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/_20sdp"
         android:visibility="gone"
-        android:text="No Result Found !" />
+        android:text="No results were found. Please try another keyword." />
 
     </LinearLayout>
     <!--<SearchView-->

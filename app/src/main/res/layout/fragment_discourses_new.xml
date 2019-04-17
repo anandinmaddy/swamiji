@@ -2,11 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white_smoke"
     android:orientation="vertical"
     android:id="@+id/homeView">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/offlineViewer"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/network_offline"/>
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="No Internet connetion Please check your \n          connection and try again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlinePageLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:text="Try Again "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:id="@+id/offlineLectureLink"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:text="Offline lectures "/>
+    </LinearLayout>
+
+
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
@@ -32,14 +78,14 @@
             <include layout="@layout/data_placeholder_layout" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/itemViewlayout"
         android:visibility="visible"
         >
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -96,6 +142,7 @@
                     android:layout_below="@id/aboutTxt"
                     android:layout_toRightOf="@+id/imageHead"
                     android:text="Know More"
+                    android:textStyle="bold"
                     android:textColor="@color/orange"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="5dp"
@@ -140,5 +187,5 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +28,8 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +41,7 @@ import java.util.Arrays;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ClickEditFragment extends Fragment {
+public class ClickEditFragment extends Fragment implements NetworkStateReceiverListener {
 
 
     ImageView img_song;
@@ -50,6 +53,8 @@ public class ClickEditFragment extends Fragment {
     TextView cancel_txt,done_txt;
     ImageView deleteplaylist;
     LinearLayout addlectu;
+    TextView offlineLink;
+    LinearLayout offlineViewer;
 
     ArrayList titleImages_next = new ArrayList<>(Arrays.asList("An Overview Of Yoga", "Intoduction into Human Pursuits","Right Action and Attribute"));
     ArrayList img_song_next = new ArrayList<>(Arrays.asList(R.drawable.vedanta,R.drawable.intro_vedanta,R.drawable.bagavad));
@@ -58,6 +63,7 @@ public class ClickEditFragment extends Fragment {
     String titleTxt= "";
     String playerId= "";
     public static final String TAG = ClickEditFragment.class.getSimpleName();
+
 
 
     public ClickEditFragment() {
@@ -81,13 +87,33 @@ public class ClickEditFragment extends Fragment {
         done_txt = (TextView)getActivity().findViewById(R.id.pageAction);
         deleteplaylist = (ImageView) view.findViewById(R.id.deleteplaylist);
         addlectu = (LinearLayout) view.findViewById(R.id.addlectu);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
 
         if(getArguments() != null){
             titleTxt= getArguments().getString("data");
+            img_title.setText(titleTxt);
             playerId = getArguments().getString("player_id");
         }
         done_txt.setVisibility(View.VISIBLE);
         done_txt.setText("Done");
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+
 
         cancel_txt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,17 +143,8 @@ public class ClickEditFragment extends Fragment {
         done_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyLibraryFragment fragment2 = new MyLibraryFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("from","playlist");
-                Constant.currentTab = 3;
-                Constant.backPress = true;
-                FragmentManager fragmentManager = getFragmentManager();
-                fragment2.setArguments(bundle);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.commit();
 
+                callWebservice(playerId,titleTxt);
 
 
 
@@ -179,6 +196,44 @@ public class ClickEditFragment extends Fragment {
         return view;
     }
 
+    private void callWebservice(final String playerId, final String titleTxt) {
+        new WebServices(getContext(), TAG).getPlaylistSongs(Session.getInstance(getContext(), TAG).getUserId(),playerId, new VolleyResponseListerner() {
+
+            @Override
+            public void onResponse(JSONObject response) throws JSONException {
+
+                Constant.trackList.clear();
+                if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                    JSONArray contentArray = response.optJSONArray("data");
+                    for (int i = 0; i < contentArray.length(); i++) {
+                        JSONObject jsonObject = contentArray.optJSONObject(i);
+                        Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+                    }
+                }
+
+                Bundle profileData = new Bundle();
+                profileData.putString("data",titleTxt);
+                profileData.putString("player_id",playerId);
+                PlayListDetailFragment fragment2 = new PlayListDetailFragment();
+                fragment2.setArguments(profileData);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
+
+
+            }
+
+            @Override
+            public void onError(String message, String title) {
+
+            }
+        });
+
+    }
+
     private void callWebservice(String playerId) {
         new WebServices(getActivity().getApplicationContext(), TAG).deletePlayLists(Session.getInstance(getContext(), TAG).getUserId(),playerId, new VolleyResponseListerner() {
 
@@ -221,5 +276,22 @@ public class ClickEditFragment extends Fragment {
     public void onResume() {
         super.onResume();
         done_txt.setVisibility(View.VISIBLE);
+
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
     }
+
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
+
 }

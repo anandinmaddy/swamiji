@@ -15,6 +15,51 @@
         android:id="@+id/topview"
         android:background="@color/white"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:id="@+id/offlineViewer"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:background="@drawable/network_offline"/>
+            <me.grantland.widget.AutofitTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:text="No Internet connetion Please check your \n          connection and try again "/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:id="@+id/offlinePageLink"
+                android:textColor="@color/orange"
+                android:textStyle="bold"
+                android:text="Try Again "/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:id="@+id/offlineLectureLink"
+                android:textColor="@color/orange"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:text="Offline lectures "/>
+        </LinearLayout>
+
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
@@ -91,6 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/knowMoreTxt"
+                android:textStyle="bold"
                 android:layout_below="@id/aboutTxt"
                 android:layout_toRightOf="@+id/imageHead"
                 android:text="Know More"
@@ -119,17 +165,18 @@
     <!--<android.support.v7.widget.RecyclerView-->
     <!--android:id="@+id/recyclerView"-->
     <!--android:layout_width="match_parent"-->
+    <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
     <!--android:layout_below="@id/image"-->
     <!--android:layout_marginTop="@dimen/_5sdp">-->
     <!--</android.support.v7.widget.RecyclerView>-->
-
-    <!--<View-->
-    <!--android:id="@+id/viewId"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:layout_below="@id/image"-->
-    <!--android:background="@color/white_smoke"/>-->
+    <View
+    android:id="@+id/viewId"
+   android:layout_width="match_parent"
+    android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/_10sdp"
+    android:layout_below="@id/topview"
+    android:background="@color/white_smoke"/>
 
 
 

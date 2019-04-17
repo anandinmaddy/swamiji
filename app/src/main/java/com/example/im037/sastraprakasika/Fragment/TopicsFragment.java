@@ -1,15 +1,24 @@
 package com.example.im037.sastraprakasika.Fragment;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.Itopice_listener;
@@ -24,13 +34,17 @@ import com.example.im037.sastraprakasika.Activity.SpaceItemdecoration;
 import com.example.im037.sastraprakasika.Activity.Topics_detailed_items;
 import com.example.im037.sastraprakasika.Adapter.TopicsRecyclerviewAdapter;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.VolumeDetailsFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.dummy.TopicsDetailsFragment;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.example.im037.sastraprakasika.Model.ListOfTopicsModels;
+import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.json.JSONException;
@@ -42,7 +56,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class TopicsFragment extends Fragment implements Itopice_listener  {
+public class TopicsFragment extends Fragment implements Itopice_listener , NetworkStateReceiverListener {
 
 
     Unbinder unbinder;
@@ -52,8 +66,12 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
     TextView title;
     ImageView back;
     DiscousesAppDatabase db;
+    TextView offlineLink;
+    LinearLayout offlineViewer;
+    LinearLayout fullview;
 
     List<ListOfTopicsModels> listOfTopicsOffline = new ArrayList<>();
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     @Nullable
     @Override
@@ -66,23 +84,42 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
         final RecyclerView topicsRecyclerview = (RecyclerView) view.findViewById(R.id.topicsRecyclerview);
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "ListOfTopics").allowMainThreadQueries().build();
+        topicsRecyclerview.setNestedScrollingEnabled(false);
 
       //  title = getActivity().findViewById(R.id.title);
        // title.setText("My Library");
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+
         shimmerFrameLayout.startShimmer();
         //  setRecyclerView();
 //        mostrarDatosFactura();
-        System.out.println("library frag:::::");
         back = (ImageView) getActivity().findViewById(R.id.back);
         back.setVisibility(View.GONE);
         listOfTopicsOffline = db.listOfTopicsModels().getAll();
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
+        fullview = view.findViewById(R.id.fullview);
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
-        if (listOfTopicsModels != null && listOfTopicsOffline.size() > 0){
+
+        if (listOfTopicsOffline != null && listOfTopicsOffline.size() > 0){
             shimmerFrameLayout.stopShimmer();
             shimmerFrameLayout.setVisibility(View.GONE);
-            listOfTopicsOffline.clear();
-            listOfTopicsOffline = db.listOfTopicsModels().getAll();
+            listOfTopicsModels.clear();
             listOfTopicsModels.addAll(listOfTopicsOffline);
             topicsRecyclerview.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.VERTICAL, false));
 
@@ -93,7 +130,7 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
             callwebservice(topicsRecyclerview);
         }
 
-        SetAboutDetail();
+       // SetAboutDetail();
 
         return view;
     }
@@ -233,12 +270,46 @@ public class TopicsFragment extends Fragment implements Itopice_listener  {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void networkAvailable() {
+      fullview.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        fullview.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fullview.setVisibility(View.GONE);
+        try {
+            ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+            connectivityReceiver.addListener(this);
+            getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 //    @Override
 //    public void onClickview(View view, int position) {
 //        //startt activity for detail page
 //       // listOfTopicsModels.get(position);
 //        Toast.makeText(getContext(),"position" +listOfTopicsModels.get(position), Toast.LENGTH_SHORT).show();
 //    }
+
+
 
 
 

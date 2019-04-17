@@ -2,10 +2,12 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +41,8 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.Selected;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -61,7 +65,7 @@ import butterknife.ButterKnife;
  * Use the {@link SearchPageFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchPageFragment extends Fragment {
+public class SearchPageFragment extends Fragment implements NetworkStateReceiverListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -77,9 +81,10 @@ public class SearchPageFragment extends Fragment {
     EditText searchBar;
     static DiscousesAppDatabase db;
     boolean isDiscourseSelected, isLibrarySelected;
-    boolean isLibAvailable;
+    boolean isLibAvailable,isDiscoursesAvailable;
 
-
+    LinearLayout offlineViewer;
+    TextView offlineLink;
     //  @BindView( R.id.image_close )
 //            ImageView imageView_close;
 
@@ -89,7 +94,7 @@ public class SearchPageFragment extends Fragment {
     SongRecyclerViewAdapter adapter;
     SongRecyclerViewAdapterNew adapterNew = null;
 
-    ImageView back;
+    ImageView back,cleartxt;
     LinearLayout main_layout;
     TextView titleView;
     TextView noSearchResult,libraryTxt,discoursesTx;
@@ -145,6 +150,8 @@ public class SearchPageFragment extends Fragment {
         searchLinearview = (ListView) view.findViewById(R.id.searchLinearview) ;
 
         searchSpin = (Spinner) view.findViewById(R.id.search_spin);
+        cleartxt = (ImageView) view.findViewById(R.id.clearTxt);
+
         searchBar = (EditText) view.findViewById(R.id.search_bar);
         back = getActivity().findViewById(R.id.back);
         main_layout = view.findViewById(R.id.mainSearch);
@@ -152,6 +159,10 @@ public class SearchPageFragment extends Fragment {
         back.setVisibility(View.GONE);
         discoursesTx = view.findViewById(R.id.discoursesTx);
         libraryTxt = view.findViewById(R.id.libraryTxt);
+
+        offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+
 //        ButterKnife.bind(getActivity());
         searchRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
@@ -166,6 +177,20 @@ public class SearchPageFragment extends Fragment {
             }
         });
 
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         main_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,11 +260,11 @@ public class SearchPageFragment extends Fragment {
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
         categories.add("Discourses");
-        categories.add("Library");
+        categories.add("My Library");
 
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_new, categories);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -248,6 +273,28 @@ public class SearchPageFragment extends Fragment {
         searchSpin.setAdapter(dataAdapter);
 
         type = searchSpin.getSelectedItem().toString().toLowerCase();
+
+        searchSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0){
+                    isDiscourseSelected = true;
+                    isLibrarySelected = false;
+                    showDiscourseUI();
+                }else{
+                    isDiscourseSelected = false;
+                    isLibrarySelected = true;
+                    showLibraryUI();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                isDiscourseSelected = false;
+                isLibrarySelected = false;
+                showDiscourseUI();
+            }
+        });
         return view;
     }
 
@@ -262,21 +309,31 @@ public class SearchPageFragment extends Fragment {
             }else {
                 searchLinearview.setVisibility(View.GONE);
                 searchRecyclerview.setVisibility(View.GONE);
-                noSearchResult.setVisibility(View.VISIBLE);
             }
         }else {
             searchLinearview.setVisibility(View.GONE);
             searchRecyclerview.setVisibility(View.GONE);
-            noSearchResult.setVisibility(View.VISIBLE);
+
+
         }
     }
 
     private void showDiscourseUI() {
-        noSearchResult.setVisibility(View.GONE);
-        searchLinearview.setVisibility(View.GONE);
-        searchRecyclerview.setVisibility(View.VISIBLE);
-        adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
-        searchRecyclerview.setAdapter(adapter);
+        if(isDiscoursesAvailable){
+                noSearchResult.setVisibility(View.GONE);
+                searchLinearview.setVisibility(View.GONE);
+                searchRecyclerview.setVisibility(View.VISIBLE);
+                adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
+                searchRecyclerview.setAdapter(adapter);
+
+        }else {
+            searchLinearview.setVisibility(View.GONE);
+            searchRecyclerview.setVisibility(View.GONE);
+           /* noSearchResult.setVisibility(View.VISIBLE);
+            noSearchResult.setText("No results were found. Please try another keyword.");*/
+
+        }
+
     }
 
 
@@ -327,7 +384,6 @@ public class SearchPageFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                searchBar .setText("");
 
 //                    // Is there an X showing?
 //                    if (et.getCompoundDrawables()[2] == null) return false;
@@ -342,6 +398,14 @@ public class SearchPageFragment extends Fragment {
             }
         });
 
+        cleartxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noSearchResult.setVisibility(View.GONE);
+                searchBar .setText("");
+            }
+        });
+
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -353,11 +417,15 @@ public class SearchPageFragment extends Fragment {
                 String text = searchBar.getText().toString();
                 int maxChar = 2;
                 if (text.length() > maxChar) {
+                    searchRecyclerview.setVisibility(View.GONE);
+                    searchLinearview.setVisibility(View.GONE);
                     noSearchResult.setVisibility(View.VISIBLE);
                     noSearchResult.setText("Searching. Please wait...");
                     showSearchData();
-                } else if (text.length() == 0) {
+                } else if (text.length() <= maxChar || text.length() == 0) {
                     arrayList.clear();
+                    searchRecyclerview.setVisibility(View.GONE);
+                    searchLinearview.setVisibility(View.GONE);
                     //  adapter.notifyDataSetChanged();
                 }
 
@@ -404,7 +472,6 @@ public class SearchPageFragment extends Fragment {
                                 SearchModel model = new SearchModel();
                                 if (jsonArrayLibrary.optJSONObject(j) != null && jsonArrayLibrary.optJSONObject(j).optString("title") != null) {
                                     ItemSong itemSong = new ItemSong();
-
                                     itemSong.setUrl(jsonArrayLibrary.optJSONObject(j).optString("mp3"));
                                     itemSong.setTitle(jsonArrayLibrary.optJSONObject(j).optString("title"));
                                     itemSong.setDuration(jsonArrayLibrary.optJSONObject(j).optString("time"));
@@ -415,24 +482,34 @@ public class SearchPageFragment extends Fragment {
                                     Constant.arrayListLectureslineSongs.add(itemSong);
                                 } else {
                                     searchRecyclerview.setVisibility(View.GONE);
+                                    searchLinearview.setVisibility(View.GONE);
                                     noSearchResult.setVisibility(View.VISIBLE);
-                                    noSearchResult.setText("No Result Found !");
+                                    noSearchResult.setText("No results were found. Please try another keyword.");
                                 }
                             }
                         }else {
                                 isLibAvailable = false;
-
+                                searchRecyclerview.setVisibility(View.GONE);
+                                searchLinearview.setVisibility(View.GONE);
+                                noSearchResult.setVisibility(View.VISIBLE);
+                                noSearchResult.setText("No results were found. Please try another keyword.");
+                               /* searchRecyclerview.setVisibility(View.GONE);
+                                searchLinearview.setVisibility(View.GONE);
+                                noSearchResult.setVisibility(View.VISIBLE);
+                                noSearchResult.setText("No results were found. Please try another keyword.");*/
                               /*  searchRecyclerview.setVisibility(View.GONE);
                                 noSearchResult.setVisibility(View.VISIBLE);
                                 noSearchResult.setText("No Result Found !");*/
                             }
                     }
 
+                    db.searchModelDao().deleteAll();
 
                     for (int i = 0; i < jsonArrayDiscourses.length(); i++) {
-                            db.searchModelDao().deleteAll();
                             SearchModel model = new SearchModel();
                             if (jsonArrayDiscourses.optJSONObject(i) != null && jsonArrayDiscourses.optJSONObject(i).optString("title")!= null){
+                                isDiscoursesAvailable = true;
+
                                 model.setTitle(jsonArrayDiscourses.optJSONObject(i).optString("title"));
                                 model.setPost_id(jsonArrayDiscourses.optJSONObject(i).optString("post_id"));
                                 model.setParentid(jsonArrayDiscourses.optJSONObject(i).optString("parentid"));
@@ -447,19 +524,30 @@ public class SearchPageFragment extends Fragment {
 
                                 db.searchModelDao().insertAll(model);
                             }else {
+                                isDiscoursesAvailable = false;
+
                                 searchRecyclerview.setVisibility(View.GONE);
+                                searchLinearview.setVisibility(View.GONE);
                                 noSearchResult.setVisibility(View.VISIBLE);
-                                noSearchResult.setText("No Result Found !");
+                                noSearchResult.setText("No results were found. Please try another keyword.");
+                             /*   searchRecyclerview.setVisibility(View.GONE);
+                                searchLinearview.setVisibility(View.GONE);
+                                noSearchResult.setVisibility(View.VISIBLE);
+                                noSearchResult.setText("No results were found. Please try another keyword.");*/
                             }
                         }
 
-
+                        if(isLibrarySelected){
+                            showLibraryUI();
+                        }else {
+                            showDiscourseUI();
+                        }
 
 
                             // model.setParentid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("parentid"));
 
 
-                    if (arrayList.size() > 0 ){
+                 /*   if (arrayList.size() > 0 ){
                         noSearchResult.setVisibility(View.GONE);
                         searchRecyclerview.setVisibility(View.VISIBLE);
                         adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
@@ -467,12 +555,12 @@ public class SearchPageFragment extends Fragment {
                     }else {
                         searchRecyclerview.setVisibility(View.GONE);
                         noSearchResult.setVisibility(View.VISIBLE);
-                    }
+                    }*/
 
                 }else{
                     searchRecyclerview.setVisibility(View.GONE);
                     noSearchResult.setVisibility(View.VISIBLE);
-                    noSearchResult.setText("No Result Found !");
+                    noSearchResult.setText("No results were found. Please try another keyword.");
                   //  CommonMethod.showSnackbar(searchSpin,response.optString("resultmessage"),getActivity());
                 }
 
@@ -480,7 +568,9 @@ public class SearchPageFragment extends Fragment {
 
             @Override
             public void onError(String message, String title) {
-
+                searchRecyclerview.setVisibility(View.GONE);
+                noSearchResult.setVisibility(View.VISIBLE);
+                noSearchResult.setText("No results were found. Please try another keyword.");
                 Log.e("Search","Error");
 
             }
@@ -496,6 +586,33 @@ public class SearchPageFragment extends Fragment {
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void networkAvailable() {
+        main_layout.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        main_layout.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        main_layout.setVisibility(View.GONE);
+        try {
+            ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+            connectivityReceiver.addListener(this);
+            getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 

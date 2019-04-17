@@ -4,6 +4,7 @@ package com.example.im037.sastraprakasika.Fragment.NewFragments;
 import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +27,8 @@ import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.Session;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.TypeConvertor;
 
 import org.json.JSONException;
@@ -36,13 +39,16 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewPlaylistFragment extends Fragment {
+public class NewPlaylistFragment extends Fragment implements NetworkStateReceiverListener {
 
     TextView cancel_txt, newplaylist_txt, done_txt;
     EditText playListTitle;
     LinearLayout addLayout;
     String title;
     ImageView back;
+    TextView offlineLink;
+    LinearLayout offlineViewer;
+
 
     //TextView titleView;
    // ImageView back;
@@ -69,9 +75,26 @@ public class NewPlaylistFragment extends Fragment {
         back = (ImageView) getActivity().findViewById(R.id.back);
         done_txt = (TextView) getActivity().findViewById(R.id.pageAction);
         addLayout = view.findViewById(R.id.addPlaylist);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
        // titleView = getActivity().findViewById(R.id.title);
      //   back = getActivity().findViewById(R.id.back);
-        done_txt.setVisibility(View.VISIBLE);
+        done_txt.setVisibility(View.GONE);
         done_txt.setText("Done");
        /* back.setVisibility(View.GONE);
 
@@ -108,9 +131,11 @@ public class NewPlaylistFragment extends Fragment {
                 if (playListTitle.getText().toString().equalsIgnoreCase("")) {
                     CommonMethod.showSnackbar(playListTitle, "Please Enter Playlist Title", getActivity());
                 } else {
-                    callWebservice();
+                    CommonMethod.showSnackbar(playListTitle, "Please Click on Lectures", getActivity());
 
-                    MyLibraryFragment fragment2 = new MyLibraryFragment();
+                    // callWebservice();
+
+                 /*   MyLibraryFragment fragment2 = new MyLibraryFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("from","playlist");
                     FragmentManager fragmentManager = getFragmentManager();
@@ -118,7 +143,7 @@ public class NewPlaylistFragment extends Fragment {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                     fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    fragmentTransaction.commit();*/
 
                 }
             }
@@ -226,7 +251,11 @@ public class NewPlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        done_txt.setVisibility(View.VISIBLE);
+        done_txt.setVisibility(View.GONE);
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
 
     }
 
@@ -240,5 +269,15 @@ public class NewPlaylistFragment extends Fragment {
         fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+
     }
 }

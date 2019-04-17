@@ -100,6 +100,8 @@
                 android:background="@color/mild_grey"
                 android:visibility="gone"/>
 
+
+
             <FrameLayout
                 android:id="@+id/commonActivityFrameLayout"
                 android:layout_width="match_parent"

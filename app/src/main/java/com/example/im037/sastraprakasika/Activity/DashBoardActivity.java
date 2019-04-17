@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -81,9 +82,10 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
     DiscousesAppDatabase db;
     LinearLayout homeView;
     ShimmerFrameLayout mShimmerViewContainer;
-    ScrollView itemViewlayout;
+    NestedScrollView itemViewlayout;
     private FirebaseAnalytics mFirebaseAnalytics;
     TextView knowMoreTxt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,9 @@ public class DashBoardActivity extends CommonActivity implements FragmentInterac
         knowMoreTxt = (TextView) findViewById(R.id.knowMoreTxt);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
-        itemViewlayout = (ScrollView) findViewById(R.id.itemViewlayout);
+        itemViewlayout = (NestedScrollView) findViewById(R.id.itemViewlayout);
+
+
         mShimmerViewContainer = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmer();
 //        playerLayout.setVisibility(View.GONE);

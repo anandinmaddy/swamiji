@@ -1,33 +1,43 @@
 package com.example.im037.sastraprakasika.Fragment.NewFragments;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.example.im037.sastraprakasika.Activity.DashBoardActivity;
 import com.example.im037.sastraprakasika.Activity.FragmentInteractionListener;
 import com.example.im037.sastraprakasika.Activity.SpaceItemdecoration;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.DiscoursesNewFragment;
 import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
+import com.example.im037.sastraprakasika.Fragment.DownloadsFragmentNew;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscousesAppDatabase;
@@ -36,6 +46,8 @@ import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.AppPreference;
 import com.example.im037.sastraprakasika.utils.Selected;
 import com.example.im037.sastraprakasika.utils.TypeConvertor;
@@ -53,14 +65,14 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class DashBoardNewFragment extends Fragment  {
+public class DashBoardNewFragment extends Fragment implements NetworkStateReceiverListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private View.OnClickListener mListener;
-
+    ConnectivityReceiver connectivityReceiver;
     String parentID;
     ImageView vedanta, discourses, back;
     RecyclerView discourseView;
@@ -70,6 +82,7 @@ public class DashBoardNewFragment extends Fragment  {
     boolean doubleBackToExitPressedOnce = false;
     ArrayList<DiscoursesModel> discoursesModels = new ArrayList<>();
     ArrayList<VolumeModel> volumeArrayList = new ArrayList<>();
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     RelativeLayout common_dragview;
     public static final String TAG = DashBoardNewFragment.class.getSimpleName();
@@ -79,8 +92,11 @@ public class DashBoardNewFragment extends Fragment  {
     DiscousesAppDatabase db;
     LinearLayout homeView;
     ShimmerFrameLayout mShimmerViewContainer;
-    ScrollView itemViewlayout;
+    NestedScrollView itemViewlayout;
     TextView titleView,knowMoreTxt;
+    TextView offlineLink;
+    LinearLayout offlineViewer;
+    ShimmerFrameLayout shimmerFrameLayout;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -99,12 +115,15 @@ public class DashBoardNewFragment extends Fragment  {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_dash_board, container, false);
+
+        checkPermissionREAD_EXTERNAL_STORAGE(getContext());
 
         isHomeActivityRunning = true;
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
@@ -123,9 +142,12 @@ public class DashBoardNewFragment extends Fragment  {
         homeView = (LinearLayout) view.findViewById(R.id.homeView);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
-        itemViewlayout = (ScrollView) view.findViewById(R.id.itemViewlayout);
+        itemViewlayout = (NestedScrollView) view.findViewById(R.id.itemViewlayout);
         mShimmerViewContainer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
+
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
         mShimmerViewContainer.startShimmer();
+        offlineViewer = view.findViewById(R.id.offlineViewer);
 //        playerLayout.setVisibility(View.GONE);
 //
         knowMoreTxt = (TextView) view.findViewById(R.id.knowMoreTxt);
@@ -134,6 +156,9 @@ public class DashBoardNewFragment extends Fragment  {
         titleView.setText("Discourses");
         titleView.setTextColor(getResources().getColor(R.color.white));
 
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        itemViewlayout.setVisibility(View.GONE);
         knowMoreTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +175,20 @@ public class DashBoardNewFragment extends Fragment  {
             }
         });
 
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         content.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +196,7 @@ public class DashBoardNewFragment extends Fragment  {
                 if (isTextViewClicked) {
                     // content.setMaxLines(6);
                     isTextViewClicked = false;
+
                 } else {
                     content.setMaxLines(Integer.MAX_VALUE);
                     isTextViewClicked = true;
@@ -277,6 +317,18 @@ public class DashBoardNewFragment extends Fragment  {
          */
     }
 
+    @Override
+    public void networkAvailable() {
+        itemViewlayout.setVisibility(View.VISIBLE);
+        offlineViewer.setVisibility(View.GONE);
+      //  mShimmerViewContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.setVisibility(View.GONE);
+    }
 
 
     public class CategoryRecyclerviewAdapter extends RecyclerView.Adapter<CategoryRecyclerviewAdapter.Customview> {
@@ -394,5 +446,67 @@ public class DashBoardNewFragment extends Fragment  {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        itemViewlayout.setVisibility(View.GONE);
+        try {
+            connectivityReceiver = new ConnectivityReceiver();
+            connectivityReceiver.addListener(this);
+            getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
+            final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat
+                            .requestPermissions(
+                                    (Activity) context,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return true;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
+
+    public void showDialog(final String msg, final Context context,
+                           final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle("Permission necessary");
+        alertBuilder.setMessage(msg + " permission is necessary");
+        alertBuilder.setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions((Activity) context,
+                                new String[]{permission},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
 
 }

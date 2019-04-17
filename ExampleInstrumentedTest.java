@@ -1,4 +1,4 @@
-package com.example.im037.sastraprakasika;
+package com.sastram.im037.sastraprakasika;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

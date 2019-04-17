@@ -186,7 +186,46 @@ public class PlayerService extends IntentService implements Player.EventListener
     private void startNewSong(boolean b) {
         isNewSong = true;
         setBuffer(true);
+        if (Constant.isfromPlayer.equalsIgnoreCase("topic")){
+            Constant.isplayTopics = true;
+            Constant.isplayLectures = false;
+            Constant.isplayDownloads = false;
+            Constant.isplayPlaylist = false;
+            Constant.isplaySearch = false;
 
+
+        }else if(Constant.isfromPlayer.equalsIgnoreCase("lecturer")){
+            Constant.isplayTopics = false;
+            Constant.isplayLectures = true;
+            Constant.isplayDownloads = false;
+            Constant.isplayPlaylist = false;
+            Constant.isplaySearch = false;
+
+
+        }else if(Constant.isfromPlayer.equalsIgnoreCase("download")){
+            Constant.isplayTopics = false;
+            Constant.isplayLectures = false;
+            Constant.isplayDownloads = true;
+            Constant.isplayPlaylist = false;
+            Constant.isplaySearch = false;
+
+
+        }else if(Constant.isfromPlayer.equalsIgnoreCase("playlist")){
+            Constant.isplayTopics = false;
+            Constant.isplayLectures = false;
+            Constant.isplayDownloads = false;
+            Constant.isplayPlaylist = true;
+            Constant.isplaySearch = false;
+
+        }else if(Constant.isfromPlayer.equalsIgnoreCase("search")){
+            Constant.isplayTopics = false;
+            Constant.isplayLectures = false;
+            Constant.isplayDownloads = false;
+            Constant.isplayPlaylist = false;
+            Constant.isplaySearch = true;
+
+
+        }
         Intent intent = new Intent();
         intent.putExtra("message",Constant.playPos);
         intent.setAction("com.android.activity.SEND_DATA");

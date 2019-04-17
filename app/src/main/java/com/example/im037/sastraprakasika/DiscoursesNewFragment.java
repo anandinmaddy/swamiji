@@ -2,14 +2,17 @@ package com.example.im037.sastraprakasika;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +25,13 @@ import android.widget.TextView;
 
 import com.example.im037.sastraprakasika.Activity.DashBoardActivity;
 import com.example.im037.sastraprakasika.Activity.FragmentInteractionListener;
+import com.example.im037.sastraprakasika.Activity.GridAutofitLayoutManager;
 import com.example.im037.sastraprakasika.Activity.SpaceItemdecoration;
 import com.example.im037.sastraprakasika.Common.CommonActivity;
 import com.example.im037.sastraprakasika.Common.CommonMethod;
 import com.example.im037.sastraprakasika.Fragment.AboutDetailFragment;
 import com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment;
+import com.example.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
 import com.example.im037.sastraprakasika.Fragment.VolumePageFragment;
 import com.example.im037.sastraprakasika.Model.DiscoursesModel;
 import com.example.im037.sastraprakasika.Model.DiscoursesNewModel;
@@ -36,6 +41,8 @@ import com.example.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.example.im037.sastraprakasika.R;
 import com.example.im037.sastraprakasika.VolleyResponseListerner;
 import com.example.im037.sastraprakasika.Webservices.WebServices;
+import com.example.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+import com.example.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.example.im037.sastraprakasika.utils.AppPreference;
 import com.example.im037.sastraprakasika.utils.Selected;
 import com.example.im037.sastraprakasika.utils.TypeConvertor;
@@ -53,7 +60,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class DiscoursesNewFragment extends Fragment  {
+public class DiscoursesNewFragment extends Fragment  implements NetworkStateReceiverListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -79,7 +86,7 @@ public class DiscoursesNewFragment extends Fragment  {
     DiscousesAppDatabase db;
     LinearLayout homeView;
     ShimmerFrameLayout mShimmerViewContainer;
-    ScrollView itemViewlayout;
+    NestedScrollView itemViewlayout;
     TextView titleView;
     ImageView image1;
     String parentId = "";
@@ -87,7 +94,8 @@ public class DiscoursesNewFragment extends Fragment  {
     String subId = "";
     TextView titleContent,knowMoreTxt;
     String titleTxt,contentTxt,contentImg;
-
+    TextView offlineLink;
+    LinearLayout offlineViewer;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -127,12 +135,15 @@ public class DiscoursesNewFragment extends Fragment  {
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
         discourseView = (RecyclerView) view.findViewById(R.id.discoursesRecyclerview);
         discourseView.setNestedScrollingEnabled(false);
+        discourseView.setHasFixedSize(true);
+
+        discourseView.setItemViewCacheSize(0);
         Stetho.initializeWithDefaults(getActivity().getApplicationContext());
         content.setMaxLines(Integer.MAX_VALUE);
         homeView = (LinearLayout) view.findViewById(R.id.homeView);
         //common_dragview.setVisibility(View.VISIBLE);
 //        playerLayout = findViewById(R.id.playerLayout);
-        itemViewlayout = (ScrollView) view.findViewById(R.id.itemViewlayout);
+        itemViewlayout = (NestedScrollView) view.findViewById(R.id.itemViewlayout);
         mShimmerViewContainer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmer();
         titleContent = (TextView) view.findViewById(R.id.aboutTxt);
@@ -165,7 +176,25 @@ public class DiscoursesNewFragment extends Fragment  {
             titleContent.setText("Discourses");
         }
         back.setVisibility(View.VISIBLE);
+        offlineLink = view.findViewById(R.id.offlineLectureLink);
+        offlineViewer = view.findViewById(R.id.offlineViewer);
 
+
+
+        offlineLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("offline",true);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 2;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,7 +303,8 @@ public class DiscoursesNewFragment extends Fragment  {
 
                     discoursesModels.clear();
                     discoursesModels.addAll(discoursesModelsNew);
-                    discourseView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
+                    GridLayoutManager gridLayoutManager=  new GridLayoutManager(getContext(),2);
+                    discourseView.setLayoutManager(gridLayoutManager);
                     discourseView.setAdapter(new CategoryRecyclerviewAdapter(getContext(), discoursesModels, parentID));
                     AppPreference.putLong(Constant.LAST_SYNC, new Date().getTime(), getContext());
                 } else if (response.getString("resultcode").equalsIgnoreCase("400")) {
@@ -330,6 +360,17 @@ public class DiscoursesNewFragment extends Fragment  {
          */
     }
 
+    @Override
+    public void networkAvailable() {
+        offlineViewer.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void networkUnavailable() {
+        offlineViewer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.setVisibility(View.GONE);
+    }
 
 
     public class CategoryRecyclerviewAdapter extends RecyclerView.Adapter<CategoryRecyclerviewAdapter.Customview> {
@@ -352,6 +393,7 @@ public class DiscoursesNewFragment extends Fragment  {
 
             return new Customview(view);
         }
+
 
         @Override
         public void onBindViewHolder(@NonNull CategoryRecyclerviewAdapter.Customview holder, final int position) {
@@ -435,5 +477,14 @@ public class DiscoursesNewFragment extends Fragment  {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+        connectivityReceiver.addListener(this);
+        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
+
+    }
 }
