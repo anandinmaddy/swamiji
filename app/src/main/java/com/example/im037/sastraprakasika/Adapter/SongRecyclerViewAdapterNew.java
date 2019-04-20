@@ -103,7 +103,7 @@ public class SongRecyclerViewAdapterNew extends BaseAdapter {
         try {
             Picasso.get()
                     .load(items.getImageSmall())
-                    .placeholder(R.drawable.placeholder_song)
+                    .placeholder(R.drawable.placeholder_default)
                     .into(viewHolder.song_img_view);
 
         }catch (Exception e){

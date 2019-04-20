@@ -102,7 +102,7 @@ public class TopicsDetailsFragment extends Fragment {
 
         Picasso.get()
                 .load(getArguments().getString("data4"))
-                .placeholder(R.drawable.placeholder_song)
+                .placeholder(R.drawable.placeholder_default)
                 .into(imageView);
 
         listOfTopicsDetailedsList = db.listOfTopicsDetailed().getAll();

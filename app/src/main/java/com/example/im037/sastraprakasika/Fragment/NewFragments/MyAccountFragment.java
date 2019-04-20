@@ -353,9 +353,14 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
     public void onResume() {
         super.onResume();
         fullview.setVisibility(View.GONE);
-        ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
-        connectivityReceiver.addListener(this);
-        getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        try {
+            ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
+            connectivityReceiver.addListener(this);
+            getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 

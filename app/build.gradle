@@ -74,7 +74,11 @@ dependencies {
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
     implementation 'me.biubiubiu.justifytext:library:1.1'
     implementation 'me.grantland:autofittextview:0.2.1'
+    implementation 'com.mani:ThinDownloadManager:1.4.0'
+
     implementation 'com.android.billingclient:billing:1.2.2'
+
+
 
 
 

@@ -61,9 +61,8 @@ public class TopicsRecyclerviewAdapter extends RecyclerView.Adapter<TopicsRecycl
         System.out.println("Image url:::: "+imgUrl);
         Picasso.get()
                 .load(model.getSong_image())
-                .placeholder(R.drawable.placeholder_song)
+                .placeholder(R.drawable.placeholder_default)
                 .into(holder.topics_image);
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

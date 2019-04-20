@@ -178,7 +178,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                         file.delete();
                     db.itemSongDao().updateRat("false",itemSong.getTitle());
 
-                }else
+                }
                 if (isOfflinevideo != null && !isOfflinevideo.isEmpty()){
                     db.itemSongDao().update(isOfflinevideo,itemSong.getTitle());
                 }
@@ -660,7 +660,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                 // img_imageViewAlbumArt.setImageResource( data.getAlbum_img() );
                 Picasso.get()
                         .load(data.getAlbum_img())
-                        .placeholder(R.drawable.placeholder_song)
+                        .placeholder(R.drawable.placeholder_default)
                         .into(img_imageViewAlbumArt);
             } else {
                 img_imageViewAlbumArt.setBackgroundDrawable(new BitmapDrawable(UtilFunctions.getDefaultAlbumArt(context)));
