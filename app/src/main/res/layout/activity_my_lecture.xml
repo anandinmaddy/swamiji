@@ -124,6 +124,16 @@
             android:textStyle="bold"/>
 
     </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/nosongsView"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:textStyle="bold"
+        android:textSize="@dimen/_14sdp"
+        android:text="No lectures found, please  add some..."/>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

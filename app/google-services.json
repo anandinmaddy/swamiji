@@ -1,52 +1,53 @@
 {
   "project_info": {
-    "project_number": "818410163127",
-    "firebase_url": "https://sasthraprakashika.firebaseio.com",
-    "project_id": "sasthraprakashika",
-    "storage_bucket": "sasthraprakashika.appspot.com"
+    "project_number": "536781925391",
+    "firebase_url": "https://sastraprakasika-f5ac4.firebaseio.com",
+    "project_id": "sastraprakasika-f5ac4",
+    "storage_bucket": "sastraprakasika-f5ac4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:818410163127:android:d7029ef56f1119fa",
+        "mobilesdk_app_id": "1:536781925391:android:b14b71f2418c5d12",
         "android_client_info": {
-          "package_name": "com.example.im037.sastraprakasika"
+          "package_name": "com.sastra.im037.sastraprakasika"
         }
       },
       "oauth_client": [
         {
-          "client_id": "818410163127-iiqil65vvfg4uup22bbv7giqe11uimp4.apps.googleusercontent.com",
+          "client_id": "536781925391-2c6qfebl20bid70gv6m0b9k0a5o8cepm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.im037.sastraprakasika",
-            "certificate_hash": "c5d946ac9f3ae9ddf3a7ef1ca2c6a66ffca46df3"
+            "package_name": "com.sastra.im037.sastraprakasika",
+            "certificate_hash": "2161af26fe2ed9d7473df25700219773f13ee68e"
           }
         },
         {
-          "client_id": "818410163127-o8ibs6dijapd9q0ssmjcnh6970esfmmv.apps.googleusercontent.com",
+          "client_id": "536781925391-174ndjeq5df5tlks4vmmhev52puvbh3s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sastra.im037.sastraprakasika",
+            "certificate_hash": "1e4a1c85aed3826c17d13861e62724a7a333af36"
+          }
+        },
+        {
+          "client_id": "536781925391-bvgn42i9t9931n9fi0kv6j2oln7fqt5q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDKExd0Jn-z24guugRNCh12rsanUbW9Cgk"
+          "current_key": "AIzaSyATttk0B-VMquIDoNk4d13lJy4sjqBkff4"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "818410163127-o8ibs6dijapd9q0ssmjcnh6970esfmmv.apps.googleusercontent.com",
+              "client_id": "536781925391-bvgn42i9t9931n9fi0kv6j2oln7fqt5q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

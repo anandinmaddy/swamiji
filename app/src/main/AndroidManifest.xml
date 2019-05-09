@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.im037.sastraprakasika">
+    package="com.sastra.im037.sastraprakasika">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+
 
     <application
-        android:name=".MyApp"
+        android:name="com.sastra.im037.sastraprakasika.MyApp"
         android:allowBackup="true"
         android:icon="@drawable/app_launcher"
         android:label="@string/app_name"
@@ -17,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activity.SplashActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,67 +28,64 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MusicPlayer.NotificationPlayerService" />
-        <service android:name=".MusicPlayer.AnyAudioStreamService" />
+        <service android:name="com.sastra.im037.sastraprakasika.MusicPlayer.NotificationPlayerService" />
+        <service android:name="com.sastra.im037.sastraprakasika.MusicPlayer.AnyAudioStreamService" />
 
         <receiver
-            android:name=".mediaservice.ConnectivityReceiver"
+            android:name="com.sastra.im037.sastraprakasika.mediaservice.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-        </receiver>s
+        </receiver>
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
 
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.ForgotPasswd"
+            android:name="com.sastra.im037.sastraprakasika.Activity.ForgotPasswd"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.SendOtpActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.SendOtpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.VerifyOtpActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.VerifyOtpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activity.SignupActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.SignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activity.DashBoardActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.DashBoardActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Common.CommonActivity"
+            android:name="com.sastra.im037.sastraprakasika.Common.CommonActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -105,60 +104,60 @@
 
         <!--<activity android:name=".Activity.PlayerListActivity" />-->
         <activity
-            android:name=".Activity.VolumeActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.VolumeActivity"
             android:label="@string/title_activity_volume"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.VolumeDetailsActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.VolumeDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.MyLibraryActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.MyLibraryActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".FcmClasses.MyFirebaseInstanceIDService">
+        <service android:name="com.sastra.im037.sastraprakasika.FcmClasses.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".FcmClasses.MyFirebaseMessagingService">
+        <service android:name="com.sastra.im037.sastraprakasika.FcmClasses.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".Activity.MyAccountActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.MyAccountActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.SetPasswdActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.SetPasswdActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.NotificationSettingActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.NotificationSettingActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.PrivacyPolicyActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.PrivacyPolicyActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
         <activity
-            android:name=".Activity.SearchActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.SearchActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
-            android:name=".Activity.HelpSupportActivity"
+            android:name="com.sastra.im037.sastraprakasika.Activity.HelpSupportActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -176,56 +175,56 @@
 
         <!--<activity android:name=".Mediaactivity.Mediaplay_MainActivity"/>-->
         <activity
-            android:name="com.example.im037.sastraprakasika.Mediaactivity.Audio_player_activity"
+            android:name="com.sastra.im037.sastraprakasika.Mediaactivity.Audio_player_activity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_AudioPlay"
           >
         </activity>
-        <receiver android:name="com.example.im037.sastraprakasika.mediareceiver.NotificationBroadcast"
+        <receiver android:name="com.sastra.im037.sastraprakasika.mediareceiver.NotificationBroadcast"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.im037.sastraprakasika.mediaservice.delete" />
-                <action android:name="com.example.im037.sastraprakasika.mediaservice.pause" />
-                <action android:name="com.example.im037.sastraprakasika.mediaservice.next" />
-                <action android:name="com.example.im037.sastraprakasika.mediaservice.play" />
-                <action android:name="com.example.im037.sastraprakasika.mediaservice.previous" />
+                <action android:name="com.sastra.im037.sastraprakasika.mediaservice.delete" />
+                <action android:name="com.sastra.im037.sastraprakasika.mediaservice.pause" />
+                <action android:name="com.sastra.im037.sastraprakasika.mediaservice.next" />
+                <action android:name="com.sastra.im037.sastraprakasika.mediaservice.play" />
+                <action android:name="com.sastra.im037.sastraprakasika.mediaservice.previous" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".Common.CommonActivity" />
-        <receiver android:name=".Fragment.NewFragments.DashBoardNewFragment" />
+        <receiver android:name="com.sastra.im037.sastraprakasika.Common.CommonActivity" />
+        <receiver android:name="com.sastra.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment" />
 
         <service
-            android:name="com.example.im037.sastraprakasika.mediaservice.SongService"
+            android:name="com.sastra.im037.sastraprakasika.mediaservice.SongService"
             android:exported="true"
             android:enabled="true"/>
         <meta-data android:name="DATABASE" android:value="sugar_example.db" />
         <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example.im037.sastraprakasika" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.sastra.im037.sastraprakasika" />
 
-        <activity android:name=".Activity.Topics_detailed_items"
+        <activity android:name="com.sastra.im037.sastraprakasika.Activity.Topics_detailed_items"
             android:theme="@style/AppTheme_AudioPlay"/>
-        <activity android:name=".Activity.SearchDetailedActivity"
-            android:theme="@style/AppTheme_AudioPlay"/>
-
-        <activity android:name=".Activity.Playlist_detailed_Activity"
-            android:theme="@style/AppTheme_AudioPlay"/>
-        <activity android:name=".Activity.ClickEdit_Activity"
+        <activity android:name="com.sastra.im037.sastraprakasika.Activity.SearchDetailedActivity"
             android:theme="@style/AppTheme_AudioPlay"/>
 
-        <activity android:name=".Activity.NewPlaylist_activity"
+        <activity android:name="com.sastra.im037.sastraprakasika.Activity.Playlist_detailed_Activity"
+            android:theme="@style/AppTheme_AudioPlay"/>
+        <activity android:name="com.sastra.im037.sastraprakasika.Activity.ClickEdit_Activity"
+            android:theme="@style/AppTheme_AudioPlay"/>
+
+        <activity android:name="com.sastra.im037.sastraprakasika.Activity.NewPlaylist_activity"
             android:theme="@style/AppTheme_AudioPlay"/>
 
         <service
-            android:name=".OnlinePlayer.PlayerService"
+            android:name="com.sastra.im037.sastraprakasika.OnlinePlayer.PlayerService"
             android:exported="false" />
 
-        <activity android:name=".Activity.MyLecture" />
-        <activity android:name=".Adapter.createPlaylistAdapter"></activity>
+        <activity android:name="com.sastra.im037.sastraprakasika.Activity.MyLecture" />
+        <activity android:name="com.sastra.im037.sastraprakasika.Adapter.CreatePlaylistAdapter"></activity>
         <activity
             android:name=".Activity.HelpSu1pportActivity"
             android:launchMode="singleInstance"

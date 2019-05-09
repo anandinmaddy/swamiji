@@ -67,7 +67,6 @@
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:maxLines="1"
-
             android:text="Not Playing"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
@@ -146,6 +145,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:orientation="horizontal">
 
         <ImageView
@@ -195,6 +195,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_centerInParent="true"
+                android:visibility="gone"
                 android:src="@drawable/close" />
 
             <ProgressBar

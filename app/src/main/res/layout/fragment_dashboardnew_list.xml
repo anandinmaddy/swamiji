@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="com.example.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment"
+    android:name="com.sastra.im037.sastraprakasika.Fragment.NewFragments.DashBoardNewFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"

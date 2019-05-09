@@ -72,6 +72,16 @@
         android:background="@android:color/transparent"
         android:layout_marginBottom="60dp"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/nosongs"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:textStyle="bold"
+        android:textSize="@dimen/_14sdp"
+        android:text="No lectures found, please  add some..."/>
 
 
 
@@ -79,23 +89,11 @@
         android:id="@+id/linearLayoutPlayingSong_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
         android:gravity="center"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/nosongs"
-            android:textSize="@dimen/_15sdp"
-            android:padding="@dimen/_5sdp"
-            android:visibility="gone"
-            android:text="No Offline Songs Found !" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

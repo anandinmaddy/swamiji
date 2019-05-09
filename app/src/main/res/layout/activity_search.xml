@@ -91,15 +91,17 @@
     android:layout_weight="1.30"
     android:weightSum="1"
     android:layout_marginLeft="@dimen/_2sdp"
+    android:layout_marginRight="@dimen/_5sdp"
     android:layout_marginBottom="@dimen/_20sdp"
     android:background="@drawable/search_editcorner"
     >
     <ImageView
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:layout_gravity="center"
-        android:layout_weight="0.2"
-        android:layout_marginTop="@dimen/_1sdp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+      android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:background="@drawable/search48"
         />
 
@@ -107,17 +109,18 @@
 
             android:layout_marginRight="5dp"
             android:id="@+id/search_bar"
+            android:layout_marginLeft="@dimen/_5sdp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@drawable/search_editcorner"
             android:ems="10"
             android:layout_weight="0.6"
-
+            android:keyboardNavigationCluster="false"
             android:imeOptions="actionDone"
             android:hint="@string/search_text"
             android:inputType="textPersonName"
-            android:minHeight="@dimen/_25sdp"
+            android:minHeight="@dimen/_20sdp"
             />
     <ImageView
         android:layout_width="wrap_content"
@@ -125,6 +128,7 @@
         android:id="@+id/clearTxt"
         android:layout_weight="0.2"
         android:layout_gravity="end"
+        android:visibility="gone"
         android:background="@drawable/ic_search_close"
        />
 

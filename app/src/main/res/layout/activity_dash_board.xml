@@ -155,7 +155,7 @@
             android:fontFamily="Helvetica Neue"
             android:text="@string/discourse_title"
             android:textSize="@dimen/_15sdp" />
-        <com.example.im037.sastraprakasika.Readmore.ReadMoreTextView
+        <com.sastra.im037.sastraprakasika.Readmore.ReadMoreTextView
             android:id="@+id/discoursesContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

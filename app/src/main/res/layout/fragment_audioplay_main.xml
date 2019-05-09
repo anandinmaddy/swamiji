@@ -92,11 +92,23 @@
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/noSongsView"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:textStyle="bold"
+        android:textSize="@dimen/_14sdp"
+        android:text="No lectures found, please  add some..."/>
+
     <ListView
         android:layout_marginLeft="5sp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:id="@+id/listViewMusicSong_list"
+        android:visibility="visible"
         android:layout_width="fill_parent"
         android:scrollbars="none"
         android:layout_height="match_parent"

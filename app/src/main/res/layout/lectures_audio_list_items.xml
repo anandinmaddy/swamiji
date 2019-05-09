@@ -173,6 +173,7 @@
                     android:text="00:00/00:00" />
 
             </LinearLayout>
+
             <!--<LinearLayout-->
             <!--android:layout_marginLeft="7dp"-->
             <!--android:layout_width="match_parent"-->
@@ -302,30 +303,6 @@
         </RelativeLayout>
 
 
-        <at.grabner.circleprogress.CircleProgressView
-            android:id="@+id/circleView"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:visibility="gone"
-            CircleProgressView:cpv_autoTextSize="true"
-            CircleProgressView:cpv_barColor="@color/primary"
-
-            CircleProgressView:cpv_barWidth="35dp"
-            CircleProgressView:cpv_innerContourSize="0dp"
-            CircleProgressView:cpv_maxValue="100"
-            CircleProgressView:cpv_outerContourSize="0dp"
-            CircleProgressView:cpv_rimColor="@color/primary_light"
-            CircleProgressView:cpv_rimWidth="35dp"
-            CircleProgressView:cpv_seekMode="true"
-            CircleProgressView:cpv_showUnit="true"
-            CircleProgressView:cpv_spinColor="@color/primary"
-            CircleProgressView:cpv_textColor="@color/primary_dark"
-            CircleProgressView:cpv_textScale="1"
-            CircleProgressView:cpv_unit="%"
-            CircleProgressView:cpv_unitColor="@color/primary_light"
-            CircleProgressView:cpv_unitPosition="right_top"
-            CircleProgressView:cpv_unitScale="1"
-            CircleProgressView:cpv_value="10" />
 
 
         <!--<ImageView-->

@@ -6,13 +6,14 @@ android {
 
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.im037.sastraprakasika"
+        applicationId "com.sastra.im037.sastraprakasika"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 17
+        versionName "2.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -77,12 +78,7 @@ dependencies {
     implementation 'com.mani:ThinDownloadManager:1.4.0'
 
     implementation 'com.android.billingclient:billing:1.2.2'
-
-
-
-
-
-
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
 apply plugin: 'com.google.gms.google-services'
