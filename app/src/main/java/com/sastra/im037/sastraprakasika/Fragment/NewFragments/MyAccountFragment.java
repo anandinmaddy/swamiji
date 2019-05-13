@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -38,6 +40,7 @@ import com.sastra.im037.sastraprakasika.Webservices.WebServices;
 import com.sastra.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
 import com.sastra.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.sastra.im037.sastraprakasika.utils.Selected;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,6 +75,11 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
     LinearLayout fullview;
     public static boolean namechanged = false;
     EditText input, input1;
+    RelativeLayout.LayoutParams params;
+    SlidingUpPanelLayout sliding_layout;
+    RelativeLayout rl_min_header;
+    LinearLayout bottomLayoutblank;
+
     LinearLayout notificationLayout,helpSupportLayout,privacypolicyLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +91,7 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-            View view = inflater.inflate(R.layout.activity_account, container, false);
+            final View view = inflater.inflate(R.layout.activity_account, container, false);
          //   ButterKnife.bind( getActivity() );
 
         CommonActivity.setSelected( Selected.MYACCOUNT );
@@ -107,6 +115,10 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
         privacypolicyLayout = view.findViewById(R.id.privacypolicyLayout);
         fullview = (LinearLayout) view.findViewById(R.id.fullview);
 
+        sliding_layout = getActivity().findViewById(R.id.sliding_layout);
+        rl_min_header = (RelativeLayout) getActivity().findViewById(R.id.rl_min_header);
+        bottomLayoutblank = (LinearLayout) getActivity().findViewById(R.id.bottomLayout);
+
         notificationLayout = view.findViewById(R.id.notificationLayout);
             account = getActivity().findViewById( R.id.account );
             back = getActivity().findViewById( R.id.back );
@@ -122,7 +134,19 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
 
              title.setText( Html.fromHtml( getResources().getString( R.string.myaccount ) ) );
             helpSupport.setText( Html.fromHtml( getResources().getString( R.string.contest_giveaways ) ) );
-            //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
+
+
+        int dpValue = 65; // margin in dips
+        float d = this.getResources().getDisplayMetrics().density;
+        final int margin = (int)(dpValue * d);
+        params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, 0, margin);
+
+
+        //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
             //common_dragview.setVisibility(View.VISIBLE);
             name.setText( Session.getInstance( getActivity().getApplicationContext(), TAG ).getName() );
             email.setText( Session.getInstance( getActivity().getApplicationContext(), TAG ).getEmail() );
@@ -159,6 +183,34 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
                 }
             });
 
+
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                //r will be populated with the coordinates of your view that area still visible.
+                view.getWindowVisibleDisplayFrame(r);
+
+                int heightDiff = view.getRootView().getHeight() - (r.bottom - r.top);
+                if (heightDiff > 500) {
+                    params.setMargins(0, 0, 0, 0);
+                    sliding_layout.setLayoutParams(params);
+
+                    rl_min_header.setVisibility(View.GONE);
+                    bottomLayoutblank.setVisibility(View.GONE);
+
+                }else {
+                    params.setMargins(0, 0, 0, margin);
+                        sliding_layout.setLayoutParams(params);
+                        rl_min_header.setVisibility(View.VISIBLE);
+                        bottomLayoutblank.setVisibility(View.VISIBLE);
+
+
+                }
+
+            }
+        });
 
         nameEdit.setOnClickListener( new View.OnClickListener() {
                 @Override
