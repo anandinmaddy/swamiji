@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -45,6 +47,7 @@ import com.sastra.im037.sastraprakasika.Webservices.WebServices;
 import com.sastra.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
 import com.sastra.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
 import com.sastra.im037.sastraprakasika.utils.Selected;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,12 +75,15 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
     private String mParam2;
     RecyclerView searchRecyclerview;
     ListView searchLinearview;
-
+    RelativeLayout.LayoutParams params;
+    boolean isSearchClicked;
     Spinner searchSpin;
     EditText searchBar;
     static DiscousesAppDatabase db;
     boolean isDiscourseSelected, isLibrarySelected;
     boolean isLibAvailable,isDiscoursesAvailable;
+    RelativeLayout rl_min_header;
+    LinearLayout bottomLayoutblank;
 
     LinearLayout offlineViewer;
     TextView offlineLink;
@@ -96,7 +102,8 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
     TextView noSearchResult,libraryTxt,discoursesTx;
     private OnFragmentInteractionListener mListener;
     private TabLayout tablayout;
-
+    int margin=0;
+    SlidingUpPanelLayout sliding_layout;
     public SearchPageFragment() {
         // Required empty public constructor
     }
@@ -130,17 +137,21 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_search, container, false);
+        final View view = inflater.inflate(R.layout.activity_search, container, false);
 
         CommonActivity.setSelected( Selected.SEARCH);
         titleView = (TextView) getActivity().findViewById(R.id.title);
 
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "ListOfTopics").allowMainThreadQueries().build();
+        rl_min_header = (RelativeLayout) getActivity().findViewById(R.id.rl_min_header);
+        bottomLayoutblank = (LinearLayout) getActivity().findViewById(R.id.bottomLayout);
 
         searchRecyclerview = (RecyclerView) view.findViewById(R.id.searchRecyclerview) ;
         searchLinearview = (ListView) view.findViewById(R.id.searchLinearview) ;
@@ -155,6 +166,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
         back.setVisibility(View.GONE);
         discoursesTx = view.findViewById(R.id.discoursesTx);
         libraryTxt = view.findViewById(R.id.libraryTxt);
+        sliding_layout = getActivity().findViewById(R.id.sliding_layout);
 
         offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
         offlineLink = view.findViewById(R.id.offlineLectureLink);
@@ -188,6 +200,9 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
             }
         });
 
+        int dpValue = 65; // margin in dips
+        float d = this.getResources().getDisplayMetrics().density;
+        margin = (int)(dpValue * d);
 
 
         main_layout.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +226,11 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                 CommonMethod.hideKeyboardNew(getActivity(), v);
             }
         });
+
+        params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
 
 
         libraryTxt.setOnClickListener(new View.OnClickListener() {
@@ -295,6 +315,38 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                 showDiscourseUI();
             }
         });
+
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                //r will be populated with the coordinates of your view that area still visible.
+                view.getWindowVisibleDisplayFrame(r);
+
+                int heightDiff = view.getRootView().getHeight() - (r.bottom - r.top);
+                if (heightDiff > 500) {
+                    params.setMargins(0, 0, 0, 0);
+                    sliding_layout.setLayoutParams(params);
+
+                    rl_min_header.setVisibility(View.GONE);
+                    bottomLayoutblank.setVisibility(View.GONE);
+
+                }else {
+                    params.setMargins(0, 0, 0, margin);
+                    if (isSearchClicked){
+                        sliding_layout.setLayoutParams(params);
+                        rl_min_header.setVisibility(View.VISIBLE);
+                        bottomLayoutblank.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+            }
+        });
+
+
         return view;
     }
 
@@ -335,7 +387,12 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
         }
 
+
+
     }
+
+
+
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -415,6 +472,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                isSearchClicked = true;
                 String text = searchBar.getText().toString();
                 int maxChar = 2;
                 if (text.length() > 0) {

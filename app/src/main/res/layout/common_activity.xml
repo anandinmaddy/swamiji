@@ -23,7 +23,6 @@
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_44sdp"
         android:gravity="bottom"
         sothree:umanoPanelHeight="65dp"
         sothree:umanoShadowHeight="4dp"
@@ -162,6 +161,7 @@
         android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
+
         android:background="@android:color/white"
         android:weightSum="4"
 

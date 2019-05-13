@@ -18,7 +18,6 @@
         <RelativeLayout
             android:id="@+id/rl_small"
             android:layout_width="match_parent"
-            android:background="@color/orange"
             android:layout_height="?android:actionBarSize"
             >
 
@@ -34,6 +33,7 @@
                 android:id="@+id/rl_min_header"
                 layout="@layout/layout_music_min_header"
                 android:layout_width="match_parent"
+
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 />

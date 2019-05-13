@@ -118,6 +118,7 @@ public class CommonActivity extends AppCompatActivity   {
     RelativeLayout rl_download_loading;
     private TextView title, songtitle;
     TextView time;
+    RelativeLayout.LayoutParams params;
     LinearLayout discourses, myLibrary, search, myAccount,bottomLayout,bottomLayoutblank;
     static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg, view_round;
     LinearLayout layoutBackground;
@@ -156,6 +157,7 @@ public class CommonActivity extends AppCompatActivity   {
     private BroadcastReceiver yourReceiver;
     private String songUrl;
     private String songTitle;
+    RelativeLayout rl_small;
 
 
     @Override
@@ -206,14 +208,15 @@ public class CommonActivity extends AppCompatActivity   {
         //add me
         iv_music_shuffle = findViewById(R.id.iv_music_add2playlist);
         iv_music_downloads = findViewById(R.id.iv_music_downloads);
+        rl_small = findViewById(R.id.rl_small);
         view_round = findViewById(R.id.vBgLike);
 
         iv_min_song = findViewById(R.id.iv_min_song);
-      //  iv_max_song = findViewById(R.id.iv_max_song);
+        //  iv_max_song = findViewById(R.id.iv_max_song);
         iv_min_previous = findViewById(R.id.iv_min_previous);
         iv_min_play = findViewById(R.id.iv_min_play);
         iv_min_next = findViewById(R.id.iv_min_next);
-       // iv_max_fav = findViewById(R.id.iv_max_fav);
+        // iv_max_fav = findViewById(R.id.iv_max_fav);
         //iv_max_option = findViewById(R.id.iv_max_option);
         imageView_heart = findViewById(R.id.ivLike);
 
@@ -223,13 +226,13 @@ public class CommonActivity extends AppCompatActivity   {
         tv_music_title = findViewById(R.id.tv_music_title);
         tv_music_artist = findViewById(R.id.tv_music_artist);
         tv_min_title = findViewById(R.id.tv_min_title);
-       // tv_min_artist = findViewById(R.id.tv_min_artist);
-     //   tv_max_title = findViewById(R.id.tv_max_title);
-       // tv_max_artist = findViewById(R.id.tv_max_artist);
+        // tv_min_artist = findViewById(R.id.tv_min_artist);
+        //   tv_max_title = findViewById(R.id.tv_max_title);
+        // tv_max_artist = findViewById(R.id.tv_max_artist);
         sliding_layout = findViewById(R.id.sliding_layout);
 
         bottomLayoutblank = findViewById(R.id.bottomLayoutblank);
-      //  iv_max_option.setColorFilter(Color.BLACK);
+        //  iv_max_option.setColorFilter(Color.BLACK);
 
         final IntentFilter theFilter = new IntentFilter();
         theFilter.addAction(ACTION);
@@ -257,8 +260,8 @@ public class CommonActivity extends AppCompatActivity   {
         startNewFragment(dashBoardNewFragment,"home");
 
 
-     //   iv_max_fav.setOnClickListener();
-       // iv_max_option.setOnClickListener(this);
+        //   iv_max_fav.setOnClickListener();
+        // iv_max_option.setOnClickListener(this);
 
    /*     iv_min_play.setOnClickListener(this);
         iv_min_next.setOnClickListener(this);
@@ -333,6 +336,15 @@ public class CommonActivity extends AppCompatActivity   {
         });
 
         am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        int dpValue = 65; // margin in dips
+        float d = this.getResources().getDisplayMetrics().density;
+        int margin = (int)(dpValue * d);
+           params = new RelativeLayout.LayoutParams(
+                   RelativeLayout.LayoutParams.WRAP_CONTENT,
+                   RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 0, 0, margin);
 
 
 
@@ -453,7 +465,7 @@ public class CommonActivity extends AppCompatActivity   {
 
                 //  volumePageFragment.setArguments(profileData);
 
-            //    CommonMethod.changeActivity(CommonActivity.this, MyLibraryActivity.class);
+                //    CommonMethod.changeActivity(CommonActivity.this, MyLibraryActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -474,7 +486,7 @@ public class CommonActivity extends AppCompatActivity   {
                     //  volumePageFragment.setArguments(profileData);
                     startNewFragment(dashBoardNewFragment, "home");
                 }
-               // CommonMethod.changeActivity(CommonActivity.this, DashBoardActivity.class);
+                // CommonMethod.changeActivity(CommonActivity.this, DashBoardActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -496,7 +508,7 @@ public class CommonActivity extends AppCompatActivity   {
                     //  volumePageFragment.setArguments(profileData);
                     startNewFragment(searchPageFragment, "search");
                 }
-             //   CommonMethod.changeActivity(CommonActivity.this, SearchActivity.class);
+                //   CommonMethod.changeActivity(CommonActivity.this, SearchActivity.class);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -519,8 +531,8 @@ public class CommonActivity extends AppCompatActivity   {
                     startNewFragment(myAccountActivityFragment, "account");
                 }
 
-             //   CommonMethod.changeActivity(CommonActivity.this, MyAccountActivity.class);
-               // //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+                //   CommonMethod.changeActivity(CommonActivity.this, MyAccountActivity.class);
+                // //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
 
@@ -610,7 +622,7 @@ public class CommonActivity extends AppCompatActivity   {
 
 
 
-        public static void setSelected(Selected select) {
+    public static void setSelected(Selected select) {
 
         int textColor;
         switch (select) {
@@ -796,7 +808,7 @@ public class CommonActivity extends AppCompatActivity   {
                 }
             }
         } else {
-           // Toast.makeText(CommonActivity.this, "", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(CommonActivity.this, "", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1210,7 +1222,7 @@ public class CommonActivity extends AppCompatActivity   {
                     isRotateAnim = true;
                     if (imageView_pager != null) {
 
-                       // imageView_pager.setAnimation(null);
+                        // imageView_pager.setAnimation(null);
 
                     }
                     View view_pager = viewpager.findViewWithTag("myview" + Constant.playPos);
@@ -1237,7 +1249,7 @@ public class CommonActivity extends AppCompatActivity   {
     public void changeText(final ItemSong itemSong, final String page) {
 
         tv_min_title.setText(itemSong.getTitle());
-       // tv_min_artist.setText(itemSong.getArtist());
+        // tv_min_artist.setText(itemSong.getArtist());
 
    /*     tv_max_title.setText(itemSong.getTitle());
         tv_max_artist.setText(itemSong.getArtist());
@@ -1252,7 +1264,11 @@ public class CommonActivity extends AppCompatActivity   {
         tv_song_count.setText(Constant.playPos + 1 + "/" + Constant.arrayList_play.size());
         tv_total_time.setText(itemSong.getDuration());
 
-        changeFav(dbHelper.checkFav(String.valueOf(itemSong.getId())));
+        try {
+            changeFav(dbHelper.checkFav(String.valueOf(itemSong.getId())));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         Picasso.get()
                 .load((itemSong.getImageSmall()))
                 .placeholder(R.drawable.vedanta)
@@ -1263,7 +1279,7 @@ public class CommonActivity extends AppCompatActivity   {
 
 
             if (ratingBar.getVisibility() == View.GONE) {
-              //  ratingBar.setVisibility(View.VISIBLE);
+                //  ratingBar.setVisibility(View.VISIBLE);
 //                iv_max_fav.setVisibility(View.VISIBLE);
 
                 //iv_music_rate.setVisibility(View.VISIBLE);
@@ -1286,7 +1302,7 @@ public class CommonActivity extends AppCompatActivity   {
 
             if (ratingBar.getVisibility() == View.VISIBLE) {
                 ratingBar.setVisibility(View.GONE);
-             //   iv_max_fav.setVisibility(View.GONE);
+                //   iv_max_fav.setVisibility(View.GONE);
 
                 //iv_music_rate.setVisibility(View.GONE);
                 view_rate.setVisibility(View.GONE);
@@ -1315,14 +1331,14 @@ public class CommonActivity extends AppCompatActivity   {
 
         songTitle = itemSong.getTopics_det_title();
         songUrl = itemSong.getTopics_det_imgurl();
-     //   ratingBar.setRating(Integer.parseInt(itemSong.getr()));
+        //   ratingBar.setRating(Integer.parseInt(itemSong.getr()));
         tv_music_title.setText(itemSong.getTopics_det_title());
         tv_music_artist.setText(itemSong.getTopics_det_title());
 
         tv_song_count.setText(Constant.playPos + 1 + "/" + Constant.arrayList_play.size());
         tv_total_time.setText(itemSong.getTopics_time());
 
-      //  changeFav(dbHelper.checkFav(String.valueOf(itemSong.getTopics_det_post_id())));
+        //  changeFav(dbHelper.checkFav(String.valueOf(itemSong.getTopics_det_post_id())));
         Picasso.get()
                 .load((itemSong.getTopics_det_img()))
                 .placeholder(R.drawable.vedanta)
@@ -1440,6 +1456,8 @@ public class CommonActivity extends AppCompatActivity   {
 
     public void isBuffering(Boolean isBuffer) {
         Constant.isPlaying = !isBuffer;
+        rl_min_header.setVisibility(View.VISIBLE);
+        sliding_layout.setLayoutParams(params);
         if (isBuffer) {
             rl_music_loading.setVisibility(View.VISIBLE);
             iv_music_play.setVisibility(View.INVISIBLE);
@@ -1453,7 +1471,7 @@ public class CommonActivity extends AppCompatActivity   {
         iv_music_previous.setEnabled(!isBuffer);
         iv_min_next.setEnabled(!isBuffer);
         iv_min_previous.setEnabled(!isBuffer);
-       // iv_music_download.setEnabled(!isBuffer);
+        // iv_music_download.setEnabled(!isBuffer);
         iv_min_play.setEnabled(!isBuffer);
         seekBar_music.setEnabled(!isBuffer);
     }
@@ -1691,7 +1709,7 @@ public class CommonActivity extends AppCompatActivity   {
 
     class DownloadFileAsync extends AsyncTask<String, String,String> {
         public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-      //  private ProgressDialog mProgressDialog;
+        //  private ProgressDialog mProgressDialog;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1725,7 +1743,7 @@ public class CommonActivity extends AppCompatActivity   {
                 input.close();
             } catch (Exception e) {
                 e.printStackTrace();
-             //   mProgressDialog.dismiss();
+                //   mProgressDialog.dismiss();
 
             }
             return "done";
@@ -1733,7 +1751,7 @@ public class CommonActivity extends AppCompatActivity   {
 
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC",progress[0]);
-          //  mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+            //  mProgressDialog.setProgress(Integer.parseInt(progress[0]));
         }
 
         @Override
@@ -1741,7 +1759,7 @@ public class CommonActivity extends AppCompatActivity   {
             Toast.makeText(CommonActivity.this, "Download completed", Toast.LENGTH_SHORT).show();
             rl_download_loading.setVisibility(View.GONE);
             iv_music_downloads.setVisibility(View.VISIBLE);
-          //  mProgressDialog.dismiss();
+            //  mProgressDialog.dismiss();
         }
 
 
