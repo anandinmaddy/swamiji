@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +48,8 @@ public class TopicsDetailedAdapter extends BaseAdapter{
     boolean isDownloadUpdated= false;
     private ThinDownloadManager downloadManager;
     HashMap<String,Integer> hashMap= new HashMap<>();
+    private int lastPosition = -1;
+
 
     public TopicsDetailedAdapter(ArrayList<ListOfTopicsDetailed> listOfTopicsDetaileds, Context context) {
         this.listOfTopicsDetaileds = listOfTopicsDetaileds;
@@ -116,6 +120,12 @@ public class TopicsDetailedAdapter extends BaseAdapter{
         }else {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
+
+        Animation animation = AnimationUtils.loadAnimation(context, (i > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        convertView.startAnimation(animation);
+        lastPosition = i;
+
+
 
         //     viewHolder.progressInside.setTag(i);
         viewHolder.iv_music_pause_downloads.setTag(i);

@@ -12,8 +12,7 @@
         android:id="@+id/image"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
-        android:layout_marginLeft="@dimen/_5sdp"
-        android:src="@drawable/divyanantham1" />
+        android:layout_marginLeft="@dimen/_5sdp"    />
 
 
 

@@ -92,7 +92,7 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
     RatingBar ratingBar;
     SeekBar seekBar_music, seekbar_min;
     View view_playlist, view_download, view_rate, view_round;
-    TextView tv_min_title, tv_min_artist, tv_max_title, tv_max_artist, tv_music_title, tv_music_artist, tv_song_count,
+    TextView  tv_min_artist, tv_max_title, tv_max_artist, tv_music_title, tv_music_artist, tv_song_count,
             tv_current_time, tv_total_time;
     RoundedImageView iv_max_song, iv_min_song, imageView_pager;
     ImageView iv_music_bg, iv_min_previous, iv_min_play, iv_min_next, iv_max_fav, iv_max_option, iv_music_shuffle,
@@ -115,7 +115,6 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
         include_sliding_panel_childtwo = findViewById( R.id.include_sliding_panel_childtwo);
         commonProgressBar = (AVLoadingIndicatorView) findViewById(R.id.commonProgressBar);
         seekbar_min = (SeekBar) findViewById(R.id.seekbar_min);
-        songtitle = (TextView) findViewById(R.id.tv_min_title);
 
         Constant.isAppOpen = true;
         //checkSlidingPanelLayout(false);
@@ -172,7 +171,7 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
         tv_song_count = findViewById(R.id.tv_music_song_count);
         tv_music_title = findViewById(R.id.tv_music_title);
         tv_music_artist = findViewById(R.id.tv_music_artist);
-        tv_min_title = findViewById(R.id.tv_min_title);
+//        tv_min_title = findViewById(R.id.tv_min_title);
 //        tv_min_artist = findViewById(R.id.tv_min_artist);
         tv_max_title = findViewById(R.id.tv_max_title);
         tv_max_artist = findViewById(R.id.tv_max_artist);
@@ -973,7 +972,6 @@ public class CommonActivityNew extends AppCompatActivity implements View.OnClick
 
     public void changeText(final ItemSong itemSong, final String page) {
 
-        tv_min_title.setText(itemSong.getTitle());
         tv_min_artist.setText(itemSong.getArtist());
 
         tv_max_title.setText(itemSong.getTitle());

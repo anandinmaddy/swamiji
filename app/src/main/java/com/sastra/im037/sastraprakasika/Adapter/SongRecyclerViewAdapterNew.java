@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +26,8 @@ public class SongRecyclerViewAdapterNew extends BaseAdapter {
     //    ArrayList<ListOfLecturesListDetails> lect_det;
     ArrayList<ItemSong> mediaItems;
     Context context;
+    private int lastPosition = -1;
+
 
 
     public SongRecyclerViewAdapterNew(ArrayList<ItemSong> media_det, Context context) {
@@ -94,6 +98,10 @@ public class SongRecyclerViewAdapterNew extends BaseAdapter {
             viewHolder.textNowPlaying.setVisibility(View.VISIBLE);
         }
 
+
+        Animation animation = AnimationUtils.loadAnimation(context, (i > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        view.startAnimation(animation);
+        lastPosition = i;
 
 //        ListOfLecturesListDetails details = (ListOfLecturesListDetails)lect_det.get(i);
         final ItemSong items = mediaItems.get(i);

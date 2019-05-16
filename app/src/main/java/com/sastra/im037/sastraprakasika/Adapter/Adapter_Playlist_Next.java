@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
     ArrayList<ItemSong> arrayListSong = new ArrayList();
     Context context;
 
+    private int lastPosition = -1;
 
     public Adapter_Playlist_Next(ArrayList<ItemSong> arrayListSong,Context context) {
         this.arrayListSong = arrayListSong;
@@ -50,6 +53,9 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
     @Override
     public void onBindViewHolder(@NonNull final Adapter_Playlist_Next.Custom_view holder, final int position) {
 
+        Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        holder.itemView.startAnimation(animation);
+        lastPosition = position;
 
         holder.title_imge.setText(arrayListSong.get(position).getTitle());
         try {
@@ -69,6 +75,7 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
             holder.nowPlaying_layout.setVisibility(View.GONE);
             holder.textNowPlaying.setVisibility(View.VISIBLE);
         }
+
 
 
 

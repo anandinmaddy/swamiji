@@ -161,11 +161,10 @@
         android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-
         android:background="@android:color/white"
         android:weightSum="4"
-
-        android:windowSoftInputMode="adjustPan"
+        android:isScrollContainer="false"
+        android:windowSoftInputMode="adjustPan|adjustResize"
         android:fitsSystemWindows="true">
 
         <LinearLayout

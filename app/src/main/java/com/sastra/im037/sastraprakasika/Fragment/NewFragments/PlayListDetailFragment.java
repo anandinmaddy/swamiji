@@ -11,6 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,6 +85,26 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
             txtview.setText("Playlist");
 
         }
+
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+
+                    @Override
+                    public boolean onPreDraw() {
+                        recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                            View v = recyclerView.getChildAt(i);
+                            v.setAlpha(0.0f);
+                            v.animate().alpha(1.0f)
+                                    .setDuration(300)
+                                    .setStartDelay(i * 50)
+                                    .start();
+                        }
+
+                        return true;
+                    }
+                });
 
 
         offlineLink.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +200,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
             recyclerView.setVisibility(View.GONE);
             nosongs.setVisibility(View.VISIBLE);
         }
+
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

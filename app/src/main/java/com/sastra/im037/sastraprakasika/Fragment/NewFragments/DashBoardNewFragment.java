@@ -211,8 +211,8 @@ public class DashBoardNewFragment extends Fragment implements NetworkStateReceiv
         back.setVisibility(View.GONE);
         //    setCommonProgressBar(View.VISIBLE);
 
-        //  callWebservice();
-
+          callWebservice();
+/*
         if(discoursesModelsList != null && discoursesModelsList.size() > 0){
             mShimmerViewContainer.stopShimmer();
             mShimmerViewContainer.setVisibility(View.GONE);
@@ -224,7 +224,7 @@ public class DashBoardNewFragment extends Fragment implements NetworkStateReceiv
 
         }else{
             callWebservice();
-        }
+        }*/
 
         //SetAboutDetail();
 

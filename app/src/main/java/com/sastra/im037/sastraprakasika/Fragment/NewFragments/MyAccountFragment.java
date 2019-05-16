@@ -1,6 +1,7 @@
 package com.sastra.im037.sastraprakasika.Fragment.NewFragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -145,6 +146,7 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
         );
         params.setMargins(0, 0, 0, margin);
 
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         //common_dragview = (RelativeLayout) findViewById(R.id.dragView);
             //common_dragview.setVisibility(View.VISIBLE);
@@ -184,7 +186,6 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
             });
 
 
-
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -194,23 +195,30 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
 
                 int heightDiff = view.getRootView().getHeight() - (r.bottom - r.top);
                 if (heightDiff > 500) {
-                    params.setMargins(0, 0, 0, 0);
+                 /*   params.setMargins(0, 0, 0, 0);
                     sliding_layout.setLayoutParams(params);
-
                     rl_min_header.setVisibility(View.GONE);
-                    bottomLayoutblank.setVisibility(View.GONE);
+                    bottomLayoutblank.setVisibility(View.GONE);*/
 
                 }else {
-                    params.setMargins(0, 0, 0, margin);
+                    if (Constant.isPlaying){
+                        params.setMargins(0, 0, 0, margin);
                         sliding_layout.setLayoutParams(params);
-                        rl_min_header.setVisibility(View.VISIBLE);
-                        bottomLayoutblank.setVisibility(View.VISIBLE);
+                    }
+            //        params.setMargins(0, 0, 0, margin);
+                 //   sliding_layout.setLayoutParams(params);
 
+                    //    if (isSearchClicked){
+                    //    sliding_layout.setLayoutParams(params);
+
+                    //      }
 
                 }
 
             }
         });
+
+
 
         nameEdit.setOnClickListener( new View.OnClickListener() {
                 @Override
@@ -292,6 +300,8 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
     public void Show() {
         AlertDialog.Builder builder = new AlertDialog.Builder( this.getActivity() );
         builder.setTitle( "Change Name" );
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 // Set up the input
         final EditText input = new EditText( this.getActivity() );
@@ -349,6 +359,9 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType( InputType.TYPE_CLASS_NUMBER  );
         builder.setView( input );
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
 
 // Set up the buttons
         builder.setPositiveButton( "OK", new DialogInterface.OnClickListener() {
@@ -356,6 +369,7 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
             public void onClick(final DialogInterface dialog, int which) {
                 InputMethodManager im = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(input.getWindowToken(), 0);
+
                 mobile.setText( input.getText().toString() );
                 dialog.cancel();
                 mobileNumUpdated = mobile.getText().toString();

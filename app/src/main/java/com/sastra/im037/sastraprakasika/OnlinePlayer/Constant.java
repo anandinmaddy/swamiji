@@ -25,7 +25,7 @@ public class Constant {
     public static boolean isplaySearch = false;
     public static boolean refreshLecture = false;
     public static boolean downloadCompleted = false;
-    public static boolean isFirstTime = true;
+    public static boolean isFirstTime = false;
     public static ArrayList<ItemSong> wholeMediaList = new ArrayList<>();
     public static int downloadCount = 0;
 

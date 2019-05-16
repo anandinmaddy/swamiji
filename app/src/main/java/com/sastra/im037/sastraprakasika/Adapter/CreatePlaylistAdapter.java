@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -21,6 +23,7 @@ public class CreatePlaylistAdapter extends BaseAdapter {
 
     ArrayList<ItemSong> mediaItems;
     Context context;
+    private int lastPosition = -1;
 
     public CreatePlaylistAdapter(){
 
@@ -79,6 +82,10 @@ public class CreatePlaylistAdapter extends BaseAdapter {
 
         viewHolder.checkbox.setTag(i);
 
+
+        Animation animation = AnimationUtils.loadAnimation(context, (i > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        view.startAnimation(animation);
+        lastPosition = i;
         // final ImageView playlist_track = (ImageView)view.findViewById(R.id.plating_track_icon);
         // TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
         if(viewHolder.checkbox.getTag().equals(i) && viewHolder.checkbox.isChecked()){

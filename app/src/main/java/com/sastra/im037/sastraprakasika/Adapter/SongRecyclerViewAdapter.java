@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +33,8 @@ public class SongRecyclerViewAdapter extends RecyclerView.Adapter<SongRecyclerVi
     String type;
     DiscousesAppDatabase db;
     FragmentManager fragmentManager;
+    private int lastPosition = -1;
+
 
 
     public SongRecyclerViewAdapter(Activity context, ArrayList<SearchModel> arrayList,String type, FragmentManager fragmentManager) {
@@ -52,6 +56,12 @@ public class SongRecyclerViewAdapter extends RecyclerView.Adapter<SongRecyclerVi
 
         holder.searchTitle.setText(arrayList.get(position).getTitle());
         holder.imageicon.setImageResource(R.drawable.righticonsearch);
+
+        Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        holder.itemView.startAnimation(animation);
+        lastPosition = position;
+
+
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {

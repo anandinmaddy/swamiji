@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +28,8 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
     ArrayList<ItemSong> mediaItems;
     Context context;
     private IProcessFilter mCallback;
+    private int lastPosition = -1;
+
 
 
     public Downloads_audio_list_adapter(ArrayList<ItemSong> media_det, Context context, IProcessFilter processCallback) {
@@ -93,6 +97,11 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         viewHolder.delete_play.setTag(i);
 
         // TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
+        final Animation animation = AnimationUtils.loadAnimation(context, (i > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        view.startAnimation(animation);
+        lastPosition = i;
+
+
 
 
         if (Constant.playPos == i && Constant.isplayDownloads) {
@@ -122,6 +131,7 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         viewHolder.song_artist.setText(items.getClassName());
         viewHolder.song_dur.setText(items.getDuration());
 
+        final View finalView = view;
         viewHolder.delete_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,9 +144,10 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
                         File file = new File(path);
                         file.delete();
                         notifyDataSetChanged();
-
+                        finalView.startAnimation(animation);
                         Toast.makeText(context, "Audio Deleted",Toast.LENGTH_SHORT).show();
                         mCallback.onProcessFilter(fileName);
+
                     }
                 }
 

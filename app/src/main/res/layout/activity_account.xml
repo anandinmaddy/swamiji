@@ -126,6 +126,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1.5"
                         android:text="Sample"
+
                         android:textColor="@color/dark_grey"
                         android:textSize="@dimen/_11sdp" />
 

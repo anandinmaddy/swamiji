@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,6 +44,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     BillingClient billingClient;
     SkuDetails skuDetails;
     Activity activity;
+
+    private int lastPosition = -1;
 
     public ExpandableListAdapter(Activity activity, Context context, ArrayList<VolumeDetailsModel> arrayList, BillingClient billingAppClient) {
         this.context = context;
@@ -105,6 +109,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         title.setText(volume);
 
 //
+
+        Animation animation = AnimationUtils.loadAnimation(context, (groupPosition > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        convertView.startAnimation(animation);
+        lastPosition = groupPosition;
+
+
         List<String> skuList = new ArrayList<> ();
             skuList.add("purchase_free");
 

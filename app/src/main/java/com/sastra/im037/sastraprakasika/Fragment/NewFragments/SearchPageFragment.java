@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -326,20 +327,21 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
                 int heightDiff = view.getRootView().getHeight() - (r.bottom - r.top);
                 if (heightDiff > 500) {
-                    params.setMargins(0, 0, 0, 0);
+                  /*  params.setMargins(0, 0, 0, 0);
                     sliding_layout.setLayoutParams(params);
-
                     rl_min_header.setVisibility(View.GONE);
-                    bottomLayoutblank.setVisibility(View.GONE);
+                    bottomLayoutblank.setVisibility(View.GONE);*/
 
                 }else {
-                    params.setMargins(0, 0, 0, margin);
-                    if (isSearchClicked){
+                    if (Constant.isPlaying){
+                        params.setMargins(0, 0, 0, margin);
                         sliding_layout.setLayoutParams(params);
-                        rl_min_header.setVisibility(View.VISIBLE);
-                        bottomLayoutblank.setVisibility(View.VISIBLE);
-
                     }
+
+                    //    if (isSearchClicked){
+                    //    sliding_layout.setLayoutParams(params);
+
+              //      }
 
                 }
 
@@ -373,10 +375,13 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
     private void showDiscourseUI() {
         if(isDiscoursesAvailable){
-                noSearchResult.setVisibility(View.GONE);
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+            noSearchResult.setVisibility(View.GONE);
                 searchLinearview.setVisibility(View.GONE);
                 searchRecyclerview.setVisibility(View.VISIBLE);
-                adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
+
+            adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
                 searchRecyclerview.setAdapter(adapter);
 
         }else {

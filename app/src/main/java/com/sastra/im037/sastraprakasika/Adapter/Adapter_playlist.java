@@ -217,9 +217,6 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
-
-
-
             }
 
             @Override
