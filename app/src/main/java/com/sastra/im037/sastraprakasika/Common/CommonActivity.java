@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -158,6 +159,7 @@ public class CommonActivity extends AppCompatActivity   {
     private String songUrl;
     private String songTitle;
     RelativeLayout rl_small;
+    LinearLayout playerTopl;
 
 
     @Override
@@ -232,6 +234,8 @@ public class CommonActivity extends AppCompatActivity   {
         sliding_layout = findViewById(R.id.sliding_layout);
 
         bottomLayoutblank = findViewById(R.id.bottomLayoutblank);
+
+        playerTopl = findViewById(R.id.playerTop);
         //  iv_max_option.setColorFilter(Color.BLACK);
 
         final IntentFilter theFilter = new IntentFilter();
@@ -273,7 +277,6 @@ public class CommonActivity extends AppCompatActivity   {
         iv_music_shuffle.setOnClickListener(this);
         iv_music_downloads.setOnClickListener(this);
         sliding_layout.setOnClickListener(this);*/
-
 
         iv_min_play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +380,8 @@ public class CommonActivity extends AppCompatActivity   {
             }
         });
 
+
+
         seekBar_music.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -407,8 +412,8 @@ public class CommonActivity extends AppCompatActivity   {
         });
 
 
-
-
+    //
+//https://github.com/umano/AndroidSlidingUpPanel/issues/19
         //add me new
         sliding_layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -419,6 +424,8 @@ public class CommonActivity extends AppCompatActivity   {
                     ll_max_header.setVisibility(View.GONE);
                     bottomLayout.setVisibility(View.VISIBLE);
                     bottomLayoutblank.setVisibility(View.GONE);
+                    sliding_layout.setDragView(findViewById(R.id.rl_min_header));
+
                 } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
                     rl_min_header.setVisibility(View.GONE);
                     ll_max_header.setVisibility(View.VISIBLE);
@@ -437,15 +444,37 @@ public class CommonActivity extends AppCompatActivity   {
                     rl_min_header.setVisibility(View.GONE);
                     ll_max_header.setVisibility(View.VISIBLE);
                     bottomLayoutblank.setVisibility(View.VISIBLE);
+                    sliding_layout.setDragView(findViewById(R.id.ll_max_header));
                 }
             }
-
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
 
             }
+
         });
 
+/*
+        ll_max_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isExpand){
+                    isExpand = false;
+                    rl_min_header.setVisibility(View.VISIBLE);
+                    ll_max_header.setVisibility(View.GONE);
+                    bottomLayout.setVisibility(View.VISIBLE);
+                    bottomLayoutblank.setVisibility(View.GONE);
+                } else {
+                isExpand = true;
+                bottomLayout.setVisibility(View.GONE);
+                rl_min_header.setVisibility(View.GONE);
+                ll_max_header.setVisibility(View.VISIBLE);
+                bottomLayoutblank.setVisibility(View.VISIBLE);
+            }
+
+            }
+        });*/
         myLibrary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

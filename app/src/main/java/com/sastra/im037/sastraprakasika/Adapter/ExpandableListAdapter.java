@@ -1,41 +1,41 @@
 package com.sastra.im037.sastraprakasika.Adapter;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+        import android.app.Activity;
+        import android.app.AlertDialog;
+        import android.content.Context;
+        import android.content.DialogInterface;
+        import android.support.v4.content.ContextCompat;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.view.animation.Animation;
+        import android.view.animation.AnimationUtils;
+        import android.widget.BaseExpandableListAdapter;
+        import android.widget.Button;
+        import android.widget.ImageView;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.sastra.im037.sastraprakasika.Common.CommonActivity;
-import com.sastra.im037.sastraprakasika.Model.VolumeDetailsModel;
-import com.sastra.im037.sastraprakasika.R;
-import com.sastra.im037.sastraprakasika.Session;
-import com.sastra.im037.sastraprakasika.VolleyResponseListerner;
-import com.sastra.im037.sastraprakasika.Webservices.WebServices;
+        import com.android.billingclient.api.BillingClient;
+        import com.android.billingclient.api.BillingFlowParams;
+        import com.android.billingclient.api.Purchase;
+        import com.android.billingclient.api.SkuDetails;
+        import com.android.billingclient.api.SkuDetailsParams;
+        import com.android.billingclient.api.SkuDetailsResponseListener;
+        import com.sastra.im037.sastraprakasika.Common.CommonActivity;
+        import com.sastra.im037.sastraprakasika.Model.VolumeDetailsModel;
+        import com.sastra.im037.sastraprakasika.R;
+        import com.sastra.im037.sastraprakasika.Session;
+        import com.sastra.im037.sastraprakasika.VolleyResponseListerner;
+        import com.sastra.im037.sastraprakasika.Webservices.WebServices;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        import org.json.JSONException;
+        import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+        import java.util.ArrayList;
+        import java.util.List;
+        import java.util.logging.Logger;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     Context context;
@@ -110,13 +110,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 //
 
-        Animation animation = AnimationUtils.loadAnimation(context, (groupPosition > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
-        convertView.startAnimation(animation);
-        lastPosition = groupPosition;
+
 
 
         List<String> skuList = new ArrayList<> ();
-            skuList.add("purchase_free");
+        skuList.add("purchase_free");
 
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
         params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
@@ -200,6 +198,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         int imageResourceId = isExpanded ? R.drawable.up : R.drawable.down;
         arrow.setImageResource(imageResourceId);
 
+        Animation animation = AnimationUtils.loadAnimation(context, (groupPosition > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        convertView.startAnimation(animation);
+        lastPosition = groupPosition;
         return convertView;
     }
 
@@ -255,6 +256,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         title.setText(arrayList.get(groupPosition).getFileDetailsModels().get(childPosition).getFileName());
         classValues.setText(arrayList.get(groupPosition).getFileDetailsModels().get(childPosition).getClassName());
         time.setText(arrayList.get(groupPosition).getFileDetailsModels().get(childPosition).getLength());
+        Animation animation = AnimationUtils.loadAnimation(context, (groupPosition > lastPosition) ? R.anim.slide_down : R.anim.slide_down);
+        convertView.startAnimation(animation);
+        lastPosition = groupPosition;
         return convertView;
     }
 

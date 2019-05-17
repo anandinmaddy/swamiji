@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:background="@color/white_smoke"
+android:orientation="vertical"
+android:id="@+id/homeView">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white_smoke"
-    android:orientation="vertical"
-    android:id="@+id/homeView">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/offlineViewer"
-        android:visibility="gone"
+    android:id="@+id/offlineViewer"
+    android:visibility="gone"
+    android:layout_gravity="center"
+    android:layout_marginTop="@dimen/_20sdp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:orientation="vertical">
+        android:background="@drawable/network_offline"/>
+    <me.grantland.widget.AutofitTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:text="No Internet connetion Please check your \n          connection and try again "/>
 
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:background="@drawable/network_offline"/>
-        <me.grantland.widget.AutofitTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginRight="@dimen/_20sdp"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:text="No Internet connetion Please check your \n          connection and try again "/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/_10sdp"
+        android:id="@+id/offlinePageLink"
+        android:textColor="@color/orange"
+        android:textStyle="bold"
+        android:text="Try Again "/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:id="@+id/offlinePageLink"
-            android:textColor="@color/orange"
-            android:textStyle="bold"
-            android:text="Try Again "/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:id="@+id/offlineLectureLink"
-            android:textColor="@color/orange"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:text="Offline lectures "/>
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/_10sdp"
+        android:id="@+id/offlineLectureLink"
+        android:textColor="@color/orange"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:text="Offline lectures "/>
+</LinearLayout>
 
 
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:visibility="visible"
-        android:orientation="vertical"
-        app:shimmer_duration="800"
-        >
+<com.facebook.shimmer.ShimmerFrameLayout
+    android:id="@+id/shimmer_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="15dp"
+    android:visibility="visible"
+    android:orientation="vertical"
+    app:shimmer_duration="800"
+    >
 
-        <!-- Adding 7 rows of placeholders -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-            <include layout="@layout/data_placeholder_layout" />
-        </LinearLayout>
-    </com.facebook.shimmer.ShimmerFrameLayout>
-    <android.support.v4.widget.NestedScrollView
+    <!-- Adding 7 rows of placeholders -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/itemViewlayout"
-        android:visibility="visible"
-        >
+        android:orientation="vertical">
+        <include layout="@layout/data_placeholder_layout" />
+        <include layout="@layout/data_placeholder_layout" />
+        <include layout="@layout/data_placeholder_layout" />
+        <include layout="@layout/data_placeholder_layout" />
+        <include layout="@layout/data_placeholder_layout" />
+        <include layout="@layout/data_placeholder_layout" />
+        <include layout="@layout/data_placeholder_layout" />
+    </LinearLayout>
+</com.facebook.shimmer.ShimmerFrameLayout>
+<android.support.v4.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/itemViewlayout"
+    android:visibility="visible"
+    >
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -162,30 +162,28 @@
                 android:textSize="@dimen/_12sdp" />
         </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:gravity="left"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/discoursesRecyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:gravity="left"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:orientation="vertical">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/discoursesRecyclerview"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="none"
-
-                    android:layout_marginBottom="90dp">
+                android:scrollbars="none"
+                android:layout_marginBottom="50dp">
 
 
-                </android.support.v7.widget.RecyclerView>
-
-            </LinearLayout>
-
+            </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
 </LinearLayout>

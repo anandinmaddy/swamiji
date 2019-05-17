@@ -1,135 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/_20sdp"
+    android:id="@+id/offlineViewer"
+    android:layout_gravity="center"
+    android:visibility="gone"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:id="@+id/offlineViewer"
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:background="@drawable/network_offline"/>
-        <me.grantland.widget.AutofitTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginRight="@dimen/_20sdp"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:text="No Internet connetion Please check your \n          connection and try again "/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:id="@+id/offlinePageLink"
-            android:textColor="@color/orange"
-            android:textStyle="bold"
-            android:text="Try Again "/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:id="@+id/offlineLectureLink"
-            android:textColor="@color/orange"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:text="Offline lectures "/>
-    </LinearLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/layout_txt"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        android:orientation="horizontal">
-
-
-
-        <TextView
-            android:id="@+id/cancel_newplaylist"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="Cancel"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:visibility="gone"
-            android:textColor="@color/orange"/>
-
-        <TextView
-
-            android:id="@+id/new_playlist"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="New Playlist"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:textSize="18dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/done_playlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Done"
-            android:visibility="gone"
-            android:layout_marginEnd="@dimen/_5sdp"
-            android:layout_alignParentRight="true"
-            android:textSize="18dp"
-            android:textAlignment="viewEnd"
-            android:layout_marginRight="15dp"
-            android:textColor="@color/light_grey"
-            android:textStyle="bold"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:background="@drawable/network_offline"/>
+    <me.grantland.widget.AutofitTextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:text="No Internet connetion Please check your \n          connection and try again "/>
 
-        android:orientation="horizontal"
-        android:weightSum="2">
-        <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="100dp"-->
-        <!--app:cardCornerRadius="@dimen/_10sdp"-->
-        <!--app:cardElevation="@dimen/_5sdp">-->
-        <ImageView
-            android:id="@+id/album_image_playlist_next_edit"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/vedanta"
-            android:layout_weight="0.2"
-            />
-        <!--</android.support.v7.widget.CardView>-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/_10sdp"
+        android:id="@+id/offlinePageLink"
+        android:textColor="@color/orange"
+        android:textStyle="bold"
+        android:text="Try Again "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/_10sdp"
+        android:id="@+id/offlineLectureLink"
+        android:textColor="@color/orange"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:text="Offline lectures "/>
+</LinearLayout>
+
+
+<RelativeLayout
+    android:id="@+id/layout_txt"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:visibility="gone"
+    android:orientation="horizontal">
+
+
+
+    <TextView
+        android:id="@+id/cancel_newplaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Cancel"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:visibility="gone"
+        android:textColor="@color/orange"/>
+
+    <TextView
+
+        android:id="@+id/new_playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="New Playlist"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textSize="18dp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/done_playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Done"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_alignParentRight="true"
+        android:textSize="18dp"
+        android:textAlignment="viewEnd"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/light_grey"
+        android:textStyle="bold"/>
+
+</RelativeLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="horizontal"
+    android:weightSum="2">
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--app:cardCornerRadius="@dimen/_10sdp"-->
+    <!--app:cardElevation="@dimen/_5sdp">-->
+    <ImageView
+        android:id="@+id/album_image_playlist_next_edit"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/vedanta"
+        android:layout_weight="0.2"
+        />
+    <!--</android.support.v7.widget.CardView>-->
+    <LinearLayout
+
+        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2.8"
+        android:orientation="vertical"
+
+        >
         <LinearLayout
-
-            android:layout_marginTop="10dp"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2.8"
-            android:orientation="vertical"
-
-            >
+            android:orientation="vertical">
             <EditText
 
                 android:id="@+id/album_image_title_next_edit"
@@ -138,43 +142,44 @@
                 android:hint="Playlist Title"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:paddingLeft="@dimen/_10sdp"
-                android:textSize="20dp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/light_grey"
 
                 />
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:id="@+id/addPlaylist"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/add_edit"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/add_green"/>
+
+                <TextView
+                    android:id="@+id/text_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Lectures"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
         </LinearLayout>
 
-
     </LinearLayout>
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0.5dp"-->
-    <!--android:background="@color/mild_grey" />-->
 
-    <LinearLayout
 
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/addPlaylist"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_marginLeft="12dp"
-            android:id="@+id/add_edit"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/add_green"/>
+</LinearLayout>
+<!--<View-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="0.5dp"-->
+<!--android:background="@color/mild_grey" />-->
 
-        <TextView
-            android:id="@+id/text_edit"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="14dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Lectures"
-            android:textColor="@color/black"/>
-    </LinearLayout>
+
 
 
 </LinearLayout>

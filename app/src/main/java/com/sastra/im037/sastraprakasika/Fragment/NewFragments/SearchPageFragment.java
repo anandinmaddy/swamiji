@@ -1,61 +1,62 @@
-package com.sastra.im037.sastraprakasika.Fragment.NewFragments;
+        package com.sastra.im037.sastraprakasika.Fragment.NewFragments;
 
-import android.arch.persistence.room.Room;
-import android.content.Context;
-import android.content.IntentFilter;
-import android.graphics.Rect;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
+        import android.app.Activity;
+        import android.arch.persistence.room.Room;
+        import android.content.Context;
+        import android.content.IntentFilter;
+        import android.graphics.Rect;
+        import android.net.Uri;
+        import android.os.Bundle;
+        import android.support.design.widget.TabLayout;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentTransaction;
+        import android.support.v4.content.ContextCompat;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.text.Editable;
+        import android.text.TextWatcher;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.MotionEvent;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.view.ViewTreeObserver;
+        import android.view.WindowManager;
+        import android.view.inputmethod.InputMethodManager;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.LinearLayout;
+        import android.widget.ListView;
+        import android.widget.RelativeLayout;
+        import android.widget.Spinner;
+        import android.widget.TextView;
 
-import com.sastra.im037.sastraprakasika.Activity.SearchActivity;
-import com.sastra.im037.sastraprakasika.Adapter.SongRecyclerViewAdapter;
-import com.sastra.im037.sastraprakasika.Adapter.SongRecyclerViewAdapterNew;
-import com.sastra.im037.sastraprakasika.Common.CommonActivity;
-import com.sastra.im037.sastraprakasika.Common.CommonMethod;
-import com.sastra.im037.sastraprakasika.Model.DiscousesAppDatabase;
-import com.sastra.im037.sastraprakasika.Model.SearchModel;
-import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
-import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
-import com.sastra.im037.sastraprakasika.R;
-import com.sastra.im037.sastraprakasika.Session;
-import com.sastra.im037.sastraprakasika.VolleyResponseListerner;
-import com.sastra.im037.sastraprakasika.Webservices.WebServices;
-import com.sastra.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
-import com.sastra.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
-import com.sastra.im037.sastraprakasika.utils.Selected;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+        import com.sastra.im037.sastraprakasika.Activity.SearchActivity;
+        import com.sastra.im037.sastraprakasika.Adapter.SongRecyclerViewAdapter;
+        import com.sastra.im037.sastraprakasika.Adapter.SongRecyclerViewAdapterNew;
+        import com.sastra.im037.sastraprakasika.Common.CommonActivity;
+        import com.sastra.im037.sastraprakasika.Common.CommonMethod;
+        import com.sastra.im037.sastraprakasika.Model.DiscousesAppDatabase;
+        import com.sastra.im037.sastraprakasika.Model.SearchModel;
+        import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
+        import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
+        import com.sastra.im037.sastraprakasika.R;
+        import com.sastra.im037.sastraprakasika.Session;
+        import com.sastra.im037.sastraprakasika.VolleyResponseListerner;
+        import com.sastra.im037.sastraprakasika.Webservices.WebServices;
+        import com.sastra.im037.sastraprakasika.mediareceiver.NetworkStateReceiverListener;
+        import com.sastra.im037.sastraprakasika.mediaservice.ConnectivityReceiver;
+        import com.sastra.im037.sastraprakasika.utils.Selected;
+        import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+        import org.json.JSONArray;
+        import org.json.JSONException;
+        import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,7 +87,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
     RelativeLayout rl_min_header;
     LinearLayout bottomLayoutblank;
 
-    LinearLayout offlineViewer;
+    LinearLayout offlineViewer,spinner_layout;
     TextView offlineLink;
     //  @BindView( R.id.image_close )
 //            ImageView imageView_close;
@@ -156,7 +157,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
         searchRecyclerview = (RecyclerView) view.findViewById(R.id.searchRecyclerview) ;
         searchLinearview = (ListView) view.findViewById(R.id.searchLinearview) ;
-
+        spinner_layout=(LinearLayout)view.findViewById(R.id.spinner_layout);
         searchSpin = (Spinner) view.findViewById(R.id.search_spin);
         cleartxt = (ImageView) view.findViewById(R.id.clearTxt);
 
@@ -274,7 +275,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                 showDiscourseUI();
             }
         });
-       // searchSpin.setOnItemSelectedListener(SearchPageFragment.this);
+        // searchSpin.setOnItemSelectedListener(SearchPageFragment.this);
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
@@ -341,7 +342,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                     //    if (isSearchClicked){
                     //    sliding_layout.setLayoutParams(params);
 
-              //      }
+                    //      }
 
                 }
 
@@ -378,11 +379,11 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
             noSearchResult.setVisibility(View.GONE);
-                searchLinearview.setVisibility(View.GONE);
-                searchRecyclerview.setVisibility(View.VISIBLE);
+            searchLinearview.setVisibility(View.GONE);
+            searchRecyclerview.setVisibility(View.VISIBLE);
 
             adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
-                searchRecyclerview.setAdapter(adapter);
+            searchRecyclerview.setAdapter(adapter);
 
         }else {
             searchLinearview.setVisibility(View.GONE);
@@ -445,8 +446,37 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
         searchBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(final View v, MotionEvent event) {
+                spinner_layout.setVisibility(View.VISIBLE);
+                Log.e("hide","hide");
+                v.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
 
+                                Rect r = new Rect();
+                                v.getWindowVisibleDisplayFrame(r);
+                                int screenHeight = v.getRootView().getHeight();
+
+                                // r.bottom is the position above soft keypad or device button.
+                                // if keypad is shown, the r.bottom is smaller than that before.
+                                int keypadHeight = screenHeight - r.bottom;
+
+                                Log.d(TAG, "keypadHeight = " + keypadHeight);
+
+                                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                                    // keyboard is opened
+                                    Log.e("hide","hide");
+                                 //   CommonActivity.hide();
+                                }
+                                else {
+                                    // keyboard is closed
+                                    Log.e("show","show ");
+                              //      CommonActivity.show();
+
+                                }
+                            }
+                        });
 
 //                    // Is there an X showing?
 //                    if (et.getCompoundDrawables()[2] == null) return false;
@@ -465,9 +495,11 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
             @Override
             public void onClick(View v) {
                 noSearchResult.setVisibility(View.GONE);
+                spinner_layout.setVisibility(View.GONE);
                 searchBar .setText("");
             }
         });
+
 
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -533,10 +565,10 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                     JSONArray wholelibrary = jsonObject.optJSONArray("library");
                     db.itemSongDao().deleteAll();
                     Constant.arrayListLectureslineSongs.clear();
-                        for (int i = 0; i < wholelibrary.length(); i++) {
-                            if (wholelibrary.optJSONObject(i) != null && wholelibrary.optJSONObject(i).optString("title")!= null) {
-                                isLibAvailable = true;
-                                JSONArray jsonArrayLibrary = wholelibrary.getJSONObject(i).getJSONArray("tracks");
+                    for (int i = 0; i < wholelibrary.length(); i++) {
+                        if (wholelibrary.optJSONObject(i) != null && wholelibrary.optJSONObject(i).optString("title")!= null) {
+                            isLibAvailable = true;
+                            JSONArray jsonArrayLibrary = wholelibrary.getJSONObject(i).getJSONArray("tracks");
                             for (int j = 0; j < jsonArrayLibrary.length(); j++) {
 
                                 SearchModel model = new SearchModel();
@@ -558,11 +590,11 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                                 }
                             }
                         }else {
-                                isLibAvailable = false;
-                                searchRecyclerview.setVisibility(View.GONE);
-                                searchLinearview.setVisibility(View.GONE);
-                                noSearchResult.setVisibility(View.VISIBLE);
-                                noSearchResult.setText("No results were found. Please try another keyword.");
+                            isLibAvailable = false;
+                            searchRecyclerview.setVisibility(View.GONE);
+                            searchLinearview.setVisibility(View.GONE);
+                            noSearchResult.setVisibility(View.VISIBLE);
+                            noSearchResult.setText("No results were found. Please try another keyword.");
                                /* searchRecyclerview.setVisibility(View.GONE);
                                 searchLinearview.setVisibility(View.GONE);
                                 noSearchResult.setVisibility(View.VISIBLE);
@@ -570,51 +602,51 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                               /*  searchRecyclerview.setVisibility(View.GONE);
                                 noSearchResult.setVisibility(View.VISIBLE);
                                 noSearchResult.setText("No Result Found !");*/
-                            }
+                        }
                     }
 
                     db.searchModelDao().deleteAll();
 
                     for (int i = 0; i < jsonArrayDiscourses.length(); i++) {
-                            SearchModel model = new SearchModel();
-                            if (jsonArrayDiscourses.optJSONObject(i) != null && jsonArrayDiscourses.optJSONObject(i).optString("title")!= null){
-                                isDiscoursesAvailable = true;
+                        SearchModel model = new SearchModel();
+                        if (jsonArrayDiscourses.optJSONObject(i) != null && jsonArrayDiscourses.optJSONObject(i).optString("title")!= null){
+                            isDiscoursesAvailable = true;
 
-                                model.setTitle(jsonArrayDiscourses.optJSONObject(i).optString("title"));
-                                model.setPost_id(jsonArrayDiscourses.optJSONObject(i).optString("post_id"));
-                                model.setParentid(jsonArrayDiscourses.optJSONObject(i).optString("parentid"));
-                                model.setSubid(jsonArrayDiscourses.optJSONObject(i).optString("subid"));
-                                model.setImage_url(jsonArrayDiscourses.optJSONObject(i).optString("image_url"));
-                                model.setDescription(jsonArrayDiscourses.optJSONObject(i).optString("description"));
-                                // model.setSubid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("subid"));
-                                // model.setType(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("type"));
-                                // model.setTime(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("time"));
-                                // model.setImage_url(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("image_url"));*/
-                                arrayList.add(model);
+                            model.setTitle(jsonArrayDiscourses.optJSONObject(i).optString("title"));
+                            model.setPost_id(jsonArrayDiscourses.optJSONObject(i).optString("post_id"));
+                            model.setParentid(jsonArrayDiscourses.optJSONObject(i).optString("parentid"));
+                            model.setSubid(jsonArrayDiscourses.optJSONObject(i).optString("subid"));
+                            model.setImage_url(jsonArrayDiscourses.optJSONObject(i).optString("image_url"));
+                            model.setDescription(jsonArrayDiscourses.optJSONObject(i).optString("description"));
+                            // model.setSubid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("subid"));
+                            // model.setType(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("type"));
+                            // model.setTime(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("time"));
+                            // model.setImage_url(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("image_url"));*/
+                            arrayList.add(model);
 
-                                db.searchModelDao().insertAll(model);
-                            }else {
-                                isDiscoursesAvailable = false;
+                            db.searchModelDao().insertAll(model);
+                        }else {
+                            isDiscoursesAvailable = false;
 
-                                searchRecyclerview.setVisibility(View.GONE);
-                                searchLinearview.setVisibility(View.GONE);
-                                noSearchResult.setVisibility(View.VISIBLE);
-                                noSearchResult.setText("No results were found. Please try another keyword.");
+                            searchRecyclerview.setVisibility(View.GONE);
+                            searchLinearview.setVisibility(View.GONE);
+                            noSearchResult.setVisibility(View.VISIBLE);
+                            noSearchResult.setText("No results were found. Please try another keyword.");
                              /*   searchRecyclerview.setVisibility(View.GONE);
                                 searchLinearview.setVisibility(View.GONE);
                                 noSearchResult.setVisibility(View.VISIBLE);
                                 noSearchResult.setText("No results were found. Please try another keyword.");*/
-                            }
                         }
+                    }
 
-                        if(isLibrarySelected){
-                            showLibraryUI();
-                        }else {
-                            showDiscourseUI();
-                        }
+                    if(isLibrarySelected){
+                        showLibraryUI();
+                    }else {
+                        showDiscourseUI();
+                    }
 
 
-                            // model.setParentid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("parentid"));
+                    // model.setParentid(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("parentid"));
 
 
                  /*   if (arrayList.size() > 0 ){
@@ -631,7 +663,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                     searchRecyclerview.setVisibility(View.GONE);
                     noSearchResult.setVisibility(View.VISIBLE);
                     noSearchResult.setText("No results were found. Please try another keyword.");
-                  //  CommonMethod.showSnackbar(searchSpin,response.optString("resultmessage"),getActivity());
+                    //  CommonMethod.showSnackbar(searchSpin,response.optString("resultmessage"),getActivity());
                 }
 
             }
