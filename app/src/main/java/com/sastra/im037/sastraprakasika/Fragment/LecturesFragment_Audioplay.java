@@ -169,6 +169,10 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         }
 
         itemSongList = db.itemSongDao().getAll();
+        if (itemSongList != null && itemSongList.size() > 0){
+            Constant.arrayListLectureslineSongs.clear();
+            Constant.arrayListLectureslineSongs.addAll(itemSongList);
+        }
             for (ItemSong itemSong : itemSongList){
                 String isOfflinevideo = readFileNames(itemSong.getTrackId(),itemSong.getUserRating());
                 if (itemSong.getUserRating() != null && !itemSong.getUserRating().equalsIgnoreCase("") && itemSong.getUserRating().equalsIgnoreCase("true") && isOfflinevideo != null && !isOfflinevideo.isEmpty()){
@@ -181,52 +185,10 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                     db.itemSongDao().update(isOfflinevideo,itemSong.getTitle());
                 }
             }
-
-
-      //  itemSongListNew = db.itemSongDao().getAll();
-
         listView_song = (ListView) view.findViewById(R.id.listViewMusicSong_list);
 
 
-        callWebservice();
-/*
-        if (itemSongListNew != null && itemSongListNew.size() > 0){
-            shimmerFrameLayout.stopShimmer();
-            shimmerFrameLayout.setVisibility(View.GONE);
-            Constant.arrayList_play.clear();
-            Constant.arrayList_play.addAll(itemSongListNew);
-            Constant.arrayListLectureslineSongs.clear();
-            Constant.arrayListLectureslineSongs.addAll(itemSongListNew);
-
-         //   Constant.arrayListLectureslineSongs.addAll(itemSongList);
-
-            Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(Constant.arrayListLectureslineSongs, getActivity(),this);
-        //    listView_song.smoothScrollToPosition(Constant.lastPosition);
-            listView_song.setAdapter(lectures_audio_list_adapter);
-            listView_song.setSelection(Constant.downloadPosition);
-            lectures_audio_list_adapter.notifyDataSetChanged();
-
-            //   lectures_audio_list_adapter.notifyDataSetChanged();
-        }else {
-            //listView_song.invalidateViews();
-            callWebservice();
-        }*/
-/*
-            final Lectures_audio_list_adapter lectures_audio_list_adapter = new Lectures_audio_list_adapter(lect_det, getActivity(),this);
-            listView_song.smoothScrollToPosition(Constant.lastPosition);
-            listView_song.setAdapter(lectures_audio_list_adapter);*//*
-
-        }
-
-*/
-
- /*       listView_song.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                lectures_audio_list_adapter.notifyDataSetChanged();
-            }
-        });*/
+      //  callWebservice();
 
         return view;
 
@@ -306,8 +268,12 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
 
             if(db.itemSongDao().getAll().size() > 0){
-               /* shimmerFrameLayout.stopShimmer();
-                shimmerFrameLayout.setVisibility(View.GONE);*/
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                Constant.arrayList_play.clear();
+                Constant.arrayList_play.addAll(db.itemSongDao().getAll());
+                setListItems();
+
             }else {
                 callWebservice();
             }
@@ -373,11 +339,6 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         String url_song_title[] = {"Introduction to Purushastra", "Introduction to Sastram", "Introduction to Varma_dharma", "Introduction to Asrama_dharma"};
 
         String song_start_letter[] = {"A", "I", "R", "S"};
-        for (int i = 0; i < img_url.length; i++) {
-
-
-        }
-
 
     }
 

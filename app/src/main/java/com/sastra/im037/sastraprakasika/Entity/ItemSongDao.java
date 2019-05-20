@@ -29,8 +29,8 @@ public interface ItemSongDao {
     @Query("select userRating from ItemSong WHERE title = :title")
     String getRating(String title);
 
-    @Query("UPDATE ItemSong SET progress=:progress WHERE title = :title")
-    void updateProgress(int progress,String title);
+    @Query("UPDATE ItemSong SET progress=:progress WHERE track_id = :trackId")
+    void updateProgress(int progress,String trackId);
 
     @Query("select progress from ItemSong WHERE title = :title")
     int getProgressStatus(String title);

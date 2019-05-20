@@ -479,7 +479,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 0){
+                if (Constant.downloadCount > 10){
                     callAlert();
                 }else {
 
@@ -503,7 +503,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 0){
+                if (Constant.downloadCount > 10){
                     callAlert();
                 }else {
 
@@ -524,7 +524,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 0){
+                if (Constant.downloadCount > 10){
                     callAlert();
                 }else {
 
@@ -546,7 +546,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 0){
+                if (Constant.downloadCount > 10){
                     callAlert();
                 }else {
 
