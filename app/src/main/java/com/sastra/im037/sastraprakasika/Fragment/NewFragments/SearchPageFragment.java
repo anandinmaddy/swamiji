@@ -105,6 +105,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
     private OnFragmentInteractionListener mListener;
     private TabLayout tablayout;
     int margin=0;
+    int index = 0;
     SlidingUpPanelLayout sliding_layout;
     public SearchPageFragment() {
         // Required empty public constructor
@@ -297,7 +298,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
         searchSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CommonMethod.hideKeyboardNew(getActivity(), view);
+           //     CommonMethod.hideKeyboardNew(getActivity(), view);
 
                 if (position == 0){
                     isDiscourseSelected = true;
@@ -375,15 +376,17 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
     }
 
     private void showDiscourseUI() {
-        if(isDiscoursesAvailable){
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-            noSearchResult.setVisibility(View.GONE);
-            searchLinearview.setVisibility(View.GONE);
-            searchRecyclerview.setVisibility(View.VISIBLE);
+        if(isDiscoursesAvailable){
+                noSearchResult.setVisibility(View.GONE);
+                searchLinearview.setVisibility(View.GONE);
+                searchRecyclerview.setVisibility(View.VISIBLE);
 
             adapter = new SongRecyclerViewAdapter(getActivity(), arrayList,type,getFragmentManager());
             searchRecyclerview.setAdapter(adapter);
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
 
         }else {
             searchLinearview.setVisibility(View.GONE);
@@ -453,6 +456,9 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                         new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
+                                spinner_layout.setVisibility(View.VISIBLE);
+                                index=1;
+                                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
                                 Rect r = new Rect();
                                 v.getWindowVisibleDisplayFrame(r);
@@ -509,6 +515,8 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
                 isSearchClicked = true;
                 String text = searchBar.getText().toString();
                 int maxChar = 2;
@@ -551,6 +559,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
 
 
     public void showSearchData() {
+
         new WebServices(getActivity(), TAG).setSearchUpdate(Session.getInstance(getActivity(), TAG).getUserId(),type, searchBar.getText().toString(), new VolleyResponseListerner() {
             @Override
             public void onResponse(JSONObject response) throws JSONException {
@@ -638,6 +647,7 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
                                 noSearchResult.setText("No results were found. Please try another keyword.");*/
                         }
                     }
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
                     if(isLibrarySelected){
                         showLibraryUI();
@@ -708,7 +718,11 @@ public class SearchPageFragment extends Fragment implements NetworkStateReceiver
     public void onResume() {
         super.onResume();
         main_layout.setVisibility(View.GONE);
+        if (index==1){
+            spinner_layout.setVisibility(View.VISIBLE);
+        }
         try {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
             connectivityReceiver.addListener(this);
             getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));

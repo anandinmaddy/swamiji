@@ -1,6 +1,7 @@
 package com.sastra.im037.sastraprakasika.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +18,28 @@ import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.sastra.im037.sastraprakasika.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class CreatePlaylistAdapter extends BaseAdapter {
 
     ArrayList<ItemSong> mediaItems;
     Context context;
     private int lastPosition = -1;
-
+    List<ItemSong> names ;
     public CreatePlaylistAdapter(){
 
     }
     public CreatePlaylistAdapter(ArrayList<ItemSong> media_det, Context context) {
         this.mediaItems = media_det;
         this.context = context;
+        this.names=new ArrayList<ItemSong>();
+        this.names.addAll(mediaItems);
     }
+
+
 
     static class ViewHolderItem {
         ImageView song_img_view;
@@ -42,7 +50,7 @@ public class CreatePlaylistAdapter extends BaseAdapter {
         CheckBox checkbox;
         TextView className;
     }
-        @Override
+    @Override
     public int getCount() {
         return mediaItems.size();
     }
@@ -77,7 +85,7 @@ public class CreatePlaylistAdapter extends BaseAdapter {
             view.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolderItem) view.getTag();
-        //    notifyDataSetChanged();
+            //    notifyDataSetChanged();
         }
 
         viewHolder.checkbox.setTag(i);
@@ -124,8 +132,8 @@ public class CreatePlaylistAdapter extends BaseAdapter {
                     }
                     Constant.playListSongs1.add(mediaItems.get(i));
                 }else {
-                        viewHolder.checkbox.setButtonDrawable(R.drawable.add_grey);
-                        viewHolder.checkbox.setChecked(false);
+                    viewHolder.checkbox.setButtonDrawable(R.drawable.add_grey);
+                    viewHolder.checkbox.setChecked(false);
                     if (Constant.playListSongs1.contains(mediaItems.get(i))){
                         Constant.playListSongs1.remove(mediaItems.get(i));
                     }
@@ -153,4 +161,33 @@ public class CreatePlaylistAdapter extends BaseAdapter {
 
         return position;
     }
+
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        ItemSong itemSong=new ItemSong();
+        Log.e("getCatName",""+itemSong.getCatName());
+        mediaItems.clear();
+        if (charText.length() == 0) {
+            Log.e("texsting","sampletest");
+            mediaItems.addAll(names);
+
+        }
+        else
+        {
+            for ( ItemSong itemSongName : names)
+            {
+                String title=itemSongName.getTitle();
+                String title1= Normalizer.normalize(title, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                if (title1.toLowerCase(Locale.getDefault()).contains(charText))
+                {
+                    Log.e("mediaItems21",""+itemSongName.getTitle());
+                    mediaItems.add(itemSongName);
+                    notifyDataSetChanged();
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 }

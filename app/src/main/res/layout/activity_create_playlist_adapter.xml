@@ -63,6 +63,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:id="@+id/mainLayoutt"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1.9"
@@ -176,12 +177,12 @@
             </LinearLayout>
             <CheckBox
                 android:id="@+id/checkbox"
-                android:layout_marginTop="@dimen/_5sdp"
-
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_12sdp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:scaleX="1.5"
-                android:scaleY="1.5"
+                android:scaleX="2.5"
+                android:scaleY="2.5"
                 android:button="@drawable/add_grey"
               />
         </LinearLayout>

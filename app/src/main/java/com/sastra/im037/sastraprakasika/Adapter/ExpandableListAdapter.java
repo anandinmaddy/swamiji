@@ -4,6 +4,8 @@ package com.sastra.im037.sastraprakasika.Adapter;
         import android.app.AlertDialog;
         import android.content.Context;
         import android.content.DialogInterface;
+        import android.graphics.Color;
+        import android.os.Handler;
         import android.support.v4.content.ContextCompat;
         import android.util.Log;
         import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ package com.sastra.im037.sastraprakasika.Adapter;
         import android.widget.BaseExpandableListAdapter;
         import android.widget.Button;
         import android.widget.ImageView;
+        import android.widget.LinearLayout;
         import android.widget.TextView;
         import android.widget.Toast;
 
@@ -102,7 +105,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView volumeValue = convertView.findViewById(R.id.volumevalues);
         TextView classesValue=convertView.findViewById(R.id.classesvalue);
         final ImageView arrow = convertView.findViewById(R.id.arrow);
-        Button priceBtn = convertView.findViewById(R.id.price);
+        final Button priceBtn = convertView.findViewById(R.id.price);
+        //final LinearLayout mainTool = convertView.findViewById(R.id.mainTool);
         // hypen code static
         String volume = arrayList.get(groupPosition).getTitle();
         //commented below anand
@@ -150,19 +154,35 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     Toast.makeText(context, "Already purchased / Not available currently", Toast.LENGTH_LONG).show();
 
                 }else {
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_red) );
+                    } else {
+                        priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_red));
+                    }
                     BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                             .setSkuDetails(skuDetails)
                             .build();
 
-
-
                     int responseCode = billingClient.launchBillingFlow(activity,flowParams);
+                    Toast.makeText(context, "Payment Status : "+responseCode, Toast.LENGTH_LONG).show();
 
                     if (responseCode == 0){
+                        priceBtn.setVisibility(View.INVISIBLE);
                         callwebservice(arrayList.get(groupPosition).getPostid());
+                        //Do something after 100ms
+                        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_orange) );
+                        } else {
+                            priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_orange));
+                        }
+                    }else {
+                        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_orange) );
+                        } else {
+                            priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_orange));
+                        }
                     }
-
-
                 }
 
                /* AlertDialog.Builder alertbox = new AlertDialog.Builder(v.getRootView().getContext());

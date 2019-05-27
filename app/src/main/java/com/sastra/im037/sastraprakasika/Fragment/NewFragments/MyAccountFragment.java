@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -165,6 +166,7 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                     fragmentTransaction.commit();
                     Session.getInstance( getActivity().getApplicationContext(), TAG ).logout();
+                    CommonMethod.clearAllPreviousActivity( getActivity().getApplicationContext(), LoginActivity.class );
                     CommonMethod.clearAllPreviousActivity( getActivity().getApplicationContext(), LoginActivity.class );
                    // finish();
                 }
@@ -330,7 +332,8 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
 
                     @Override
                     public void onError(String message, String title) {
-
+                        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                     }
                 } );
             }
@@ -347,6 +350,9 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         builder.show();
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
 
@@ -401,6 +407,9 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         builder.show();
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public void setProfileUpdate() {
@@ -425,6 +434,7 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
         super.onResume();
         fullview.setVisibility(View.GONE);
         try {
+
             ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver();
             connectivityReceiver.addListener(this);
             getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));

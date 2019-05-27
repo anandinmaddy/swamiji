@@ -109,6 +109,7 @@ public class TopicsFragment extends Fragment implements Itopice_listener , Netwo
             }
         });
         callwebservice(topicsRecyclerview);
+
 /*
 
         if (listOfTopicsOffline != null && listOfTopicsOffline.size() > 0){
@@ -123,7 +124,8 @@ public class TopicsFragment extends Fragment implements Itopice_listener , Netwo
 
         }else {
             callwebservice(topicsRecyclerview);
-        }*/
+        }
+*/
 
        // SetAboutDetail();
 

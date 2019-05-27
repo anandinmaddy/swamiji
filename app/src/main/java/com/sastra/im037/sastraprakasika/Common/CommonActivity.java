@@ -38,12 +38,15 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -120,7 +123,12 @@ public class CommonActivity extends AppCompatActivity   {
     private TextView title, songtitle;
     TextView time;
     RelativeLayout.LayoutParams params;
-    LinearLayout discourses, myLibrary, search, myAccount,bottomLayout,bottomLayoutblank;
+    LinearLayout discourses;
+    LinearLayout myLibrary;
+    LinearLayout search;
+    LinearLayout myAccount;
+    static LinearLayout bottomLayout;
+    static LinearLayout bottomLayoutblank;
     static ImageView discoursesImg, myLibraryImg, searchImg, myAccountImg, view_round;
     LinearLayout layoutBackground;
     TextView titleView;
@@ -135,7 +143,7 @@ public class CommonActivity extends AppCompatActivity   {
     Methods methods;
     DBHelper dbHelper;
     AudioManager am;
-    RelativeLayout rl_min_header;
+    static RelativeLayout rl_min_header;
     LinearLayout ll_max_header;
     RatingBar ratingBar;
     SeekBar seekBar_music, seekbar_min;
@@ -144,7 +152,7 @@ public class CommonActivity extends AppCompatActivity   {
             tv_current_time, tv_total_time;
     RoundedImageView  iv_min_song, imageView_pager;
     ImageView iv_music_bg, iv_min_previous, iv_min_play, iv_min_next, iv_music_shuffle,
-            iv_music_downloads, iv_music_previous, iv_music_next, iv_music_play,iv_music_addplaylist,imageView_heart;
+            iv_music_downloads, iv_music_previous, iv_music_next, iv_music_play,iv_music_addplaylist,imageView_heart,search_img;
 
     RelativeLayout rl_music_loading;
     public ViewPager viewpager;
@@ -153,13 +161,14 @@ public class CommonActivity extends AppCompatActivity   {
     Boolean isExpand = false, isRotateAnim = false;
     PausableRotateAnimation rotateAnimation;
     ImagePagerAdapter adapter;
-    RelativeLayout include_sliding_panel_childtwo;
+    static RelativeLayout include_sliding_panel_childtwo;
     Toolbar toolbarLayout;
     private BroadcastReceiver yourReceiver;
     private String songUrl;
     private String songTitle;
-    RelativeLayout rl_small;
-    LinearLayout playerTopl;
+    static RelativeLayout rl_small;
+    LinearLayout playerTopl,layoutCLick;
+
 
 
     @Override
@@ -187,6 +196,7 @@ public class CommonActivity extends AppCompatActivity   {
         seekbar_min.setPadding(0, 0, 0, 0);
         iv_min_song = (RoundedImageView) findViewById(R.id.iv_min_song);
         time = findViewById(R.id.time);
+        search_img=(ImageView)findViewById(R.id.search_img);
         myAccount = findViewById(R.id.accountLayout);
         discourses = findViewById(R.id.discoursesLayout);
         myLibrary = findViewById(R.id.myLibraryLayout);
@@ -236,6 +246,7 @@ public class CommonActivity extends AppCompatActivity   {
         bottomLayoutblank = findViewById(R.id.bottomLayoutblank);
 
         playerTopl = findViewById(R.id.playerTop);
+        search_img.setVisibility(View.GONE);
         //  iv_max_option.setColorFilter(Color.BLACK);
 
         final IntentFilter theFilter = new IntentFilter();
@@ -343,11 +354,11 @@ public class CommonActivity extends AppCompatActivity   {
         int dpValue = 65; // margin in dips
         float d = this.getResources().getDisplayMetrics().density;
         int margin = (int)(dpValue * d);
-           params = new RelativeLayout.LayoutParams(
-                   RelativeLayout.LayoutParams.WRAP_CONTENT,
-                   RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 0, 0, margin);
+        params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, 0, margin);
 
 
 
@@ -390,6 +401,7 @@ public class CommonActivity extends AppCompatActivity   {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+
                 tv_current_time.setText(methods.milliSecondsToTimer(PlayerService.exoPlayer.getCurrentPosition()));
             }
 
@@ -412,7 +424,7 @@ public class CommonActivity extends AppCompatActivity   {
         });
 
 
-    //
+        //
 //https://github.com/umano/AndroidSlidingUpPanel/issues/19
         //add me new
         sliding_layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -445,6 +457,7 @@ public class CommonActivity extends AppCompatActivity   {
                     ll_max_header.setVisibility(View.VISIBLE);
                     bottomLayoutblank.setVisibility(View.VISIBLE);
                     sliding_layout.setDragView(findViewById(R.id.ll_max_header));
+
                 }
             }
             @Override
@@ -595,7 +608,21 @@ public class CommonActivity extends AppCompatActivity   {
 
     }
 
+    public static void hide() {
+        Log.e("hide12","hide ");
+        include_sliding_panel_childtwo.setVisibility(View.GONE);
+        bottomLayout.setVisibility(View.GONE);
+        rl_min_header.setVisibility(View.GONE);
+        rl_small.setVisibility(View.GONE);
+        bottomLayoutblank.setVisibility(View.GONE);
+    }
 
+    public static void show() {
+        Log.e("show12","show ");
+        bottomLayout.setVisibility(View.GONE);
+        bottomLayout.setVisibility(View.VISIBLE);
+        rl_min_header.setVisibility(View.GONE);
+    }
     @Override
     protected void onResume() {
         isHomeActivityRunning = true;
@@ -807,8 +834,11 @@ public class CommonActivity extends AppCompatActivity   {
 
     public void seekUpdation() {
         try {
-            seekbar_min.setProgress(methods.getProgressPercentage(PlayerService.exoPlayer.getCurrentPosition(), methods.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
-            seekBar_music.setProgress(methods.getProgressPercentage(PlayerService.exoPlayer.getCurrentPosition(), methods.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
+            if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+                seekbar_min.setProgress(methods.getProgressPercentage(PlayerService.exoPlayer.getCurrentPosition(), methods.calculateTime(Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_time())));
+            }else {
+                seekbar_min.setProgress(methods.getProgressPercentage(PlayerService.exoPlayer.getCurrentPosition(), methods.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
+            }
             tv_current_time.setText(methods.milliSecondsToTimer(PlayerService.exoPlayer.getCurrentPosition()));
             seekBar_music.setSecondaryProgress(PlayerService.exoPlayer.getBufferedPercentage());
             if (PlayerService.exoPlayer.getPlayWhenReady() && Constant.isAppOpen) {
@@ -842,6 +872,8 @@ public class CommonActivity extends AppCompatActivity   {
     }
 
     public void next() {
+        seekbar_min.setProgress(0);
+        seekBar_music.setProgress(0);
         if (Constant.isFromPage.equalsIgnoreCase("topic") ? Constant.arrayOfflineTopiclineSongs.size() > 0 : Constant.arrayList_play.size() > 0) {
             if (!Constant.isOnline || methods.isNetworkAvailable()) {
                 isRotateAnim = false;
@@ -857,6 +889,8 @@ public class CommonActivity extends AppCompatActivity   {
     }
 
     public void previous() {
+        seekbar_min.setProgress(0);
+        seekBar_music.setProgress(0);
         if (Constant.isFromPage.equalsIgnoreCase("topic") ? Constant.arrayOfflineTopiclineSongs.size() > 0 : Constant.arrayList_play.size() > 0) {
             if (!Constant.isOnline || methods.isNetworkAvailable()) {
                 isRotateAnim = false;
@@ -1823,8 +1857,26 @@ public class CommonActivity extends AppCompatActivity   {
     }
 
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        View view = getCurrentFocus();
+        boolean ret = super.dispatchTouchEvent(event);
 
+        if (view instanceof EditText) {
+            View w = getCurrentFocus();
+            int scrcoords[] = new int[2];
+            w.getLocationOnScreen(scrcoords);
+            float x = event.getRawX() + w.getLeft() - scrcoords[0];
+            float y = event.getRawY() + w.getTop() - scrcoords[1];
 
-
+            if (event.getAction() == MotionEvent.ACTION_UP
+                    && (x < w.getLeft() || x >= w.getRight()
+                    || y < w.getTop() || y > w.getBottom())) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+            }
+        }
+        return ret;
+    }
 
 }

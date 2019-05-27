@@ -117,10 +117,6 @@ public class PlayerService extends IntentService implements Player.EventListener
             e.printStackTrace();
         }
 
-
-
-
-
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveTrackSelection.Factory(bandwidthMeter);

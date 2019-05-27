@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:orientation="vertical"
             app:shimmer_duration="800"
             >
@@ -137,7 +137,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="@dimen/_15sdp"
-                        android:layout_toRightOf="@+id/imageHead"
                         android:maxWidth="@dimen/_140sdp"
                         android:minHeight="@dimen/_20sdp"
                         android:textColor="@color/black"
@@ -151,7 +150,6 @@
                         android:textStyle="bold"
 
                         android:layout_below="@id/aboutTxt"
-                        android:layout_toRightOf="@+id/imageHead"
                         android:text="Know More"
                         android:textColor="@color/orange"
                         android:layout_marginTop="5dp"
@@ -175,6 +173,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -186,7 +185,7 @@
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="60dp">

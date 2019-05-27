@@ -32,6 +32,8 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
 import com.sastra.im037.sastraprakasika.Adapter.Lectures_audio_list_adapter;
 import com.sastra.im037.sastraprakasika.Common.CommonMethod;
 import com.sastra.im037.sastraprakasika.Fragment.NewFragments.MyLibraryFragment;
@@ -122,12 +124,17 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
     String song_dur[] = {"56.04","55.05","57.08","58.37"};
 
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_audioplay_main, container, false);
+        setRetainInstance(true);
 
+        view = inflater.inflate(R.layout.fragment_audioplay_main, container, false);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
@@ -152,6 +159,22 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                 fragmentTransaction.commit();
             }
         });
+
+        PRDownloader.initialize(context);
+
+
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(true)
+                .build();
+        PRDownloader.initialize(context, config);
+
+// Setting timeout globally for the download network requests:
+        PRDownloaderConfig confignew = PRDownloaderConfig.newBuilder()
+                .setReadTimeout(30_000)
+                .setConnectTimeout(30_000)
+                .build();
+        PRDownloader.initialize(context, confignew);
+
 
         title = getActivity().findViewById(R.id.title);
         title.setText("My Library");
@@ -178,6 +201,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
                 if (itemSong.getUserRating() != null && !itemSong.getUserRating().equalsIgnoreCase("") && itemSong.getUserRating().equalsIgnoreCase("true") && isOfflinevideo != null && !isOfflinevideo.isEmpty()){
                         File file = new File(isOfflinevideo);
                         file.delete();
+
                     db.itemSongDao().updateRat("false",itemSong.getTitle());
 
                 }
@@ -194,6 +218,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
 
     }
+
 
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(
             final Context context) {

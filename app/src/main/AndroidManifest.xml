@@ -82,6 +82,7 @@
             android:name="com.sastra.im037.sastraprakasika.Activity.DashBoardActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.sastra.im037.sastraprakasika.Common.CommonActivity"

@@ -60,7 +60,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Not Playing"
+                android:text=""
                 android:textColor="@color/text_title"
                 android:textSize="14sp"
                 android:textStyle="bold" />

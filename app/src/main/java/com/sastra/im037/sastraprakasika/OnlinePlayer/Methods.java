@@ -186,13 +186,20 @@ public class Methods {
         String hourString = "";
         String secondsString = "";
         String minutesString = "";
+        long temp_milli;
 
         // Convert total duration into time
         int hours = (int) (milliseconds / (1000 * 60 * 60));
         int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
         int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
         // Add hours if there
-        long temp_milli = (long) calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration());
+        if (Constant.isFromPage.equalsIgnoreCase("topic")) {
+             temp_milli = (long) calculateTime(Constant.arrayOfflineTopiclineSongs.get(Constant.playPos).getTopics_time());
+
+        }else {
+             temp_milli = (long) calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration());
+
+        }
         int temp_hour = (int) (temp_milli / (1000 * 60 * 60));
         if (temp_hour != 0) {
             hourString = hours + ":";

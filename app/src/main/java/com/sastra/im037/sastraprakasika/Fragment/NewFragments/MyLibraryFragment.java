@@ -140,6 +140,7 @@ public class MyLibraryFragment extends Fragment  {
                     FragmentManager fragmentManager = getFragmentManager();
                     fragment2.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                     fragmentTransaction.commit();
                 }
@@ -158,6 +159,7 @@ public class MyLibraryFragment extends Fragment  {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+
                     fragmentTransaction.commit();
                     Constant.isFirstTime = false;
                 }

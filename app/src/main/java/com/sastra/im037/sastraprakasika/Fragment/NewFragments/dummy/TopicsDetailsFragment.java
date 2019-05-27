@@ -105,8 +105,8 @@ public class TopicsDetailsFragment extends Fragment {
 
         callwebservice();
 
-/*
-        if(listOfTopicsDetailedsList.size() > 0){
+
+    /*    if(listOfTopicsDetailedsList.size() > 0){
             Constant.arrayOfflineTopiclineSongs.clear();
             Constant.arrayOfflineTopiclineSongs.addAll(listOfTopicsDetailedsList);
             shimmerFrameLayout.stopShimmer();
@@ -153,6 +153,7 @@ public class TopicsDetailsFragment extends Fragment {
                                 response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("subid"),
                                 response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("time"),
                                 response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("classname")
+
 
                         ));
                         listOfTopicsDetailed.setTopics_det_title(response.optJSONObject("data").optJSONArray("list").optJSONObject(i).optString("title"));

@@ -89,7 +89,6 @@
                 android:id="@+id/volume_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/slash"
                 android:minHeight="@dimen/_15sdp"
                 android:textSize="@dimen/_10sdp"
                 android:text="10 Volume"

@@ -177,6 +177,31 @@
                 android:textColor="@color/black"
 
                 />
+
+
+            <LinearLayout
+
+
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/addlectu"
+                android:orientation="horizontal">
+                <ImageView
+
+                    android:id="@+id/add_edit"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/add_green"/>
+
+                <TextView
+                    android:id="@+id/text_edit"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Lectures"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -185,31 +210,7 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="0.5dp"-->
         <!--android:background="@color/mild_grey" />-->
-    
-    <LinearLayout
 
-
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/addlectu"
-        android:orientation="horizontal">
-        <ImageView
-
-            android:id="@+id/add_edit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/add_green"/>
-
-        <TextView
-            android:id="@+id/text_edit"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="18dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Lectures"
-            android:textColor="@color/black"/>
-    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

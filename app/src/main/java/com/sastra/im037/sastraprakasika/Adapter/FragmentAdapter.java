@@ -46,9 +46,10 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
 //                activity.startActivity(new Intent(activity, Mediaplay_MainActivity.class));
 
 //                return new LecturesFragmentNew();
-//
                 //return new LecturesFragment_Audioplay();
                 return new LecturesFragment_Audioplay();
+
+
 //                return new LecturesFragment_new();
 
             case "Downloads":

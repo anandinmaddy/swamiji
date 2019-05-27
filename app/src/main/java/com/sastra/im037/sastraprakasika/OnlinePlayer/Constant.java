@@ -104,6 +104,8 @@ public class Constant {
 
     public static ArrayList<ItemSong> arrayListOfflineSongs = new ArrayList<>();
     public static ArrayList<ItemSong> playListSongsList = new ArrayList<>();
+    public static ArrayList<ItemSong> removedSOngsList = new ArrayList<>();
+
     public static ArrayList<Integer> trackList = new ArrayList<>();
 
     public static ArrayList<ItemSong> playListSongs1 = new ArrayList<>();

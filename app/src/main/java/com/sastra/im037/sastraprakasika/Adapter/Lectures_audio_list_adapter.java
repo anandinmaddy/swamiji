@@ -1,5 +1,6 @@
  package com.sastra.im037.sastraprakasika.Adapter;
 
+        import android.app.Activity;
         import android.arch.persistence.room.Room;
         import android.content.Context;
         import android.content.DialogInterface;
@@ -25,6 +26,8 @@
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import com.downloader.OnStartOrResumeListener;
+        import com.downloader.PRDownloader;
         import com.sastra.im037.sastraprakasika.Model.DiscousesAppDatabase;
         import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
         import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
@@ -168,18 +171,17 @@
             viewHolder.isDownloadProgress = false;
             viewHolder.isDownloadPaused = false;
             viewHolder.isDownloadHappening = false;
-
+            Log.d("progressss","cominnnnnnnnnnnnnnnnnnnnn");
             view.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolderItem) view.getTag();
-            //  notifyDataSetChanged();
-        }
+            }else{
+                viewHolder = (ViewHolderItem) view.getTag();
+               //   notifyDataSetChanged();
+            }
 
         viewHolder.downloadBtn.setTag(i);
         //     viewHolder.progressInside.setTag(i);
         viewHolder.iv_music_pause_downloads.setTag(i);
         viewHolder.circularProgressbar.setTag(i);
-
 
         if(mediaItems.get(i).getImageBig() != null && !mediaItems.get(i).getImageBig().isEmpty()){
             Picasso.get()
@@ -245,9 +247,18 @@
         Log.d("Name-----------"+mediaItems.get(i).getTrackId(),String.valueOf(mediaItems.get(i).getProgress()));
         if ((Integer) viewHolder.circularProgressbar.getTag() != null && (Integer) viewHolder.circularProgressbar.getTag() == i && mediaItems.get(i).getProgress() > 0 && mediaItems.get(i).getProgress() < 100){
             viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
-            viewHolder.circularProgressbar.setProgress(mediaItems.get(i).getProgress());
             viewHolder.downloadBtn.setVisibility(View.GONE);
             viewHolder.iv_music_pause_downloads.setVisibility(View.VISIBLE);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    viewHolder.circularProgressbar.setProgress(mediaItems.get(i).getProgress());
+                    if (mediaItems.get(i).getProgress() < 99){
+                        handler.postDelayed(this, 1000);
+                    }
+                }
+            }, 2000);
 
         }
 
@@ -353,6 +364,7 @@
         });*/
 
 
+        final View finalView = view;
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -406,6 +418,8 @@
                                       //      viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
                                             viewHolder.circularProgressbar.setProgress(progress);
                                             db.itemSongDao().updateProgress(progress,mediaItems.get(i).getTrackId());
+                                            Log.d("MobileDownload",String.valueOf(progress));
+
 
                                         }
                                     });
@@ -432,6 +446,11 @@
                             viewHolder.downloadBtn.setVisibility(View.GONE);
                             viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
                         }*/
+
+
+
+
+
                     viewHolder.downloadBtn.setVisibility(View.GONE);
                     viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
                     viewHolder.iv_music_pause_downloads.setVisibility(View.VISIBLE);
@@ -455,7 +474,7 @@
                             isDownloadUpdated = true;
                             Constant.downloadCompleted = true;
                             db.itemSongDao().updateProgress(0,mediaItems.get(i).getTrackId());
-
+                            viewHolder.circularProgressbar.setVisibility(View.GONE);
                             if (Constant.downloadCount == 0 && isDownloadUpdated) {
                                 Constant.downloadCompleted = true;
                             }
@@ -471,13 +490,18 @@
                         }
 
                         @Override
-                        public void onProgress(int id, long totalBytes, long downloadedBytes, int progress) {
-                            viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
+                        public void onProgress(int id, long totalBytes, long downloadedBytes, final int progress) {
+                            int seekBarProgress = 0;
+                            viewHolder.circularProgressbar.setVisibility(View.GONE);
                             viewHolder.iv_music_pause_downloads.setVisibility(View.VISIBLE);
                             viewHolder.downloadBtn.setVisibility(View.GONE);
+                            viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
                             viewHolder.circularProgressbar.setProgress(progress);
+
+
+
                             db.itemSongDao().updateProgress(progress,mediaItems.get(i).getTrackId());
-                            Log.d("statsyu",String.valueOf(progress));
+                            Log.d("wifiDownload",String.valueOf(progress));
 
                         }
                     });
@@ -537,7 +561,11 @@
         return view;
     }
 
-    private File setFileName(String title) {
+     private void setUIElements(ProgressBar circularProgressbar, int progress) {
+         circularProgressbar.setProgress(progress);
+     }
+
+     private File setFileName(String title) {
         File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
         if (!folder.exists())
             folder.mkdirs();

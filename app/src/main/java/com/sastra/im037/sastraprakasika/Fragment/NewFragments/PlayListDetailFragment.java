@@ -140,7 +140,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         });
 
 
-      //  callWebService();
+        callWebService();
 
         pageAction.setVisibility(View.VISIBLE);
         pageAction.setText("Edit");
@@ -206,10 +206,10 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongSync,getContext());
+     /*   Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongSync,getContext());
         recyclerView.setAdapter(adapter_playlist_next);
         adapter_playlist_next.notifyDataSetChanged();
-
+*/
         // set a LinearLayoutManager with default vertical orientation
 
         return view;

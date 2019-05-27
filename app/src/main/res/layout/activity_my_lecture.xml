@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:visibility="gone"
-      >
+        >
 
         <TextView
             android:id="@+id/cancel_newplaylist"
@@ -134,6 +134,66 @@
         android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
         android:text="No lectures found, please  add some..."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_layout"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.30"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_1sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:background="@drawable/search_editcorner"
+            >
+            <ImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/search48"
+                />
+
+            <EditText
+
+                android:layout_marginRight="5dp"
+                android:id="@+id/search_bar"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:background="@drawable/search_editcorner"
+                android:ems="10"
+                android:layout_weight="0.3"
+                android:keyboardNavigationCluster="false"
+                android:imeOptions="actionDone"
+                android:hint="@string/search_text"
+                android:inputType="textPersonName"
+                android:minHeight="@dimen/_20sdp"
+                />
+            <ImageView
+                android:layout_width="@dimen/_2sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:id="@+id/clearTxt"
+                android:layout_weight="0.081"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:background="@drawable/ic_search_close"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

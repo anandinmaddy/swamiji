@@ -9,8 +9,8 @@ android {
         applicationId "com.sastra.im037.sastraprakasika"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 17
-        versionName "2.7"
+        versionCode 32
+        versionName "3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -79,6 +79,8 @@ dependencies {
 
     implementation 'com.android.billingclient:billing:1.2.2'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.mindorks.android:prdownloader:0.5.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

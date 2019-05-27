@@ -203,18 +203,20 @@ public class ClickEditFragment extends Fragment implements NetworkStateReceiverL
                     for (int i = 0; i < contentArray.length(); i++) {
                         JSONObject jsonObject = contentArray.optJSONObject(i);
                         Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+
                     }
+                    Bundle profileData = new Bundle();
+                    profileData.putString("data",titleTxt);
+                    profileData.putString("player_id",playerId);
+                    PlayListDetailFragment fragment2 = new PlayListDetailFragment();
+                    fragment2.setArguments(profileData);
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+
                 }
 
-                Bundle profileData = new Bundle();
-                profileData.putString("data",titleTxt);
-                profileData.putString("player_id",playerId);
-                PlayListDetailFragment fragment2 = new PlayListDetailFragment();
-                fragment2.setArguments(profileData);
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
 
 
 
