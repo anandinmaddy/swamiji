@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sastra.im037.sastraprakasika.Fragment.NewFragments.MyLectureFragment;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.sastra.im037.sastraprakasika.R;
@@ -37,6 +38,7 @@ public class CreatePlaylistAdapter extends BaseAdapter {
         this.context = context;
         this.names=new ArrayList<ItemSong>();
         this.names.addAll(mediaItems);
+        Constant.playListSongs1.clear();
     }
 
 
@@ -125,10 +127,12 @@ public class CreatePlaylistAdapter extends BaseAdapter {
         viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MyLectureFragment.showaddbt();
                 if (isChecked){
                     if (viewHolder.checkbox.getTag().equals(i)){
                         viewHolder.checkbox.setButtonDrawable(R.drawable.add_orange);
                         viewHolder.checkbox.setChecked(isChecked);
+                        MyLectureFragment.showaddbt();
                     }
                     Constant.playListSongs1.add(mediaItems.get(i));
                 }else {
@@ -137,6 +141,14 @@ public class CreatePlaylistAdapter extends BaseAdapter {
                     if (Constant.playListSongs1.contains(mediaItems.get(i))){
                         Constant.playListSongs1.remove(mediaItems.get(i));
                     }
+                }
+
+                if (  Constant.playListSongs1.size()==0){
+                    Log.e("playListSongs1",""+ Constant.playListSongs1.size());
+                    MyLectureFragment.hideaddbt();
+                }else {
+                    Log.e("playListSongs1",""+ Constant.playListSongs1.size());
+                    MyLectureFragment.showaddbt();
                 }
             }
         });

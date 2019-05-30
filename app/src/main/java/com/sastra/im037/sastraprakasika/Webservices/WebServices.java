@@ -189,7 +189,7 @@ public class WebServices {
 
     }
 
-    public void deleteSong(String user_id,String player_id,String track_id,VolleyResponseListerner listerner) {
+    public void deleteSong(String user_id, String player_id, JSONArray track_id, VolleyResponseListerner listerner) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("user_id", user_id);
@@ -334,6 +334,5 @@ public class WebServices {
 
 
 }
-
 
 

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,6 +58,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
     ArrayList img_song_next = new ArrayList<>(Arrays.asList(R.drawable.vedanta,R.drawable.intro_vedanta,R.drawable.bagavad));
     ArrayList class_type = new ArrayList<>(Arrays.asList("Class-1","Class-2","Class-3"));
     ArrayList dur = new ArrayList<>(Arrays.asList("0:56:04","0:58:06","0:55:05"));
+    HashSet removeDup = new HashSet();
 
     public PlayListDetailFragment() {
         // Required empty public constplayListRecyclerView_nextructor
@@ -72,6 +75,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         txtview = (TextView)view.findViewById(R.id.album_image_title_next);
         playlistTxt = (TextView) view.findViewById(R.id.playList);
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.setVisibility(View.GONE);
         nosongs = (TextView) view.findViewById(R.id.nosongs);
         pageAction = (TextView) getActivity().findViewById(R.id.pageAction);
         offlineLink = view.findViewById(R.id.offlineLectureLink);
@@ -123,7 +127,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         });
 
 
-        shimmerFrameLayout.startShimmer();
+       // shimmerFrameLayout.startShimmer();
 
         playlistTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +144,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         });
 
 
-        callWebService();
+      /// callWebService();
 
         pageAction.setVisibility(View.VISIBLE);
         pageAction.setText("Edit");
@@ -185,7 +189,6 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
 
         Constant.playListSongSync.clear();
         if (Constant.trackList.size() > 0){
-            Constant.playListSongSync.clear();
             for (ItemSong track : Constant.arrayList_play){
                 for (Integer trackno : Constant.trackList){
                     if (track.getTrackId().equalsIgnoreCase(String.valueOf(trackno))){
@@ -196,6 +199,10 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
 
         }
 
+        removeDup.addAll(Constant.playListSongSync);
+        Constant.playListSongSync.clear();
+        Constant.playListSongSync.addAll(removeDup);
+
         if(Constant.playListSongSync.size() <=0){
             recyclerView.setVisibility(View.GONE);
             nosongs.setVisibility(View.VISIBLE);
@@ -205,6 +212,9 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
+        Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongSync,getContext());
+        recyclerView.setAdapter(adapter_playlist_next);
+        adapter_playlist_next.notifyDataSetChanged();
 
      /*   Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongSync,getContext());
         recyclerView.setAdapter(adapter_playlist_next);
@@ -226,14 +236,20 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
             public void onResponse(JSONObject response) throws JSONException {
 
                 Constant.trackList.clear();
+                Log.e("response232123",""+response);
                     if (response.optString("resultcode").equalsIgnoreCase("200")) {
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.setVisibility(View.GONE);
                         JSONArray contentArray = response.optJSONArray("data");
-                        for (int i = 0; i < contentArray.length(); i++) {
-                            JSONObject jsonObject = contentArray.optJSONObject(i);
-                            Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+                        try{
+                            for (int i = 0; i < contentArray.length(); i++) {
+                                JSONObject jsonObject = contentArray.optJSONObject(i);
+                                Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
+
                     }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);

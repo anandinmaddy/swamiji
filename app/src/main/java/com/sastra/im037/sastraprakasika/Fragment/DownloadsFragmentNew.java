@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_downloads_main, container, false);
-
+        Log.e("getClassName","testing getClassName");
         context = getContext();
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
         db = Room.databaseBuilder(getActivity().getApplicationContext(),
@@ -175,35 +176,35 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     }
 
 
-        private void init() {
-            getViews();
-            setListeners();
-            txt_playingSong.setSelected(true);
-            //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-            shimmerFrameLayout.startShimmer();
-            shimmerFrameLayout.setVisibility(View.VISIBLE);
-            ArrayList<ItemSong> offlineSongs = new ArrayList<>();
-            HashMap<String,String> downloadedFile = downloadFiles();
+    private void init() {
+        getViews();
+        setListeners();
+        txt_playingSong.setSelected(true);
+        //progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        ArrayList<ItemSong> offlineSongs = new ArrayList<>();
+        HashMap<String,String> downloadedFile = downloadFiles();
 
-                if (PlayerConstants.SONGS_LIST.size() <= 0) {
+        if (PlayerConstants.SONGS_LIST.size() <= 0) {
 
-                    List<ItemSong> itemSongs = db.itemSongDao().getAll();
+            List<ItemSong> itemSongs = db.itemSongDao().getAll();
 
-                    for(ItemSong itemSong : Constant.arrayList_play){
-                        for(Map.Entry<String, String> hashMap : downloadedFile.entrySet()){
-                            if(hashMap.getKey().equalsIgnoreCase(itemSong.getTitle())){
-                                if (!offlineSongs.contains(itemSong)){
-                                    offlineSongs.add(itemSong);
-                                }
-                                db.itemSongDao().update(hashMap.getValue(),hashMap.getKey());
-                            }
+            for(ItemSong itemSong : Constant.arrayList_play){
+                for(Map.Entry<String, String> hashMap : downloadedFile.entrySet()){
+                    if(hashMap.getKey().equalsIgnoreCase(itemSong.getTitle())){
+                        if (!offlineSongs.contains(itemSong)){
+                            offlineSongs.add(itemSong);
                         }
+                        db.itemSongDao().update(hashMap.getValue(),hashMap.getKey());
                     }
+                }
+            }
 
-                    setListItems();
+            setListItems();
 
-                    //      Constant.arrayListOfflineSongs.clear();
-                  //  Constant.arrayListOfflineSongs.addAll(db.itemSongDao().getAll());
+            //      Constant.arrayListOfflineSongs.clear();
+            //  Constant.arrayListOfflineSongs.addAll(db.itemSongDao().getAll());
   /*               //   ItemSong[] lecturersList =  db.userDao().getAll();
                     if(Constant.arrayListOfflineSongs.size() > 0){
                      //   Constant.arrayListOfflineSongs.add(lecturersList[0]);
@@ -213,42 +214,42 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
                     //    callWebservice();
                     }*/
 
-                    //loadUrlData();
+            //loadUrlData();
 
-                }
+        }
 
-            }
+    }
 
 
     private HashMap<String, String> downloadFiles() {
 
-            HashMap<String,String> downloadSongs = new HashMap<String, String>();
-            try {
-                File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
-                String path = Environment.getExternalStorageDirectory().toString() + "/Swamiji";
-                File directory = new File(path);
-                File[] files = directory.listFiles();
-                if (files != null) {
-                    for (int i = 0; i < files.length; i++) {
-                        String result = files[i].getName().replace(".swami","");
+        HashMap<String,String> downloadSongs = new HashMap<String, String>();
+        try {
+            File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
+            String path = Environment.getExternalStorageDirectory().toString() + "/Swamiji";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    String result = files[i].getName().replace(".swami","");
 
-                        downloadSongs.put(result,files[i].toString());
-                    }
+                    downloadSongs.put(result,files[i].toString());
                 }
-
-                if (downloadSongs != null && downloadSongs.size() > 0){
-                    Iterator myVeryOwnIterator = downloadSongs.keySet().iterator();
-                    while(myVeryOwnIterator.hasNext()) {
-                        String key=(String)myVeryOwnIterator.next();
-
-                    }
-
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-            return downloadSongs;
+
+            if (downloadSongs != null && downloadSongs.size() > 0){
+                Iterator myVeryOwnIterator = downloadSongs.keySet().iterator();
+                while(myVeryOwnIterator.hasNext()) {
+                    String key=(String)myVeryOwnIterator.next();
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return downloadSongs;
 
     }
 
@@ -296,133 +297,133 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
 
 
 
-        private void callWebservice() {
+    private void callWebservice() {
 
            /* progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage("Loading ..., Please wait");
             progressDialog.show();*/
-            new WebServices(getActivity(), TAG).getlibrary(Session.getInstance(getContext(), TAG).getUserId(), "lectures", new VolleyResponseListerner() {
+        new WebServices(getActivity(), TAG).getlibrary(Session.getInstance(getContext(), TAG).getUserId(), "lectures", new VolleyResponseListerner() {
 
 
-                @Override
-                public void onResponse(final JSONObject response) throws JSONException {
-                    // hideCommonProgressBar();
-                  //  progressDialog.hide();
+            @Override
+            public void onResponse(final JSONObject response) throws JSONException {
+                // hideCommonProgressBar();
+                //  progressDialog.hide();
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Constant.arrayListOfflineSongs.clear();
-                            ItemSongDatabase db = null;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Constant.arrayListOfflineSongs.clear();
+                        ItemSongDatabase db = null;
 
-                            System.out.println("library respon:::: " + response);
-                            if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                        System.out.println("library respon:::: " + response);
+                        if (response.optString("resultcode").equalsIgnoreCase("200")) {
 
-                                try{
-                                     db = Room.databaseBuilder(getActivity(),
-                                             ItemSongDatabase.class, "ItemSong").allowMainThreadQueries().build();
-                                    db.clearAllTables();
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
+                            try{
+                                db = Room.databaseBuilder(getActivity(),
+                                        ItemSongDatabase.class, "ItemSong").allowMainThreadQueries().build();
+                                db.clearAllTables();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
 
-                                try {
+                            try {
 
-                                    JSONObject jsonObject1 = response.optJSONObject("data");
-                                    JSONArray contentArray = jsonObject1.optJSONArray("datacontent");
-                                    for (int i = 0; i < contentArray.length(); i++) {
+                                JSONObject jsonObject1 = response.optJSONObject("data");
+                                JSONArray contentArray = jsonObject1.optJSONArray("datacontent");
+                                for (int i = 0; i < contentArray.length(); i++) {
 
-                                        JSONObject dataConten = contentArray.getJSONObject(i);
-                                        JSONArray trackArray = dataConten.optJSONArray("track");
-                                        String image_url = dataConten.optString("image_url");
-                                        String post_id = dataConten.optString("postid");
+                                    JSONObject dataConten = contentArray.getJSONObject(i);
+                                    JSONArray trackArray = dataConten.optJSONArray("track");
+                                    String image_url = dataConten.optString("image_url");
+                                    String post_id = dataConten.optString("postid");
 
-                                        String volume_name = dataConten.optString("volume_name");
+                                    String volume_name = dataConten.optString("volume_name");
 
-                                        for (int j = 0; j < trackArray.length(); j++) {
-                                            Lecturers lecturers = new Lecturers();
-                                            JSONObject jsonObject = trackArray.optJSONObject(j);
+                                    for (int j = 0; j < trackArray.length(); j++) {
+                                        Lecturers lecturers = new Lecturers();
+                                        JSONObject jsonObject = trackArray.optJSONObject(j);
                                /* MediaItem mediaItem = new MediaItem();
                                 mediaItem.setTitle(jsonObject.optString("title"));
                                 mediaItem.setPath(jsonObject.optString("mp3"));
                                 mediaItem.setDuration(jsonObject.optString("time"));
                                 mediaItem.setAlbum_img(image_url);
                                 mediaItem.setAlbum(volume_name);*/
-                                            lecturers.setMp3(jsonObject.optString("mp3"));
-                                            lecturers.setTitle(jsonObject.optString("title"));
-                                            lecturers.setTime(jsonObject.optString("time"));
-                                            lecturers.setClassname(jsonObject.optString("classname"));
-                                            lecturers.setImage_url(image_url);
-                                            lecturers.setPost_id(post_id);
+                                        lecturers.setMp3(jsonObject.optString("mp3"));
+                                        lecturers.setTitle(jsonObject.optString("title"));
+                                        lecturers.setTime(jsonObject.optString("time"));
+                                        lecturers.setClassname(jsonObject.optString("classname"));
+                                        lecturers.setImage_url(image_url);
+                                        lecturers.setPost_id(post_id);
 
 
 
-                                            ItemSong itemSong = new ItemSong();
+                                        ItemSong itemSong = new ItemSong();
 
-                                       //     ItemSong itemSong = new ItemSong();
-                                           // itemSong.setId(01);
-                                            itemSong.setUrl(jsonObject.optString("mp3"));
-                                            itemSong.setTitle(jsonObject.optString("title"));
-                                            itemSong.setDuration(jsonObject.optString("time"));
-                                            itemSong.setTrackId(jsonObject.optString("track_id"));
-                                            itemSong.setClassName(jsonObject.optString("classname"));
-                                            itemSong.setImageBig(image_url);
-                                            itemSong.setImageSmall(image_url);
-                                            String isOfflinevideo = readFileNames(jsonObject.optString("title"));
-                                            if (isOfflinevideo != null && isOfflinevideo != ""){
-                                                itemSong.setDownloads(isOfflinevideo);
-                                            }else {
-                                                itemSong.setDownloads("");
-                                            }
-
-
-                                            try{
-
-                                                db.userDao().insertAll(itemSong);
-                                            }catch (Exception e){
-                                                e.printStackTrace();
-                                            }
-                                            Constant.arrayListOfflineSongs.add(itemSong);
-
-
+                                        //     ItemSong itemSong = new ItemSong();
+                                        // itemSong.setId(01);
+                                        itemSong.setUrl(jsonObject.optString("mp3"));
+                                        itemSong.setTitle(jsonObject.optString("title"));
+                                        itemSong.setDuration(jsonObject.optString("time"));
+                                        itemSong.setTrackId(jsonObject.optString("track_id"));
+                                        itemSong.setClassName(jsonObject.optString("classname"));
+                                        itemSong.setImageBig(image_url);
+                                        itemSong.setImageSmall(image_url);
+                                        String isOfflinevideo = readFileNames(jsonObject.optString("title"));
+                                        if (isOfflinevideo != null && isOfflinevideo != ""){
+                                            itemSong.setDownloads(isOfflinevideo);
+                                        }else {
+                                            itemSong.setDownloads("");
                                         }
 
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+
+                                        try{
+
+                                            db.userDao().insertAll(itemSong);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                        Constant.arrayListOfflineSongs.add(itemSong);
 
 
-                            } else {
-                                try {
-                                    if (response.getString("resultcode").equalsIgnoreCase("400")) {
-                                        CommonMethod.showSnackbar(listView_song, response, getActivity());
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            setListItems();
+
+
+                        } else {
+                            try {
+                                if (response.getString("resultcode").equalsIgnoreCase("400")) {
+                                    CommonMethod.showSnackbar(listView_song, response, getActivity());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        setListItems();
+                    }
 
-                    });
-
-
-                }//lectures_recycler_adapter = new Lectures_Recycler_adapter( MainActivity.this, lectures_listitems );
-                //  recyclerView.setAdapter( lectures_recycler_adapter ); // set the Adapter to RecyclerView
+                });
 
 
-                //Toast.makeText(getApplicationContext(),"Response :" + response.toString(), Toast.LENGTH_LONG).show();//display the response on screen
+            }//lectures_recycler_adapter = new Lectures_Recycler_adapter( MainActivity.this, lectures_listitems );
+            //  recyclerView.setAdapter( lectures_recycler_adapter ); // set the Adapter to RecyclerView
 
 
-                @Override
-                public void onError(String message, String title) {
-                    System.out.println("library error:::: " + message);
-                   // progressDialog.hide();
-                }
-            });
+            //Toast.makeText(getApplicationContext(),"Response :" + response.toString(), Toast.LENGTH_LONG).show();//display the response on screen
 
-        }
+
+            @Override
+            public void onError(String message, String title) {
+                System.out.println("library error:::: " + message);
+                // progressDialog.hide();
+            }
+        });
+
+    }
 
 
     private static String readFileNames(String title) {
@@ -484,15 +485,15 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
                 }
             }
         }
-            if (Constant.arrayListOfflineSongs.size() <= 0){
-                noSongsFound.setVisibility(View.VISIBLE);
-                listView_song.setVisibility(View.GONE);
-            }else{
-                noSongsFound.setVisibility(View.GONE);
-                listView_song.setVisibility(View.VISIBLE);
-            }
-            downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.arrayListOfflineSongs, getActivity(),this);
-            listView_song.setAdapter(downloads_audio_list_adapter);
+        if (Constant.arrayListOfflineSongs.size() <= 0){
+            noSongsFound.setVisibility(View.VISIBLE);
+            listView_song.setVisibility(View.GONE);
+        }else{
+            noSongsFound.setVisibility(View.GONE);
+            listView_song.setVisibility(View.VISIBLE);
+        }
+        downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.arrayListOfflineSongs, getActivity(),this);
+        listView_song.setAdapter(downloads_audio_list_adapter);
         listView_song.smoothScrollToPosition(Constant.downloadPosition);
 
 
@@ -517,5 +518,4 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
 
 
 }
-
 

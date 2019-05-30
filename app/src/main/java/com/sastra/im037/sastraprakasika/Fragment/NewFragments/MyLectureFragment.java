@@ -49,7 +49,9 @@ import java.util.Locale;
 public class MyLectureFragment extends Fragment implements NetworkStateReceiverListener {
 
     ListView lectureList;
-    TextView done, new_playlist,nosongsView;
+    static TextView done;
+    TextView new_playlist;
+    TextView nosongsView;
     ImageView back,search_img,cleartxt;
     CreatePlaylistAdapter adapter;
     String title;
@@ -108,9 +110,22 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
         offlineViewer = view.findViewById(R.id.offlineViewer);
         shimmerFrameLayout.setVisibility(View.GONE);
         fullview = view.findViewById(R.id.fullview);
+        Constant.removedSOngsList.clear();
         if (Constant.playListSongsList.size() > 0){
+            for (ItemSong tracks : Constant.playListSongsList){
+                for (Integer trackno : Constant.trackList){
+                    if (tracks.getTrackId().equalsIgnoreCase(String.valueOf(trackno))){
+                        Constant.removedSOngsList.add(tracks);
+                    }
+                }
+            }
+
+            Constant.playListSongsList.removeAll(Constant.removedSOngsList);
+
             adapter = new CreatePlaylistAdapter(Constant.playListSongsList, getActivity());
             lectureList.setAdapter(adapter);
+          /*  adapter = new CreatePlaylistAdapter(Constant.playListSongsList, getActivity());
+            lectureList.setAdapter(adapter);*/
         }else {
             lectureList.setVisibility(View.GONE);
             nosongsView.setVisibility(View.VISIBLE);
@@ -275,12 +290,23 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
         return view;
     }
 
+    public static void showaddbt(){
+
+        done.setText("Add");
+
+    }
+    public static void hideaddbt(){
+
+        done.setText("Done");
+    }
     private void callWebservicenew() {
+
         new WebServices(getContext(), TAG).getPlaylistSongs(Session.getInstance(getContext(), TAG).getUserId(),playerId, new VolleyResponseListerner() {
 
             @Override
             public void onResponse(JSONObject response) throws JSONException {
                 shimmerFrameLayout.setVisibility(View.GONE);
+                Log.e("responsemylectures",""+response);
                 Constant.trackList.clear();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     JSONArray contentArray = response.optJSONArray("data");
@@ -299,13 +325,7 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
-
-
-
-
-
-            }
+          }
 
             @Override
             public void onError(String message, String title) {
@@ -323,6 +343,7 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
             if(tracks.getTrackId() != null && !tracks.getTrackId().isEmpty()){
                 //  trackSongs.add(Integer.valueOf(tracks.getTrackId()));
                 jsonArray.put(tracks.getTrackId());
+                Log.e("jsonArrayMylecture",""+jsonArray);
             }
         }
 
@@ -332,8 +353,9 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
             public void onResponse(JSONObject response) throws JSONException {
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     Log.d("ANDRO_ASYNC", "Lenght of file: " );
+                    shimmerFrameLayout.setVisibility(View.GONE);
+                    search_img.setVisibility(View.GONE);
                     callWebservicenew();
-
                 }
             }
 
@@ -341,7 +363,6 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
             public void onError(String message, String title) {
                 shimmerFrameLayout.setVisibility(View.GONE);
                 Log.d("ANDRO_ASYNC", "Lenght of file: 2");
-
             }
         });
     }
@@ -364,10 +385,9 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
 
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     Log.d("ANDRO_ASYNC", "Lenght of file: " );
+                    search_img.setVisibility(View.GONE);
 
                 }
-
-
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("offline",true);
                 MyLibraryFragment fragment2 = new MyLibraryFragment();
@@ -377,15 +397,12 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
                 fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
             }
 
             @Override
             public void onError(String message, String title) {
                 Log.d("ANDRO_ASYNC", "Lenght of file: 2");
                 shimmerFrameLayout.setVisibility(View.GONE);
-
-
             }
         });
     }

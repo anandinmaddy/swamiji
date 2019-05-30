@@ -498,6 +498,7 @@
                             viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
                             viewHolder.circularProgressbar.setProgress(progress);
 
+                            viewHolder.circularProgressbar.onSaveInstanceState();
 
 
                             db.itemSongDao().updateProgress(progress,mediaItems.get(i).getTrackId());
@@ -863,4 +864,6 @@
 
 
     }
+
+
 }

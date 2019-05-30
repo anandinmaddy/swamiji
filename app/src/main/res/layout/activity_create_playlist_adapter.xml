@@ -172,20 +172,21 @@
                     android:layout_marginLeft="2dp"
                     android:text="00:00/00:00" />
 
-                </LinearLayout>
-
             </LinearLayout>
-            <CheckBox
-                android:id="@+id/checkbox"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_12sdp"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleX="2.5"
-                android:scaleY="2.5"
-                android:button="@drawable/add_grey"
-              />
+
         </LinearLayout>
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:scaleX="2.5"
+            android:scaleY="2.5"
+            android:gravity="center"
+            android:button="@drawable/add_grey"
+            />
+    </LinearLayout>
 
 
 </LinearLayout>

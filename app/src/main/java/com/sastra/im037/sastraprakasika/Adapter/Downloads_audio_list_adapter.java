@@ -2,6 +2,8 @@ package com.sastra.im037.sastraprakasika.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         this.mediaItems = media_det;
         this.context = context;
         this.mCallback = processCallback;
+        Log.e("demodownload","demodownload");
     }
 
     static class ViewHolderItem{
@@ -97,8 +100,8 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         viewHolder.delete_play.setTag(i);
 
         // TextView song_start_letter = (TextView)view.findViewById(R.id.song_letter_txt);
-        final Animation animation = AnimationUtils.loadAnimation(context, (i > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
-        view.startAnimation(animation);
+      /*  final Animation animation = AnimationUtils.loadAnimation(context, (i > lastPosition) ? R.anim.up_from_bottom1 : R.anim.up_from_bottom1);
+        view.startAnimation(animation);*/
         lastPosition = i;
 
 
@@ -132,21 +135,34 @@ public class Downloads_audio_list_adapter extends BaseAdapter {
         viewHolder.song_dur.setText(items.getDuration());
 
         final View finalView = view;
+        final ViewHolderItem finalViewHolder = viewHolder;
         viewHolder.delete_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Constant.arrayListOfflineSongs.size() > 0){
-                    String path = Constant.arrayListOfflineSongs.get(i).getDownloads();
-                    String fileName = Constant.arrayListOfflineSongs.get(i).getTitle();
+                    final String path = Constant.arrayListOfflineSongs.get(i).getDownloads();
+                    final String fileName = Constant.arrayListOfflineSongs.get(i).getTitle();
                     Constant.isplayLectures = true;
 
                     if(path != null && path != ""){
-                        File file = new File(path);
-                        file.delete();
+                        Animation anim = AnimationUtils.loadAnimation(context,
+                                android.R.anim.slide_out_right);
+                        anim.setDuration(500);
+                        finalViewHolder.musicPlayLayout.startAnimation(anim);
                         notifyDataSetChanged();
-                        finalView.startAnimation(animation);
-                        Toast.makeText(context, "Audio Deleted",Toast.LENGTH_SHORT).show();
-                        mCallback.onProcessFilter(fileName);
+
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                File file = new File(path);
+                                file.delete();
+                                Toast.makeText(context, "Audio Deleted",Toast.LENGTH_SHORT).show();
+                                mCallback.onProcessFilter(fileName);
+                                /*Constant.playListSongSync.remove(arrayListSong.get(position)); //Remove the current content from the array
+                                notifyDataSetChanged();*/ //Refresh list
+                            }
+
+                        }, anim.getDuration());
+
 
                     }
                 }

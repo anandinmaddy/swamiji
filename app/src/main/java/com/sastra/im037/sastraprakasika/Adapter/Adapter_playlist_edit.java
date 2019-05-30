@@ -2,13 +2,18 @@ package com.sastra.im037.sastraprakasika.Adapter;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sastra.im037.sastraprakasika.Fragment.NewFragments.ClickEditFragment;
@@ -23,6 +28,7 @@ import com.sastra.im037.sastraprakasika.Webservices.WebServices;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,7 +60,7 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Edit_view holder, final int position) {
+    public void onBindViewHolder(@NonNull final Edit_view holder, final int position) {
 
         holder.title_imge_edit.setText(arrayListSong.get(position).getTitle());
         try {
@@ -70,9 +76,21 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
         holder.add_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 callwebservices(arrayListSong.get(position).getTrackId());
-                Constant.playListSongSync.remove(arrayListSong.get(position));
-                notifyDataSetChanged();
+                Animation anim = AnimationUtils.loadAnimation(context,
+                        android.R.anim.slide_out_right);
+                anim.setDuration(500);
+                holder.linearanimation.startAnimation(anim);
+
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        Constant.playListSongSync.remove(arrayListSong.get(position)); //Remove the current content from the array
+                        notifyDataSetChanged(); //Refresh list
+                    }
+
+                }, anim.getDuration());
+                //  notifyDataSetChanged();
             }
         });
 
@@ -81,16 +99,18 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
     private void callwebservices(String trackId) {
         {
             final DiscousesAppDatabase db;
-
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(trackId);
+            Log.e("strArray",""+jsonArray);
             db = Room.databaseBuilder(context,
                     DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
 
-            new WebServices(context, TAG).deleteSong(Session.getInstance(context, TAG).getUserId(),playerId,trackId, new VolleyResponseListerner() {
+            new WebServices(context, TAG).deleteSong(Session.getInstance(context, TAG).getUserId(),playerId,jsonArray, new VolleyResponseListerner() {
                 List<PlayList> playLists ;
 
                 @Override
                 public void onResponse(JSONObject response) throws JSONException {
-
+                    Log.e("response21ew",""+response);
                     if (response.optString("resultcode").equalsIgnoreCase("200")) {
 
 
@@ -124,6 +144,8 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
         ImageView add_edit;
         @BindView(R.id.shimmer_view_container)
         ShimmerFrameLayout shimmerFrameLayout;
+        @BindView(R.id.linearanimation)
+        LinearLayout linearanimation;
         public Edit_view(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

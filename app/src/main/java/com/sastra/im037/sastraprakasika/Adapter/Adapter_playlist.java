@@ -200,7 +200,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     shimmerFrameLayout.setVisibility(View.GONE);
                     JSONArray contentArray = response.optJSONArray("data");
-                    if (contentArray.length() > 0){
+                    if (contentArray != null && contentArray.length() > 0){
                         for (int i = 0; i < contentArray.length(); i++) {
                             JSONObject jsonObject = contentArray.optJSONObject(i);
                             Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));

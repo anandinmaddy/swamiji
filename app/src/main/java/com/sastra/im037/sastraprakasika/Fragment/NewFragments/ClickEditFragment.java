@@ -149,13 +149,21 @@ public class ClickEditFragment extends Fragment implements NetworkStateReceiverL
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
+                back_btn.setVisibility(View.GONE);
+                MyLibraryFragment fragment2 = new MyLibraryFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Constant.currentTab = 3;
+                Constant.backPress = true;
+                fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+              /*  FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
                     Log.i("MainActivity", "popping backstack");
                     fm.popBackStack();
                 } else {
                     Log.i("MainActivity", "nothing on backstack, calling super");
-                }
+                }*/
 
             }
         });

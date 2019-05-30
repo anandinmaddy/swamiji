@@ -9,8 +9,8 @@ android {
         applicationId "com.sastra.im037.sastraprakasika"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 32
-        versionName "3.1"
+        versionCode 35
+        versionName "3.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

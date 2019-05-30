@@ -6,6 +6,7 @@ package com.sastra.im037.sastraprakasika.Adapter;
         import android.content.DialogInterface;
         import android.graphics.Color;
         import android.os.Handler;
+        import android.support.annotation.Nullable;
         import android.support.v4.content.ContextCompat;
         import android.util.Log;
         import android.view.LayoutInflater;
@@ -21,8 +22,10 @@ package com.sastra.im037.sastraprakasika.Adapter;
         import android.widget.Toast;
 
         import com.android.billingclient.api.BillingClient;
+        import com.android.billingclient.api.BillingClientStateListener;
         import com.android.billingclient.api.BillingFlowParams;
         import com.android.billingclient.api.Purchase;
+        import com.android.billingclient.api.PurchasesUpdatedListener;
         import com.android.billingclient.api.SkuDetails;
         import com.android.billingclient.api.SkuDetailsParams;
         import com.android.billingclient.api.SkuDetailsResponseListener;
@@ -126,7 +129,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 new SkuDetailsResponseListener() {
                     @Override
                     public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                        skuDetails = skuDetailsList.get(0);
+                        if (skuDetailsList != null && skuDetailsList.size() > 0){
+                            skuDetails = skuDetailsList.get(0);
+                        }
                     }
                 });
 
@@ -134,42 +139,108 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         classesValue.setText(arrayList.get(groupPosition).getClasses());
 
-        if (arrayList != null && arrayList.size() > 0){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (arrayList != null && arrayList.size() > 0){
 
-            if (arrayList.get(groupPosition).isPurchase()){
-                priceBtn.setVisibility(View.INVISIBLE);
-            }else {
-                priceBtn.setText(arrayList.get(groupPosition).getPrice());
+                    if (arrayList.get(groupPosition).isPurchase()){
+                        priceBtn.setVisibility(View.INVISIBLE);
+                    }else {
+                        priceBtn.setText(arrayList.get(groupPosition).getPrice());
+                    }
+                }
+
             }
-        }
+        }, 2000);
+
 
 
 
         priceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                final int sdk = android.os.Build.VERSION.SDK_INT;
+                if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_red) );
+                } else {
+                    priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_red));
+                }
                 if (arrayList.get(groupPosition).isPurchase()){
                     //Already Purchasedoa
                     Toast.makeText(context, "Already purchased / Not available currently", Toast.LENGTH_LONG).show();
 
                 }else {
-                    final int sdk = android.os.Build.VERSION.SDK_INT;
-                    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                        priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_red) );
-                    } else {
-                        priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_red));
-                    }
+
                     BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                             .setSkuDetails(skuDetails)
                             .build();
 
                     int responseCode = billingClient.launchBillingFlow(activity,flowParams);
-                    Toast.makeText(context, "Payment Status : "+responseCode, Toast.LENGTH_LONG).show();
 
-                    if (responseCode == 0){
-                        priceBtn.setVisibility(View.INVISIBLE);
-                        callwebservice(arrayList.get(groupPosition).getPostid());
+                    billingClient = BillingClient.newBuilder(context).setListener(new PurchasesUpdatedListener() {
+                        @Override
+                        public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
+                            if (responseCode == BillingClient.BillingResponse.OK
+                                    && purchases != null) {
+                                priceBtn.setVisibility(View.INVISIBLE);
+                                callwebservice(arrayList.get(groupPosition).getPostid());
+                            } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+                                Toast.makeText(context, "Payment Declined by user", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(context, "Payment failed", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }).build();
+
+                    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_orange) );
+                    } else {
+                        priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_orange));
+                    }
+
+
+                    billingClient.startConnection(new BillingClientStateListener() {
+                        @Override
+                        public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
+                            if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                                // The billing client is ready. You can query purchases here.
+
+                                List<String> skuList = new ArrayList<>();
+                                skuList.add("purchase_free");
+
+                                SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder()
+                                        .setSkusList(skuList).setType(BillingClient.SkuType.INAPP).build();
+                                billingClient.querySkuDetailsAsync(skuDetailsParams,
+                                        new SkuDetailsResponseListener() {
+                                            @Override
+                                            public void onSkuDetailsResponse(int responseCode,
+                                                                             List<SkuDetails> skuDetailsList) {
+
+                                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                                        .setSkuDetails(skuDetailsList.get(0))
+                                                        .build();
+                                                int billingResponseCode = billingClient.launchBillingFlow(activity,flowParams);
+                                                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                                                    // do something you want
+
+                                                }
+                                            }
+                                        });
+
+                            }
+                        }
+
+                        @Override
+                        public void onBillingServiceDisconnected() {
+                            // Try to restart the connection on the next request to
+                            // Google Play by calling the startConnection() method.
+                        }
+                    });
+
+            /*        if (responseCode == 0){
+
                         //Do something after 100ms
                         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             priceBtn.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rect_orange) );
@@ -182,7 +253,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         } else {
                             priceBtn.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_orange));
                         }
-                    }
+                    }*/
                 }
 
                /* AlertDialog.Builder alertbox = new AlertDialog.Builder(v.getRootView().getContext());
@@ -281,6 +352,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         lastPosition = groupPosition;
         return convertView;
     }
+
+
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
