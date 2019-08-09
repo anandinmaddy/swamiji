@@ -28,6 +28,7 @@ public class Constant {
     public static boolean isFirstTime = false;
     public static ArrayList<ItemSong> wholeMediaList = new ArrayList<>();
     public static int downloadCount = 0;
+    public static boolean refreshed = false;
 
     private static String SERVER_URL = "";
 

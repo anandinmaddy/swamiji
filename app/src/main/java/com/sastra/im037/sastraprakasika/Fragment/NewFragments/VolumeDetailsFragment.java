@@ -214,7 +214,7 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
 
                             VolumeDetailsModel.FileDetailsModel subCategoryModel = new VolumeDetailsModel.FileDetailsModel(
                                     response.optJSONObject("data").optJSONArray("datacontent").optJSONObject(i).optJSONArray("track").optJSONObject(j).optString("title"),
-                                        response.optJSONObject("data").optJSONArray("datacontent").optJSONObject(i).optJSONArray("track").optJSONObject(j).optString("classname"),
+                                    response.optJSONObject("data").optJSONArray("datacontent").optJSONObject(i).optJSONArray("track").optJSONObject(j).optString("classname"),
                                     response.optJSONObject("data").optJSONArray("datacontent").optJSONObject(i).optJSONArray("track").optJSONObject(j).optString("time"));
 
                             subCatergory.add(subCategoryModel);

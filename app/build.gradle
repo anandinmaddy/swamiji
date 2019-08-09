@@ -9,9 +9,10 @@ android {
         applicationId "com.sastra.im037.sastraprakasika"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 35
-        versionName "3.4"
+        versionCode 41
+        versionName "4.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {

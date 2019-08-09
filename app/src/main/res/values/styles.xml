@@ -127,8 +127,7 @@
     </style>
 
     <style name="customTab" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:textSize">13sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="YourTheme" parent="Theme.AppCompat.NoActionBar">

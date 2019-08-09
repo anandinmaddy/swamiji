@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textStyle="bold"
+
                 android:text="Introduction to Vedanta"
                 android:textColor="@color/dark_grey"
                 android:textSize="@dimen/_12sdp" />
@@ -73,7 +73,8 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_25sdp"
             android:layout_weight="0.8"
-            android:text="Rs. 330"
+            android:text=""
+            android:visibility="invisible"
             android:background="@drawable/rect_orange" />
 
         <ImageView
@@ -81,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:src="@drawable/down" />
+            android:src="@drawable/downblack" />
 
     </LinearLayout>
 

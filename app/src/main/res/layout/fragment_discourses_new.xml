@@ -27,7 +27,7 @@ android:id="@+id/homeView">
         android:layout_marginLeft="@dimen/_20sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:layout_gravity="center"
-        android:textStyle="bold"
+
         android:text="No Internet connetion Please check your \n          connection and try again "/>
 
     <TextView
@@ -37,7 +37,7 @@ android:id="@+id/homeView">
         android:padding="@dimen/_10sdp"
         android:id="@+id/offlinePageLink"
         android:textColor="@color/orange"
-        android:textStyle="bold"
+
         android:text="Try Again "/>
 
     <TextView
@@ -47,7 +47,7 @@ android:id="@+id/homeView">
         android:padding="@dimen/_10sdp"
         android:id="@+id/offlineLectureLink"
         android:textColor="@color/orange"
-        android:textStyle="bold"
+
         android:clickable="true"
         android:text="Offline lectures "/>
 </LinearLayout>
@@ -91,24 +91,29 @@ android:id="@+id/homeView">
         android:background="@color/white"
         android:orientation="vertical">
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="23dp"
             android:layout_marginTop="@dimen/_5sdp"
             android:orientation="horizontal">
+
+
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:orientation="vertical"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp">
 
                 <ImageView
                     android:id="@+id/image1"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:background="@drawable/rounded_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/app_launcher"
                     />
 
@@ -132,7 +137,7 @@ android:id="@+id/homeView">
                     android:textSize="@dimen/_15sdp"
                     android:maxWidth="@dimen/_140sdp"
                     android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                   />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,7 +145,6 @@ android:id="@+id/homeView">
                     android:id="@+id/knowMoreTxt"
                     android:layout_below="@id/aboutTxt"
                     android:text="Know More"
-                    android:textStyle="bold"
                     android:textColor="@color/orange"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="5dp"
@@ -163,7 +167,7 @@ android:id="@+id/homeView">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginLeft="20dp"
             android:gravity="left"
             android:layout_marginTop="@dimen/_5sdp"
             android:orientation="vertical">

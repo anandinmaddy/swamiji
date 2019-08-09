@@ -75,7 +75,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     LinearLayout layout_desc_below;
     LinearLayout offlinePageView;
     private FrameLayout frameLayout;
-
+    TextView downloadState;
     static LinearLayout st_linearLayoutPlayingSong;
     //    ListView mediaListView;
     //ProgressBar progressBar;
@@ -91,6 +91,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     // add new
     ArrayList<MediaItem> mediaItems = new ArrayList<>();
     public static final String TAG = LecturesFragment_Audioplay.class.getSimpleName();
+    ItemSongDatabase dbSong = null;
 
     //ProgressDialog progressDialog;
 
@@ -108,6 +109,15 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
 //    String song_artist[] = {"Class1","Class2","Class3","Class4"};
 //    String song_dur[] = {"56.04","55.05","57.08","58.37"};
 
+
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        context = getContext();
+
+    }
 
 
     @Nullable
@@ -274,6 +284,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         btn_Previous = (Button) view.findViewById(R.id.btnPrevious_btn);
         layout_desc_below = (LinearLayout) view.findViewById(R.id.layoutdesc);
         noSongsFound = (TextView)view.findViewById(R.id.nosongs);
+        downloadState = (TextView) view.findViewById(R.id.downloadState);
 
     }
 
@@ -314,18 +325,10 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
                     @Override
                     public void run() {
                         Constant.arrayListOfflineSongs.clear();
-                        ItemSongDatabase db = null;
 
                         System.out.println("library respon:::: " + response);
                         if (response.optString("resultcode").equalsIgnoreCase("200")) {
 
-                            try{
-                                db = Room.databaseBuilder(getActivity(),
-                                        ItemSongDatabase.class, "ItemSong").allowMainThreadQueries().build();
-                                db.clearAllTables();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
 
                             try {
 
@@ -379,7 +382,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
 
                                         try{
 
-                                            db.userDao().insertAll(itemSong);
+                                          //  db.userDao().insertAll(itemSong);
                                         }catch (Exception e){
                                             e.printStackTrace();
                                         }
@@ -420,7 +423,14 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
             public void onError(String message, String title) {
                 System.out.println("library error:::: " + message);
                 // progressDialog.hide();
-            }
+            }  /*try{
+                                dbSong = Room.databaseBuilder(getActivity(),
+                                        ItemSongDatabase.class, "ItemSong").allowMainThreadQueries().build();
+                                dbSong.clearAllTables();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }*/
+
         });
 
     }
@@ -464,6 +474,13 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         ArrayList<ItemSong> onlyOffline = new ArrayList<>();
         Constant.arrayListOfflineSongs.clear();
         List<ItemSong> itemSongs = db.itemSongDao().getAll();
+        try{
+            dbSong = Room.databaseBuilder(getActivity(),
+                    ItemSongDatabase.class, "ItemSong").allowMainThreadQueries().build();
+            dbSong.clearAllTables();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         List<ListOfTopicsDetailed> listOfTopicsDetaileds = Constant.arrayOfflineTopiclineSongs;
 
@@ -474,13 +491,28 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
             if ((offlineSong.getDownloads() != null && !offlineSong.getDownloads().equals("")) && (offlineSong.getUserRating().equalsIgnoreCase("") || offlineSong.getUserRating().equalsIgnoreCase("false"))){
                 Constant.arrayListOfflineSongs.add(offlineSong);
             }
+          /*  String isOfflinevideo = readFileNames(itemSongs.get(i).getTitle());
+            if (isOfflinevideo != null && isOfflinevideo != ""){
+                itemSongs.get(i).setDownloads(isOfflinevideo);
+            }else {
+                itemSongs.get(i).setDownloads("");
+            }
+            try{
+                dbSong.userDao().insertAll(itemSongs.get(i));
+            }catch (Exception e){
+                e.printStackTrace();
+            }*/
         }
+
+
+
 
         if (listOfTopicsDetaileds.size() > 0){
             for (ListOfTopicsDetailed listOfTopicsDetailed : listOfTopicsDetaileds){
                 for (ItemSong itemSong : itemSongs){
                     if (listOfTopicsDetailed.getDownloads() != null && !listOfTopicsDetailed.getDownloads().equals("") && listOfTopicsDetailed.getTrack_id().equals(itemSong.getTrackId())){
                         Constant.arrayListOfflineSongs.add(itemSong);
+
                     }
                 }
             }
@@ -495,15 +527,12 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         downloads_audio_list_adapter = new Downloads_audio_list_adapter(Constant.arrayListOfflineSongs, getActivity(),this);
         listView_song.setAdapter(downloads_audio_list_adapter);
         listView_song.smoothScrollToPosition(Constant.downloadPosition);
-
-
     }
 
 
     @Override
     public void onProcessFilter(String filename) {
         db.itemSongDao().update("",filename);
-
         MyLibraryFragment fragment2 = new MyLibraryFragment();
         Bundle bundle = new Bundle();
         bundle.putString("from","download");
@@ -516,6 +545,46 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setListItems();
+        if (Constant.downloadCount > 0){
+            if (downloadState != null && listView_song!= null) {
+             //   listView_song.setVisibility(View.GONE);
+                downloadState.setVisibility(View.VISIBLE);
+            }
+        }else {
+            if (downloadState != null && listView_song!= null) {
+                downloadState.setVisibility(View.GONE);
+           //     listView_song.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Constant.currentTab = 2;
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (Constant.downloadCount > 0){
+                if (downloadState != null && listView_song!= null) {
+                  //  listView_song.setVisibility(View.GONE);
+                    downloadState.setVisibility(View.VISIBLE);
+                }
+            }else {
+                if (downloadState != null && listView_song!= null) {
+                    downloadState.setVisibility(View.GONE);
+                  //  listView_song.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
 }
 

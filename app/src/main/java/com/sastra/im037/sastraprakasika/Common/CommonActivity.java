@@ -136,7 +136,7 @@ public class CommonActivity extends AppCompatActivity   {
     Selected select;
     private MediaPlayer mediaPlayer;
     private int mediaFileLengthInMilliseconds; // this value contains the song duration in milliseconds. Look at getDuration() method in MediaPlayer class
-
+    private TextView myLibrary_txt,discourses_txt,search_txt,account_txt;
     private final Handler handler = new Handler();
     String url = "https://imaginetventures.name/wp-content/uploads/2018/07/01-Purushartha.mp3";
 
@@ -154,7 +154,7 @@ public class CommonActivity extends AppCompatActivity   {
     ImageView iv_music_bg, iv_min_previous, iv_min_play, iv_min_next, iv_music_shuffle,
             iv_music_downloads, iv_music_previous, iv_music_next, iv_music_play,iv_music_addplaylist,imageView_heart,search_img;
 
-    RelativeLayout rl_music_loading;
+    RelativeLayout rl_music_loading,rl_music_min_loading;
     public ViewPager viewpager;
     BottomSheetDialog dialog_desc;
     private Handler seekHandler = new Handler();
@@ -190,6 +190,13 @@ public class CommonActivity extends AppCompatActivity   {
         rl_min_header = findViewById(R.id.rl_min_header);
         ll_max_header = findViewById(R.id.ll_max_header);
         rl_music_loading = findViewById(R.id.rl_music_loading);
+        rl_music_min_loading = findViewById(R.id.rl_music_min_loading);
+
+        myLibrary_txt = findViewById(R.id.myLibrary_txt);
+        discourses_txt = findViewById(R.id.discourses_txt);
+        search_txt = findViewById(R.id.search_txt);
+        account_txt = findViewById(R.id.account_txt);
+
         ratingBar = findViewById(R.id.rb_music);
         seekBar_music = findViewById(R.id.seekbar_music);
         seekbar_min = findViewById(R.id.seekbar_min);
@@ -397,6 +404,7 @@ public class CommonActivity extends AppCompatActivity   {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tv_current_time.setText(methods.milliSecondsToTimer(methods.getSeekFromPercentage(progress, methods.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration()))));
             }
 
             @Override
@@ -501,6 +509,11 @@ public class CommonActivity extends AppCompatActivity   {
                     searchImg.setImageResource(R.drawable.search_grey);
                     myAccountImg.setImageResource(R.drawable.account_grey);
 
+                    myLibrary_txt.setTextColor(getResources().getColor(R.color.orange));
+                    discourses_txt.setTextColor(getResources().getColor(R.color.black));
+                    search_txt.setTextColor(getResources().getColor(R.color.black));
+                    account_txt.setTextColor(getResources().getColor(R.color.black));
+
                     MyLibraryFragment myLibraryFragment = new MyLibraryFragment();
                     startNewFragment(myLibraryFragment,"library");
                 }
@@ -524,6 +537,10 @@ public class CommonActivity extends AppCompatActivity   {
                     discoursesImg.setImageResource(R.drawable.discourse_orange);
                     searchImg.setImageResource(R.drawable.search_grey);
                     myAccountImg.setImageResource(R.drawable.account_grey);
+                    myLibrary_txt.setTextColor(getResources().getColor(R.color.black));
+                    discourses_txt.setTextColor(getResources().getColor(R.color.orange));
+                    search_txt.setTextColor(getResources().getColor(R.color.black));
+                    account_txt.setTextColor(getResources().getColor(R.color.black));
                     DashBoardNewFragment dashBoardNewFragment = new DashBoardNewFragment();
                     //  volumePageFragment.setArguments(profileData);
                     startNewFragment(dashBoardNewFragment, "home");
@@ -545,7 +562,10 @@ public class CommonActivity extends AppCompatActivity   {
                     discoursesImg.setImageResource(R.drawable.discourse_grey);
                     searchImg.setImageResource(R.drawable.search_orange);
                     myAccountImg.setImageResource(R.drawable.account_grey);
-
+                    myLibrary_txt.setTextColor(getResources().getColor(R.color.black));
+                    discourses_txt.setTextColor(getResources().getColor(R.color.black));
+                    search_txt.setTextColor(getResources().getColor(R.color.orange));
+                    account_txt.setTextColor(getResources().getColor(R.color.black));
                     SearchPageFragment searchPageFragment = new SearchPageFragment();
                     //  volumePageFragment.setArguments(profileData);
                     startNewFragment(searchPageFragment, "search");
@@ -567,7 +587,10 @@ public class CommonActivity extends AppCompatActivity   {
                     discoursesImg.setImageResource(R.drawable.discourse_grey);
                     searchImg.setImageResource(R.drawable.search_grey);
                     myAccountImg.setImageResource(R.drawable.account_orange);
-
+                    myLibrary_txt.setTextColor(getResources().getColor(R.color.black));
+                    discourses_txt.setTextColor(getResources().getColor(R.color.black));
+                    search_txt.setTextColor(getResources().getColor(R.color.black));
+                    account_txt.setTextColor(getResources().getColor(R.color.orange));
                     MyAccountFragment myAccountActivityFragment = new MyAccountFragment();
                     //  volumePageFragment.setArguments(profileData);
                     startNewFragment(myAccountActivityFragment, "account");
@@ -859,6 +882,7 @@ public class CommonActivity extends AppCompatActivity   {
                 intent.setAction(PlayerService.ACTION_TOGGLE);
                 startService(intent);
             } else {
+
                 if (!Constant.isOnline || methods.isNetworkAvailable()) {
                     intent.setAction(PlayerService.ACTION_PLAY);
                     startService(intent);
@@ -939,6 +963,7 @@ public class CommonActivity extends AppCompatActivity   {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSongChange(ItemSong itemSong) {
+        seekBar_music.setProgress(0);
         changeText(itemSong, "home");
         Constant.context = CommonActivity.this;
         changeImageAnimation(PlayerService.getInstance().getIsPlayling());
@@ -949,6 +974,7 @@ public class CommonActivity extends AppCompatActivity   {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSongChangeNew(ListOfTopicsDetailed itemSong) {
+        seekBar_music.setProgress(0);
         changeTextList(itemSong, "home");
         Constant.context = CommonActivity.this;
         changeImageAnimation(PlayerService.getInstance().getIsPlayling());
@@ -1523,10 +1549,14 @@ public class CommonActivity extends AppCompatActivity   {
         sliding_layout.setLayoutParams(params);
         if (isBuffer) {
             rl_music_loading.setVisibility(View.VISIBLE);
+            rl_music_min_loading.setVisibility(View.VISIBLE);
             iv_music_play.setVisibility(View.INVISIBLE);
+            iv_min_play.setVisibility(View.INVISIBLE);
         } else {
             rl_music_loading.setVisibility(View.INVISIBLE);
+            rl_music_min_loading.setVisibility(View.INVISIBLE);
             iv_music_play.setVisibility(View.VISIBLE);
+            iv_min_play.setVisibility(View.VISIBLE);
             changePlayPauseIcon(!isBuffer);
             //seekUpdation();
         }

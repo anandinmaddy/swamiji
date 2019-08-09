@@ -122,8 +122,14 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
 
             Constant.playListSongsList.removeAll(Constant.removedSOngsList);
 
-            adapter = new CreatePlaylistAdapter(Constant.playListSongsList, getActivity());
-            lectureList.setAdapter(adapter);
+            if (Constant.playListSongsList.size() > 0){
+                search_img.setVisibility(View.VISIBLE);
+                adapter = new CreatePlaylistAdapter(Constant.playListSongsList, getActivity());
+                lectureList.setAdapter(adapter);
+            }else {
+                search_img.setVisibility(View.GONE);
+            }
+
           /*  adapter = new CreatePlaylistAdapter(Constant.playListSongsList, getActivity());
             lectureList.setAdapter(adapter);*/
         }else {
@@ -254,7 +260,9 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
             @Override
             public void afterTextChanged(Editable editable) {
                 String text = searchBar.getText().toString().toLowerCase(Locale.getDefault());
-                adapter.filter(text);
+                if (adapter != null && text != null && !text.isEmpty()){
+                    adapter.filter(text);
+                }
             }
 
         });
@@ -305,15 +313,17 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
 
             @Override
             public void onResponse(JSONObject response) throws JSONException {
-                shimmerFrameLayout.setVisibility(View.GONE);
                 Log.e("responsemylectures",""+response);
                 Constant.trackList.clear();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     JSONArray contentArray = response.optJSONArray("data");
-                    for (int i = 0; i < contentArray.length(); i++) {
-                        JSONObject jsonObject = contentArray.optJSONObject(i);
-                        Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+                    if (contentArray!= null && contentArray.length() > 0){
+                        for (int i = 0; i < contentArray.length(); i++) {
+                            JSONObject jsonObject = contentArray.optJSONObject(i);
+                            Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+                        }
                     }
+
                 }
 
                 Bundle profileData = new Bundle();
@@ -346,25 +356,33 @@ public class MyLectureFragment extends Fragment implements NetworkStateReceiverL
                 Log.e("jsonArrayMylecture",""+jsonArray);
             }
         }
+        if (jsonArray.length() > 0){
 
-        new WebServices(getActivity().getApplicationContext(), TAG).addtoPlayLists(Session.getInstance(getContext(), TAG).getUserId(),playerId,jsonArray , new VolleyResponseListerner() {
+            new WebServices(getActivity().getApplicationContext(), TAG).addtoPlayLists(Session.getInstance(getContext(), TAG).getUserId(),playerId,jsonArray , new VolleyResponseListerner() {
 
-            @Override
-            public void onResponse(JSONObject response) throws JSONException {
-                if (response.optString("resultcode").equalsIgnoreCase("200")) {
-                    Log.d("ANDRO_ASYNC", "Lenght of file: " );
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    search_img.setVisibility(View.GONE);
-                    callWebservicenew();
+                @Override
+                public void onResponse(JSONObject response) throws JSONException {
+                    if (response.optString("resultcode").equalsIgnoreCase("200")) {
+                        shimmerFrameLayout.setVisibility(View.VISIBLE);
+                        Log.d("ANDRO_ASYNC", "Lenght of file: " );
+                     //   shimmerFrameLayout.setVisibility(View.GONE);
+                        search_img.setVisibility(View.GONE);
+                        callWebservicenew();
+                    }
                 }
-            }
 
-            @Override
-            public void onError(String message, String title) {
-                shimmerFrameLayout.setVisibility(View.GONE);
-                Log.d("ANDRO_ASYNC", "Lenght of file: 2");
-            }
-        });
+                @Override
+                public void onError(String message, String title) {
+                    shimmerFrameLayout.setVisibility(View.GONE);
+                    Log.d("ANDRO_ASYNC", "Lenght of file: 2");
+                }
+            });
+        }else {
+            shimmerFrameLayout.setVisibility(View.GONE);
+            callWebservicenew();
+
+        }
+
     }
 
     private void callWebservice() {

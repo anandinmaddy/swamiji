@@ -43,7 +43,6 @@
             android:minHeight="@dimen/_20sdp"
             android:textSize="@dimen/_12sdp"
             android:maxWidth="@dimen/_140sdp"
-            android:textStyle="bold"
             android:text="Introduce to vedanta"
             android:textColor="@color/black"/>
 

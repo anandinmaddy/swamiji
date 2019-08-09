@@ -63,7 +63,7 @@
                     android:layout_weight="2.4"
                     android:text="Sermons and Chantings"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
 
                 <!--<ImageView-->

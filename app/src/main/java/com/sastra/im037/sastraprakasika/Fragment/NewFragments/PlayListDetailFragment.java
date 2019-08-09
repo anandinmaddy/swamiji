@@ -59,6 +59,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
     ArrayList class_type = new ArrayList<>(Arrays.asList("Class-1","Class-2","Class-3"));
     ArrayList dur = new ArrayList<>(Arrays.asList("0:56:04","0:58:06","0:55:05"));
     HashSet removeDup = new HashSet();
+    ImageView searcIcon;
 
     public PlayListDetailFragment() {
         // Required empty public constplayListRecyclerView_nextructor
@@ -80,7 +81,10 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         pageAction = (TextView) getActivity().findViewById(R.id.pageAction);
         offlineLink = view.findViewById(R.id.offlineLectureLink);
         offlineViewer = view.findViewById(R.id.offlineViewer);
+        searcIcon = getActivity().findViewById(R.id.search_img);
 
+
+        searcIcon.setVisibility(View.GONE);
         if (getArguments()!= null && getArguments().getString("data") != null){
             txtview.setText(getArguments().getString("data"));
             player_id =getArguments().getString("player_id");
@@ -127,7 +131,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         });
 
 
-       // shimmerFrameLayout.startShimmer();
+        // shimmerFrameLayout.startShimmer();
 
         playlistTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +148,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         });
 
 
-      /// callWebService();
+       //  callWebService();
 
         pageAction.setVisibility(View.VISIBLE);
         pageAction.setText("Edit");
@@ -169,7 +173,7 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
 
         titleView = getActivity().findViewById(R.id.title);
         back = getActivity().findViewById(R.id.back);
-       // back = getActivity().findViewById(R.id.back);
+        // back = getActivity().findViewById(R.id.back);
 
         back.setVisibility(View.VISIBLE);
         titleView.setText("Playlist");
@@ -214,14 +218,13 @@ public class PlayListDetailFragment extends Fragment implements NetworkStateRece
         recyclerView.setLayoutManager(linearLayoutManager);
         Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongSync,getContext());
         recyclerView.setAdapter(adapter_playlist_next);
-        adapter_playlist_next.notifyDataSetChanged();
+     //   adapter_playlist_next.notifyDataSetChanged();
 
      /*   Adapter_Playlist_Next adapter_playlist_next = new Adapter_Playlist_Next(Constant.playListSongSync,getContext());
         recyclerView.setAdapter(adapter_playlist_next);
         adapter_playlist_next.notifyDataSetChanged();
 */
         // set a LinearLayoutManager with default vertical orientation
-
         return view;
     }
 

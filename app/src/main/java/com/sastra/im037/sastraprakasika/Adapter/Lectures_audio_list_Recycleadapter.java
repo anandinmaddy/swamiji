@@ -1,5 +1,7 @@
 package com.sastra.im037.sastraprakasika.Adapter;
 
+
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,14 +10,19 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,7 +30,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sastra.im037.sastraprakasika.Fragment.NewFragments.VolumeDetailsFragment;
 import com.sastra.im037.sastraprakasika.Model.DiscousesAppDatabase;
+import com.sastra.im037.sastraprakasika.Model.SearchModel;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.PlayerService;
@@ -34,20 +43,15 @@ import com.thin.downloadmanager.DownloadRequest;
 import com.thin.downloadmanager.DownloadStatusListener;
 import com.thin.downloadmanager.ThinDownloadManager;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Lectures_audio_list_adapter extends BaseAdapter {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    //    ArrayList<ListOfLecturesListDetails> lect_det;
-    // List<ItemSong> mediaItems;
+public class Lectures_audio_list_Recycleadapter extends RecyclerView.Adapter<Lectures_audio_list_Recycleadapter.ViewHolder> {
+
     ArrayList<ItemSong> mediaItems;
 
     Context context;
@@ -55,7 +59,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
     boolean tempallot= false;
     HashMap<String,Integer> hashMap= new HashMap<>();
     boolean isDownloading = false;
-    private IProcessFilter mCallback;
+    private Lectures_audio_list_adapter.IProcessFilter mCallback;
     int lastposition = 0;
     AsyncTask asyncTask;
     long total = 0;
@@ -65,107 +69,33 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
     private ThinDownloadManager downloadManager;
 
 
-    public interface IProcessFilter {
-        void onProcessFilter(boolean b, ArrayList<ItemSong> mediaItems);
-    }
 
 
-    public Lectures_audio_list_adapter(ArrayList<ItemSong> media_det, Context context,IProcessFilter mCallback) {
+    public Lectures_audio_list_Recycleadapter(ArrayList<ItemSong> media_det, Context context, Lectures_audio_list_adapter.IProcessFilter mCallback) {
         this.mediaItems = media_det;
         this.context = context;
         this.mCallback = mCallback;
         Constant.wholeMediaList.addAll(media_det);
-        db = Room.databaseBuilder(context,
-                DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
+        if (context != null){
+            db = Room.databaseBuilder(context,
+                    DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
+        }
+
         try{
             downloadManager = new ThinDownloadManager(1);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-
-    }
-
-
-    public int getCount() {
-        return mediaItems.size();
-    }
-
-
-    @Override
-    public Object getItem(int i) {
-        return mediaItems.get(i);
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.lectures_audio_list_items, viewGroup, false));
     }
-
-
-    static class ViewHolderItem {
-        ImageView song_img_view;
-        TextView song_title_view;
-        TextView song_artist;
-        TextView song_dur;
-        ImageView playicon_img;
-        ImageView playlist_track;
-        ImageView downloadBtn;
-        RelativeLayout loadingDownload;
-        ImageView iv_music_pause_downloads;
-        //   ImageView progressInside;
-        //   MaterialProgressBar button_progress_2;
-        //     CircleProgressView circleProgressView;
-        ProgressBar circularProgressbar;
-        boolean isDownloadPaused = false;
-        boolean isDownloadProgress = false;
-        LinearLayout nowPlaying_layout,textNowPlaying,musicPlayLayout;
-        boolean downloadStatus = false;
-        RelativeLayout progressStateLayout;
-        boolean isDownloadHappening = false;
-
-
-
-    }
-
 
     @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
-        // inflate the layout for each list row
-        final ViewHolderItem viewHolder;
-
-
-        if (view == null) {
-            viewHolder = new ViewHolderItem();
-
-            view = LayoutInflater.from(context).
-                    inflate(R.layout.lectures_audio_list_items, viewGroup, false);
-
-            viewHolder.song_img_view = (ImageView)view.findViewById(R.id.ablum_image_img);
-            viewHolder.song_title_view = (TextView)view.findViewById(R.id.album_title_txt);
-            viewHolder.song_artist = (TextView)view.findViewById(R.id.song_type_txt);
-            viewHolder.song_dur = (TextView)view.findViewById(R.id.duration_txt);
-            viewHolder.playicon_img = (ImageView)view.findViewById(R.id.play_icon);
-            viewHolder.playlist_track = (ImageView)view.findViewById(R.id.plating_track_icon);
-            viewHolder.downloadBtn = (ImageView) view.findViewById(R.id.iv_music_downloads);
-            viewHolder.musicPlayLayout = (LinearLayout) view.findViewById(R.id.musicPlayLayout);
-            // viewHolder.circleProgressView = (CircleProgressView) view.findViewById(R.id.circleView);
-            //   viewHolder.button_progress_2 = (MaterialProgressBar) view.findViewById(R.id.downloadProgressBar);
-            viewHolder.loadingDownload = (RelativeLayout) view.findViewById(R.id.rl_music_loading);
-            viewHolder.circularProgressbar = (ProgressBar) view.findViewById(R.id.progressBar);
-            viewHolder.iv_music_pause_downloads = (ImageView) view.findViewById(R.id.iv_music_pause_downloads);
-            viewHolder.textNowPlaying = (LinearLayout) view.findViewById(R.id.textNowPlaying);
-            viewHolder.nowPlaying_layout = (LinearLayout) view.findViewById(R.id.nowPlaying_layout);
-            //      viewHolder.progressInside = (ImageView) view.findViewById(R.id.progressInside);
-            viewHolder.progressStateLayout = (RelativeLayout) view.findViewById(R.id.progressStateLayout);
-            viewHolder.isDownloadProgress = false;
-            viewHolder.isDownloadPaused = false;
-            viewHolder.isDownloadHappening = false;
-            view.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolderItem) view.getTag();
-            //  notifyDataSetChanged();
-        }
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
 
         viewHolder.downloadBtn.setTag(i);
         //     viewHolder.progressInside.setTag(i);
@@ -195,10 +125,10 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         }
 
 
-        if (Constant.downloadCount == 0 && isDownloadUpdated){
+        if (Constant.downloadCount == 0 && Constant.downloadCompleted){
             mCallback.onProcessFilter(true,mediaItems);
             isDownloadUpdated = false;
-            notifyDataSetChanged();
+            Constant.downloadCompleted = false;
         }
        /* if (isDownloadUpdated){
             isDownloadUpdated = false;
@@ -242,7 +172,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                 /*    Picasso.get()
                             .load(R.drawable.pause_orange_icon)
                             .into(viewHolder.progressInside);*/
-                    asyncTask = new DownloadFileAsync(viewHolder.circularProgressbar,viewHolder.downloadBtn,i,viewHolder.iv_music_pause_downloads,viewHolder.downloadStatus,viewHolder.isDownloadProgress,viewHolder.isDownloadHappening).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,mediaItems.get(i).getUrl(),mediaItems.get(i).getTrackId(),"false");
+               //     asyncTask = new Lectures_audio_list_Recycleadapter.DownloadFileAsync(viewHolder.circularProgressbar,viewHolder.downloadBtn,i,viewHolder.iv_music_pause_downloads,viewHolder.downloadStatus,viewHolder.isDownloadProgress,viewHolder.isDownloadHappening).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,mediaItems.get(i).getUrl(),mediaItems.get(i).getTrackId(),"false");
                     // viewHolder.progressInside.setVisibility(View.GONE);
                     viewHolder.downloadBtn.setVisibility(View.GONE);
                     viewHolder.iv_music_pause_downloads.setVisibility(View.VISIBLE);
@@ -303,30 +233,6 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         });
 
 
-    /*    viewHolder.iv_music_pause_downloads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isDownloadPaused){
-                    asyncTask = new DownloadFileAsync(viewHolder.circularProgressbar,viewHolder.downloadBtn,i,viewHolder.iv_music_pause_downloads).execute(mediaItems.get(i).getUrl(),mediaItems.get(i).getTitle(),String.valueOf(i));
-                    Picasso.get()
-                            .load(R.drawable.pause2_blackicon_new)
-                            .into(viewHolder.iv_music_pause_downloads);
-                    isDownloadPaused = false;
-                }else {
-                    if (asyncTask != null){
-                        asyncTask.cancel(true);
-
-                        Picasso.get()
-                                .load(R.drawable.play2_blackicon_new)
-                                .into(viewHolder.iv_music_pause_downloads);
-                        isDownloadPaused = true;
-                    }
-                }
-
-            }
-        });*/
-
-
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,7 +262,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                                             viewHolder.iv_music_pause_downloads.setVisibility(View.GONE);
                                             Constant.downloadCount = Constant.downloadCount -1;
                                             isDownloadUpdated = true;
-                                            Constant.downloadCompleted = true;
+                                            //Constant.downloadCompleted = true;
                                             if (Constant.downloadCount == 0 && isDownloadUpdated) {
                                                 Constant.downloadCompleted = true;
                                             }
@@ -422,7 +328,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                             viewHolder.iv_music_pause_downloads.setVisibility(View.GONE);
                             Constant.downloadCount = Constant.downloadCount -1;
                             isDownloadUpdated = true;
-                            Constant.downloadCompleted = true;
+                        //    Constant.downloadCompleted = true;
                             db.itemSongDao().updateProgress(0,mediaItems.get(i).getTitle());
 
                             if (Constant.downloadCount == 0 && isDownloadUpdated) {
@@ -442,16 +348,14 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
 
                         }
 
+
                         @Override
                         public void onProgress(int id, long totalBytes, long downloadedBytes, int progress) {
                             viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
                             viewHolder.iv_music_pause_downloads.setVisibility(View.VISIBLE);
                             viewHolder.downloadBtn.setVisibility(View.GONE);
                             viewHolder.circularProgressbar.setProgress(progress);
-
                             db.itemSongDao().updateProgress(progress,mediaItems.get(i).getTitle());
-                            Log.d("progress",String.valueOf(progress));
-                            Log.d("title",mediaItems.get(i).getTitle());
 
 
                         }
@@ -507,9 +411,6 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         // viewHolder.song_img_view.setImageResource(R.drawable.tamil);
 
 
-
-
-        return view;
     }
 
     private File setFileName(String title) {
@@ -519,34 +420,74 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
 
         File file = new File(folder, title+".swami");
 
-
         return file;
     }
 
-    public static boolean readFileNames(String songTitle) {
-        ArrayList<String> downloadSongs = new ArrayList<>();
-        try {
-            File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
-            String path = Environment.getExternalStorageDirectory().toString() + "/Swamiji";
-            File directory = new File(path);
-            File[] files = directory.listFiles();
-            if (files != null) {
-                for (int i = 0; i < files.length; i++) {
-                    String result = files[i].getName().replace(".swami","");
-                    downloadSongs.add(result);
-                }
-            }
-            if (downloadSongs != null && downloadSongs.size() > 0){
-                if (downloadSongs.contains(songTitle)){
-                    return true;
-                }else {
-                    return false;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public int getItemCount() {
+        return mediaItems.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+        @BindView(R.id.ablum_image_img)
+        ImageView song_img_view;
+
+        @BindView(R.id.album_title_txt)
+        TextView song_title_view;
+
+        @BindView(R.id.song_type_txt)
+        TextView song_artist;
+
+        @BindView(R.id.duration_txt)
+        TextView song_dur;
+
+        @BindView(R.id.play_icon)
+        ImageView playicon_img;
+
+        @BindView(R.id.plating_track_icon)
+        ImageView playlist_track;
+
+        @BindView(R.id.iv_music_downloads)
+        ImageView downloadBtn;
+
+        @BindView(R.id.progressStateLayout)
+        RelativeLayout loadingDownload;
+
+        @BindView(R.id.iv_music_pause_downloads)
+        ImageView iv_music_pause_downloads;
+        //   ImageView progressInside;
+        //   MaterialProgressBar button_progress_2;
+        //     CircleProgressView circleProgressView;
+        @BindView(R.id.progressBar)
+        ProgressBar circularProgressbar;
+
+        @BindView(R.id.nowPlaying_layout)
+        LinearLayout nowPlaying_layout;
+
+        @BindView(R.id.textNowPlaying)
+        LinearLayout textNowPlaying;
+
+        @BindView(R.id.musicPlayLayout)
+        LinearLayout musicPlayLayout;
+
+
+        boolean isDownloadPaused = false;
+        boolean isDownloadProgress = false;
+        boolean downloadStatus = false;
+        boolean isDownloadHappening = false;
+
+
+
+        //        @BindView(R.id.search_type)
+//       TextView searchType;
+//       @BindView(R.id.search_duration)
+//        TextView searchDuration;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
-        return false;
     }
 
     public static String readFilePath(String songTitle) {
@@ -585,223 +526,4 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
         return false;
     }
 
-    private void downloadMp3(String url, String title) {
-
-    }
-    @Override
-    public int getViewTypeCount() {
-
-        return getCount();
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-
-        return position;
-    }
-
-
-
-    class DownloadFileAsync extends AsyncTask<String, String, String> {
-        public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-        ProgressBar progressBar;
-        ImageView downloadbtn;
-        ImageView pauseBtn;
-        int progressVal;
-        boolean downloadstatus;
-        //  ImageView progressInside;
-        Long downloadedSize;
-        boolean isDownloadProgress;
-        HttpURLConnection connection;
-        boolean isDownloadHappening;
-        public DownloadFileAsync(ProgressBar circularProgressbar,ImageView downloadBtn,int progress, ImageView pauseBtn,boolean downloadStatus,boolean isDownloadProgress, boolean isDownloadHappening) {
-            this.progressBar = circularProgressbar;
-            this.downloadbtn = downloadBtn;
-            this.progressVal = progress;
-            this.pauseBtn = pauseBtn;
-            this.downloadstatus = downloadStatus;
-            //     this.progressInside = progressInside;
-            this.isDownloadProgress = isDownloadProgress;
-            this.isDownloadHappening = isDownloadHappening;
-
-        }
-
-
-        //  private ProgressDialog mProgressDialog;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // if (downloadbtn.getTag().equals(progressVal)){
-            //  progressBar.setVisibility(View.VISIBLE);
-
-            downloadstatus = true;
-            if (downloadbtn.getTag().equals(progressVal)){
-                isDownloadProgress = true;
-            }
-            downloadFile.add(progressVal);
-            //   }
-            //viewHolder.circularProgressbar.setVisibility(View.VISIBLE);
-            //  onCreateD ialog(DIALOG_DOWNLOAD_PROGRESS);
-        }
-
-
-
-        @Override
-        protected String doInBackground(String... aurl) {
-            int count;
-            long deneme = 0;
-            String title = aurl[1];
-
-            String status =db.itemSongDao().getRating(title);
-            if (!status.isEmpty() && status.equalsIgnoreCase("true")){
-                Constant.downloadCount = Constant.downloadCount -1 ;
-                db.itemSongDao().updateRat("false",title);
-                if (Constant.downloadCount == 0 && isDownloadUpdated) {
-                    Constant.downloadCompleted = true;
-                }
-
-                return "cancel";
-            }else {
-
-                try {
-
-
-                    URL url = new URL(aurl[0]);
-                    String check = aurl[2];
-                    int progBarCount = 0;
-                    if (check.equalsIgnoreCase("false")) {
-
-                        connection = (HttpURLConnection) url
-                                .openConnection();
-                        if (setFileName(title).exists()) {
-                            deneme = setFileName(title).length();
-                            connection.setAllowUserInteraction(true);
-                            connection.setRequestProperty("Range", "bytes=" + deneme + "-");
-                        } else {
-                            connection.setRequestProperty("Range", "bytes=" + deneme + "-");
-                        }
-
-                        connection.connect();
-
-                        String connectionField = connection.getHeaderField("content-range");
-
-                        if (connectionField != null) {
-                            String[] connectionRanges = connectionField.substring("bytes=".length()).split("-");
-                            deneme = Long.valueOf(connectionRanges[0]);
-                        }
-
-                        if (connectionField == null && connectionField.isEmpty() && setFileName(title).exists()) {
-                            setFileName(title).delete();
-                        }
-
-                        long lenghtOfFile = connection.getContentLength() + deneme;
-                        InputStream input = new BufferedInputStream(
-                                url.openStream(), 8192);
-                        OutputStream output = new FileOutputStream(setFileName(title));
-                        int lastcount = 0;
-                        total = deneme;
-                        byte data[] = new byte[4096];
-                        while ((count = input.read(data)) != -1) {
-                            total += count;
-                            progBarCount = (int) ((total * 100) / lenghtOfFile);
-                            publishProgress("" + progBarCount);
-                            output.write(data, 0, count);
-                        }
-
-                        output.flush();
-                        output.close();
-                        input.close();
-                        Toast.makeText(context, "Download completed", Toast.LENGTH_SHORT).show();
-                    } else {
-                        //no
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    //  mProgressDialog.dismiss();
-
-                }
-                return "done";
-            }
-        }
-
-        protected void onProgressUpdate(String... progress) {
-            isDownloading = true;
-            super.onProgressUpdate();
-            if (downloadbtn.getTag().equals(progressVal)) {
-                progressBar.setProgress(Integer.parseInt(progress[0]));
-
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-
-        }
-
-
-
-
-        @Override
-        protected void onPostExecute(String unused) {
-
-            Log.d("asas",unused);
-            Constant.downloadCount = Constant.downloadCount -1 ;
-            isDownloading = false;
-            downloadstatus = false;
-            /*if (downloadCount == 0){
-                mCallback.onProcessFilter(true);
-            }*/
-            //
-
-
-            if (downloadbtn.getTag().equals(progressVal)){
-                isDownloadProgress = false;
-
-            }
-
-            mediaItems.get(progressVal).setTotalRate("false");
-
-            //Constant.downloadCompleted = true;
-            isDownloadUpdated = true;
-            this.isDownloadHappening = true;
-
-            if (Constant.downloadCount == 0 && isDownloadUpdated) {
-                Constant.downloadCompleted = true;
-            }
-            try {
-                //downloadbtn.setVisibility(View.GONE);
-                //   progressInside.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
-                pauseBtn.setVisibility(View.GONE);
-                //    progressInside.setVisibility(View.GONE);
-                if (downloadFile!= null && downloadFile.size() > 0 && downloadFile.contains(progressVal)){
-                    downloadFile.remove(progressVal);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-            //   notifyDataSetChanged();
-            //   mProgressDialog.dismiss();
-        }
-
-
-        private File setFileName(String title) {
-            File folder = Environment.getExternalStoragePublicDirectory("Swamiji");
-            if (!folder.exists())
-                folder.mkdirs();
-
-            File file = new File(folder, title+".swami");
-
-
-            return file;
-        }
-
-
-
-    }
 }

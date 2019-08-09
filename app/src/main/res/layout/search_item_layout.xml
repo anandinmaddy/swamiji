@@ -61,7 +61,7 @@
             android:maxLines="1"
             android:text=""
             android:textColor="@color/black"
-            android:textStyle="bold" />
+              />
 
         <TextView
             android:id="@+id/search_item_artist"

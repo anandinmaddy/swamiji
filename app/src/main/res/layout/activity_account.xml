@@ -28,7 +28,7 @@
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_gravity="center"
-            android:textStyle="bold"
+             
             android:text="No Internet connetion Please check your \n          connection and try again "/>
 
         <TextView
@@ -38,7 +38,7 @@
             android:padding="@dimen/_10sdp"
             android:id="@+id/offlinePageLink"
             android:textColor="@color/orange"
-            android:textStyle="bold"
+             
             android:text="Try Again "/>
 
         <TextView
@@ -48,7 +48,7 @@
             android:padding="@dimen/_10sdp"
             android:id="@+id/offlineLectureLink"
             android:textColor="@color/orange"
-            android:textStyle="bold"
+             
             android:clickable="true"
             android:text="Offline lectures "/>
     </LinearLayout>
@@ -77,8 +77,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:padding="@dimen/_10sdp"
-                android:text="Profile"
-                android:textSize="@dimen/_15sdp" />
+                android:text="Profile" />
 
             <View
                 android:id="@+id/viewId"
@@ -111,7 +110,7 @@
                     android:layout_weight="0.5"
                     android:text="Name"
                     android:textColor="@color/light_grey"
-                    android:textSize="@dimen/_11sdp" />
+                   />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -126,9 +125,8 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1.5"
                         android:text="Sample"
-
                         android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/_11sdp" />
+                        />
 
                     <ImageView
                         android:id="@+id/name_edit"
@@ -164,7 +162,7 @@
                     android:layout_weight="0.5"
                     android:text="Email"
                     android:textColor="@color/light_grey"
-                    android:textSize="@dimen/_11sdp" />
+                   />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -180,7 +178,7 @@
                         android:layout_weight="1.5"
                         android:text="sample"
                         android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/_11sdp" />
+                       />
 
                     <ImageView
                         android:id="@+id/email_edit"
@@ -217,7 +215,7 @@
                     android:layout_weight="0.5"
                     android:text="Mobile"
                     android:textColor="@color/light_grey"
-                    android:textSize="@dimen/_11sdp" />
+                 />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -233,7 +231,7 @@
                         android:layout_weight="1.5"
                         android:text="12345"
                         android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/_11sdp" />
+                      />
 
                     <ImageView
                         android:id="@+id/mobile_edit"
@@ -243,6 +241,11 @@
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:background="@color/mild_grey" />
             </LinearLayout>
 
 
@@ -259,7 +262,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="@dimen/_5sdp">
+           >
 
             <TextView
                 android:id="@+id/Setting"
@@ -267,8 +270,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/_10sdp"
-                android:text="Settings"
-                android:textSize="@dimen/_15sdp" />
+                android:text="Settings" />
 
 
         </LinearLayout>
@@ -301,8 +303,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:text="Notification Settings"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textColor="@color/dark_grey" />
 
                     <ImageView
                         android:layout_width="30dp"
@@ -340,8 +341,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:text="Help and Support"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textColor="@color/dark_grey" />
 
                     <ImageView
 
@@ -385,8 +385,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:text="Privacy Policy"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textColor="@color/dark_grey" />
 
                     <ImageView
                         android:layout_width="30dp"
@@ -425,8 +424,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:text="Log out"
-                android:textColor="@color/dark_grey"
-                android:textSize="@dimen/_13sdp" />
+                android:textColor="@color/dark_grey" />
         </LinearLayout>
 
 

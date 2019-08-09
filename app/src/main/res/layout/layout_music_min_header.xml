@@ -63,7 +63,7 @@
                 android:text=""
                 android:textColor="@color/text_title"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                  />
 
 
         </LinearLayout>
@@ -88,6 +88,24 @@
         android:src="@drawable/play_icon_new"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_music_min_loading"
+        android:layout_width="30dp"
+        android:layout_toStartOf="@+id/iv_min_next"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminateTint="@color/white"
+            android:indeterminate="true" />
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/iv_min_next"

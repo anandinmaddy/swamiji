@@ -72,7 +72,7 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
 
         //holder.song_class_edit.setText((CharSequence) class_no.get(position));
         holder.song_dur_edit.setText(arrayListSong.get(position).getDuration());
-
+        holder.classNameTxt.setText(arrayListSong.get(position).getClassName());
         holder.add_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +81,10 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
                 Animation anim = AnimationUtils.loadAnimation(context,
                         android.R.anim.slide_out_right);
                 anim.setDuration(500);
+
                 holder.linearanimation.startAnimation(anim);
+                ItemSong itemSong = arrayListSong.get(position);
+                Constant.trackList.remove(Integer.valueOf(itemSong.getTrackId()));
 
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
@@ -146,6 +149,8 @@ public class Adapter_playlist_edit  extends RecyclerView.Adapter<Adapter_playlis
         ShimmerFrameLayout shimmerFrameLayout;
         @BindView(R.id.linearanimation)
         LinearLayout linearanimation;
+        @BindView(R.id.classNameTxt)
+        TextView classNameTxt;
         public Edit_view(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

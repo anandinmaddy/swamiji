@@ -29,7 +29,7 @@
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_gravity="center"
-            android:textStyle="bold"
+
             android:text="No Internet connetion Please check your \n          connection and try again "/>
 
         <TextView
@@ -39,7 +39,7 @@
             android:padding="@dimen/_10sdp"
             android:id="@+id/offlinePageLink"
             android:textColor="@color/orange"
-            android:textStyle="bold"
+
             android:text="Try Again "/>
 
         <TextView
@@ -49,7 +49,7 @@
             android:padding="@dimen/_10sdp"
             android:id="@+id/offlineLectureLink"
             android:textColor="@color/orange"
-            android:textStyle="bold"
+
             android:clickable="true"
             android:text="Offline lectures "/>
     </LinearLayout>

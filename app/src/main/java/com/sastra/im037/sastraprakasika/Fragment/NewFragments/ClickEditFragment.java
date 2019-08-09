@@ -58,7 +58,7 @@ public class ClickEditFragment extends Fragment implements NetworkStateReceiverL
     String titleTxt= "";
     String playerId= "";
     public static final String TAG = ClickEditFragment.class.getSimpleName();
-
+    ImageView searcIcon;
 
 
     public ClickEditFragment() {
@@ -84,12 +84,14 @@ public class ClickEditFragment extends Fragment implements NetworkStateReceiverL
         addlectu = (LinearLayout) view.findViewById(R.id.addlectu);
         offlineLink = view.findViewById(R.id.offlineLectureLink);
         offlineViewer = view.findViewById(R.id.offlineViewer);
+        searcIcon = getActivity().findViewById(R.id.search_img);
 
         if(getArguments() != null){
             titleTxt= getArguments().getString("data");
             img_title.setText(titleTxt);
             playerId = getArguments().getString("player_id");
         }
+        searcIcon.setVisibility(View.GONE);
         done_txt.setVisibility(View.VISIBLE);
         done_txt.setText("Done");
 
@@ -208,11 +210,14 @@ public class ClickEditFragment extends Fragment implements NetworkStateReceiverL
                 Constant.trackList.clear();
                 if (response.optString("resultcode").equalsIgnoreCase("200")) {
                     JSONArray contentArray = response.optJSONArray("data");
-                    for (int i = 0; i < contentArray.length(); i++) {
-                        JSONObject jsonObject = contentArray.optJSONObject(i);
-                        Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
+                    if (contentArray != null && contentArray.length() > 0){
+                        for (int i = 0; i < contentArray.length(); i++) {
+                            JSONObject jsonObject = contentArray.optJSONObject(i);
+                            Constant.trackList.add(Integer.parseInt(jsonObject.optString("track_id")));
 
+                        }
                     }
+
                     Bundle profileData = new Bundle();
                     profileData.putString("data",titleTxt);
                     profileData.putString("player_id",playerId);

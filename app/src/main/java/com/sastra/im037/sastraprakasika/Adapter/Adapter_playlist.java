@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +131,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
                         .setNegativeButton(android.R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
-            return false;
+                return false;
             }
 
 
@@ -138,17 +139,17 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
         holder.playListName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.shimmerFrameLayout.setVisibility(View.VISIBLE);
+                holder.shimmerFrameLayout.setVisibility(View.GONE);
 
                 holder.shimmerFrameLayout.startShimmer();
 
                 callWebservice(contentsList.get(position).getPlayer_id(),position,holder.shimmerFrameLayout);
 
 
-/*
+                /*
 
 
- */
+                 */
               /*  Intent intent = new Intent(context,Playlist_detailed_Activity.class);
                  //intent.putExtra("title",holder.title_img.setText((CharSequence) title_image.get(position)));
                 context.startActivity(intent);*/
@@ -156,7 +157,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
             }
         });
 
-        }
+    }
 
 
     private void deleteWebservice(String playerId) {
@@ -194,6 +195,7 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
 
             @Override
             public void onResponse(JSONObject response) throws JSONException {
+                Log.e("Adapter_playlist",""+response);
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
                 Constant.trackList.clear();
@@ -240,4 +242,3 @@ public class Adapter_playlist extends RecyclerView.Adapter<Adapter_playlist.Cust
 
 
 }
-

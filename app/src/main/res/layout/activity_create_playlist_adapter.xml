@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
     android:layout_marginTop="10dp"
-    android:layout_marginRight="5dp"
     android:background="@color/white"
     android:defaultFocusHighlightEnabled="true"
     android:orientation="vertical"
@@ -29,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="end"
         android:paddingLeft="@dimen/_10sdp"
         android:id="@+id/musicPlayLayout"
         android:weightSum="2">
@@ -175,17 +175,18 @@
             </LinearLayout>
 
         </LinearLayout>
+
         <CheckBox
             android:id="@+id/checkbox"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_20sdp"
             android:layout_width="20dp"
             android:layout_height="30dp"
-            android:scaleX="2.5"
-            android:scaleY="2.5"
-            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
             android:button="@drawable/add_grey"
-            />
+            android:gravity="center"
+            android:scaleX="2.5"
+            android:scaleY="2.5" />
     </LinearLayout>
 
 

@@ -16,14 +16,14 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:text="Downloaded Lectures"-->
         <!--android:textSize="18dp"-->
-        <!--android:textStyle="bold"/>-->
+        <!-- />-->
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         app:shimmer_duration="800"
         >
@@ -56,8 +56,17 @@
         android:text="Downloaded Lectures"
         android:textColor="@color/black"
         android:textSize="@dimen/_15sdp"
-        android:textStyle="bold" />
+          />
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/downloadState"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="Download in progress."/>
 
     <ListView
         android:layout_marginLeft="10dp"
@@ -79,7 +88,6 @@
         android:id="@+id/nosongs"
         android:visibility="gone"
         android:layout_marginTop="@dimen/_25sdp"
-        android:textStyle="bold"
         android:textSize="@dimen/_14sdp"
         android:text="No lectures found, please  add some..."/>
 
@@ -162,7 +170,7 @@
                                 android:text="@string/Introduction_to_Vedanta"
                                 android:textColor="@color/black"
                                 android:textSize="16dp"
-                                android:textStyle="bold" />
+                                  />
 
                             <TextView
                                 android:id="@+id/textSongTitle_txt"

@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,6 +51,7 @@ public class PlaylistsFragment extends Fragment implements NetworkStateReceiverL
     List<PlayList> playLists;
     TextView offlineLink;
     LinearLayout offlineViewer;
+    ImageView search_img;
     public static final String TAG = PlaylistsFragment.class.getSimpleName();
 
     ArrayList<ArrayList<ItemSong>> playList = new ArrayList<ArrayList<ItemSong>>();
@@ -68,7 +70,8 @@ public class PlaylistsFragment extends Fragment implements NetworkStateReceiverL
                 DiscousesAppDatabase.class, "DiscoursesModel").allowMainThreadQueries().build();
         offlineLink = view.findViewById(R.id.offlineLectureLink);
         offlineViewer = view.findViewById(R.id.offlineViewer);
-
+        search_img = getActivity().findViewById(R.id.search_img);
+        search_img.setVisibility(View.GONE);
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         shimmerFrameLayout.startShimmer();

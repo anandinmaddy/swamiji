@@ -32,7 +32,6 @@
                 android:minHeight="@dimen/_25sdp"
                 android:text="Allow Notifications"
                 android:textColor="@color/dark_grey"
-                android:textSize="@dimen/_15sdp"
                />
 
             <Switch
@@ -66,7 +65,6 @@
                 android:minHeight="@dimen/_25sdp"
                 android:text="Sound"
                 android:textColor="@color/dark_grey"
-                android:textSize="@dimen/_15sdp"
                  />
 
             <Switch
@@ -99,8 +97,7 @@
                 android:layout_centerVertical="true"
                 android:minHeight="@dimen/_25sdp"
                 android:text="Vibration"
-                android:textColor="@color/dark_grey"
-                android:textSize="@dimen/_15sdp" />
+                android:textColor="@color/dark_grey"/>
 
             <Switch
                 android:id="@+id/vibe_noti_switch"
@@ -122,11 +119,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/view_vibe"
-            android:background="@color/white"
-            android:padding="@dimen/_15sdp">
+            android:paddingLeft="15dp"
+            android:background="@color/white">
 
             <TextView
-
                 android:layout_marginTop="10dp"
                 android:id="@+id/donot_disb_title"
                 android:layout_width="match_parent"
@@ -134,7 +130,7 @@
                 android:minHeight="@dimen/_25sdp"
                 android:text="Do not Disturb"
                 android:textColor="@color/orange"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_14sdp" />
 
         </RelativeLayout>
 
@@ -145,7 +141,7 @@
             android:layout_below="@+id/donot_disturb_title_layout"
             android:background="@color/white"
             android:gravity="center"
-            android:padding="@dimen/_15sdp">
+            android:paddingLeft="@dimen/_15sdp">
 
             <TextView
                 android:id="@+id/donot_sub_title"
@@ -154,7 +150,6 @@
                 android:minHeight="@dimen/_15sdp"
                 android:text="Do not disturb"
                 android:textColor="@color/dark_grey"
-                android:textSize="@dimen/_15sdp"
                  />
 
             <TextView
@@ -165,14 +160,14 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:minHeight="@dimen/_25sdp"
                 android:text="@string/donot_disturb_content"
-                android:textColor="@color/light_grey"
-                android:textSize="@dimen/_15sdp" />
+                android:textColor="@color/light_grey" />
 
             <Switch
                 android:id="@+id/donot_noti_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_marginEnd="15dp"
                 android:layout_centerInParent="true"
                 android:theme="@style/SCBSwitch" />
         </RelativeLayout>
@@ -191,7 +186,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/view_donot_disb"
             android:background="@color/white"
-            android:padding="@dimen/_15sdp">
+            android:paddingLeft="15dp"
+           >
 
             <TextView
                 android:layout_marginTop="10dp"
@@ -201,7 +197,7 @@
                 android:minHeight="@dimen/_25sdp"
                 android:text="Primary Notifications"
                 android:textColor="@color/orange"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_14sdp" />
 
         </RelativeLayout>
 
@@ -211,8 +207,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/primary_noti_layout"
             android:background="@color/white"
-            android:gravity="center"
-            android:padding="@dimen/_15sdp">
+            android:paddingLeft="15dp"
+
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/primary_content_title"
@@ -221,7 +218,6 @@
                 android:minHeight="@dimen/_15sdp"
                 android:text="@string/primary_content_title1"
                 android:textColor="@color/dark_grey"
-                android:textSize="@dimen/_15sdp"
                  />
 
             <TextView
@@ -232,13 +228,13 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:minHeight="@dimen/_25sdp"
                 android:text="@string/primary_content"
-                android:textColor="@color/light_grey"
-                android:textSize="@dimen/_15sdp" />
+                android:textColor="@color/light_grey" />
 
             <Switch
                 android:id="@+id/primary_content_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:theme="@style/SCBSwitch" />
@@ -266,7 +262,6 @@
             android:minHeight="@dimen/_15sdp"
             android:text="@string/primary_purchase_title"
             android:textColor="@color/dark_grey"
-            android:textSize="@dimen/_15sdp"
             />
 
         <TextView
@@ -277,8 +272,7 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:minHeight="@dimen/_25sdp"
             android:text="@string/primary_purchase"
-            android:textColor="@color/light_grey"
-            android:textSize="@dimen/_15sdp" />
+            android:textColor="@color/light_grey" />
 
         <Switch
             android:id="@+id/primary_purchase_switch"

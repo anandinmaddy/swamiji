@@ -121,7 +121,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 
         List<String> skuList = new ArrayList<> ();
-        skuList.add("purchase_free");
+        skuList.add("purchase_new");
 
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
         params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
@@ -136,24 +136,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 });
 
 
-
+        if (arrayList != null && arrayList.size() > 0){
+            if (arrayList.get(groupPosition).isPurchase()){
+                priceBtn.setVisibility(View.INVISIBLE);
+            }else {
+                priceBtn.setVisibility(View.VISIBLE);
+                priceBtn.setText(arrayList.get(groupPosition).getPrice());
+            }
+        }
         classesValue.setText(arrayList.get(groupPosition).getClasses());
 
-        final Handler handler = new Handler();
+     /*   final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (arrayList != null && arrayList.size() > 0){
-
                     if (arrayList.get(groupPosition).isPurchase()){
                         priceBtn.setVisibility(View.INVISIBLE);
                     }else {
+                        priceBtn.setVisibility(View.VISIBLE);
                         priceBtn.setText(arrayList.get(groupPosition).getPrice());
                     }
                 }
 
             }
-        }, 2000);
+        }, 2000);*/
 
 
 
@@ -188,8 +195,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 callwebservice(arrayList.get(groupPosition).getPostid());
                             } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
                                 Toast.makeText(context, "Payment Declined by user", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(context, "Payment failed", Toast.LENGTH_LONG).show();
                             }
                         }
                     }).build();
@@ -208,7 +213,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 // The billing client is ready. You can query purchases here.
 
                                 List<String> skuList = new ArrayList<>();
-                                skuList.add("purchase_free");
+                                if (arrayList.get(groupPosition).getPrice().equalsIgnoreCase("320")){
+                                    skuList.add("purchase_free");
+                                }else if(arrayList.get(groupPosition).getPrice().equalsIgnoreCase("280")){
+                                    skuList.add("purchase_new");
+                                }else if(arrayList.get(groupPosition).getPrice().equalsIgnoreCase("280")){
+                                    skuList.add("purchase_300");
+                                }
 
                                 SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder()
                                         .setSkusList(skuList).setType(BillingClient.SkuType.INAPP).build();
@@ -218,14 +229,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                             public void onSkuDetailsResponse(int responseCode,
                                                                              List<SkuDetails> skuDetailsList) {
 
-                                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                                        .setSkuDetails(skuDetailsList.get(0))
-                                                        .build();
-                                                int billingResponseCode = billingClient.launchBillingFlow(activity,flowParams);
-                                                if (billingResponseCode == BillingClient.BillingResponse.OK) {
-                                                    // do something you want
+                                                if (skuDetailsList.size() > 0){
+                                                    BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                                            .setSkuDetails(skuDetailsList.get(0))
+                                                            .build();
+                                                    int billingResponseCode = billingClient.launchBillingFlow(activity,flowParams);
+                                                    if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                                                        // do something you want
 
+                                                    }
                                                 }
+
                                             }
                                         });
 

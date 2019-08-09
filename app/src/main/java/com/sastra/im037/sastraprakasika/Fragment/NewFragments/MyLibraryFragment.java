@@ -3,6 +3,7 @@ package com.sastra.im037.sastraprakasika.Fragment.NewFragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sastra.im037.sastraprakasika.Adapter.FragmentAdapter;
+import com.sastra.im037.sastraprakasika.Fragment.DownloadsFragmentNew;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.sastra.im037.sastraprakasika.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -57,6 +59,13 @@ public class MyLibraryFragment extends Fragment  {
         // Required empty public constructor
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        titleView = getActivity().findViewById(R.id.title);
+
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +77,7 @@ public class MyLibraryFragment extends Fragment  {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_mylibrary, container, false);
         this.mView = view;
+        setRetainInstance(true);
 
         titleView = getActivity().findViewById(R.id.title);
         if(getArguments() != null){
@@ -140,13 +150,33 @@ public class MyLibraryFragment extends Fragment  {
                     FragmentManager fragmentManager = getFragmentManager();
                     fragment2.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
                     fragmentTransaction.commit();
                 }
-                if (Constant.currentTab == 2 && Constant.downloadCount > 0){
-                  //  Toast.makeText(getContext(), "Download on progress. Please wait to complete the downloads.", Toast.LENGTH_SHORT).show();
-                }
+           /*     if (Constant.currentTab == 2 && Constant.downloadCount == 0){
+               //     Toast.makeText(getContext(), "Download on progress. Please wait to complete the downloads.", Toast.LENGTH_SHORT).show();
+                    Constant.downloadCompleted = false;
+                    MyLibraryFragment fragment2 = new MyLibraryFragment();
+                    Bundle bundle = new Bundle();
+                    Constant.currentTab = 2;
+                    Constant.backPress = true;
+                    bundle.putString("from","lecture");
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragment2.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();
+                    Constant.isFirstTime = false;
+                }*/
+            /*    if (Constant.currentTab == 1 && Constant.downloadCount > 0){
+                    DownloadsFragmentNew fragment2 = new DownloadsFragmentNew();
+                    Constant.currentTab = 2;
+                    Constant.backPress = true;
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
+                    fragmentTransaction.commit();                }*/
                 if (Constant.currentTab == 2 && Constant.isFirstTime){
                     Constant.downloadCompleted = false;
                     MyLibraryFragment fragment2 = new MyLibraryFragment();
@@ -159,7 +189,6 @@ public class MyLibraryFragment extends Fragment  {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                     fragmentTransaction.replace(R.id.commonActivityFrameLayout, fragment2);
-
                     fragmentTransaction.commit();
                     Constant.isFirstTime = false;
                 }
@@ -189,4 +218,6 @@ public class MyLibraryFragment extends Fragment  {
        // titleView.setTextColor(getResources().getColor(R.color.white));
 
     }
+
+
 }

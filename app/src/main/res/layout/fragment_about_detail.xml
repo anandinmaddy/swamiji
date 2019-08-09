@@ -26,7 +26,7 @@
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_gravity="center"
-            android:textStyle="bold"
+             
             android:text="No Internet connetion Please check your \n          connection and try again "/>
 
         <TextView
@@ -36,7 +36,7 @@
             android:padding="@dimen/_10sdp"
             android:id="@+id/offlinePageLink"
             android:textColor="@color/orange"
-            android:textStyle="bold"
+             
             android:text="Try Again "/>
 
         <TextView
@@ -46,7 +46,7 @@
             android:padding="@dimen/_10sdp"
             android:id="@+id/offlineLectureLink"
             android:textColor="@color/orange"
-            android:textStyle="bold"
+             
             android:clickable="true"
             android:text="Offline lectures "/>
     </LinearLayout>
@@ -114,12 +114,11 @@
             <TextView
                 android:id="@+id/headerTxt"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:gravity="center"
                 android:text="ABOUT SWAMIJI"
-                android:textStyle="bold" />
+                  />
 
             <me.biubiubiu.justifytext.library.JustifyTextView
                 android:id="@+id/textContent"
@@ -130,7 +129,6 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginBottom="@dimen/_20sdp"
                 android:breakStrategy="balanced"
-                android:textSize="@dimen/_14sdp"
                 android:text="@string/discourse_content" />
 
 

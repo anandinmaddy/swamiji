@@ -67,6 +67,7 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
 
        // holder.song_class.setText(arrayListSong.get(position).getCatName());
         holder.song_dur.setText(arrayListSong.get(position).getDuration());
+        holder.song_type_txt.setText(arrayListSong.get(position).getClassName());
 
         if (Constant.playPos == position && Constant.isplayPlaylist) {
             holder.textNowPlaying.setVisibility(View.GONE);
@@ -141,6 +142,8 @@ public class Adapter_Playlist_Next extends RecyclerView.Adapter<Adapter_Playlist
         @BindView(R.id.songView)
         LinearLayout songView;
 
+        @BindView(R.id.song_type_txt)
+        TextView song_type_txt;
         @BindView(R.id.textNowPlaying)
         LinearLayout textNowPlaying;
         @BindView(R.id.nowPlaying_layout)

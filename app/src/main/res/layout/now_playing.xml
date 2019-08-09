@@ -21,17 +21,20 @@
         android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/down"/>
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@drawable/downblack"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NOW PLAYING"
+            android:textColor="@color/white"
             android:layout_marginLeft="@dimen/_5sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/_4sdp"
+
             android:textSize="@dimen/_15sdp"/>
     </LinearLayout>
 </LinearLayout>
