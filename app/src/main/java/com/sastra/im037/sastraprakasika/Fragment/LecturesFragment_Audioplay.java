@@ -520,7 +520,6 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         if (b){
             MyLibraryFragment fragment2 = new MyLibraryFragment();
             Bundle bundle = new Bundle();
-            Constant.currentTab = 1;
             Constant.backPress = true;
             bundle.putString("from","lecture");
             FragmentManager fragmentManager = getFragmentManager();

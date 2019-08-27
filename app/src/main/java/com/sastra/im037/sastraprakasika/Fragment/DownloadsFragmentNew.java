@@ -75,7 +75,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     LinearLayout layout_desc_below;
     LinearLayout offlinePageView;
     private FrameLayout frameLayout;
-    TextView downloadState;
+    LinearLayout downloadState;
     static LinearLayout st_linearLayoutPlayingSong;
     //    ListView mediaListView;
     //ProgressBar progressBar;
@@ -284,7 +284,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
         btn_Previous = (Button) view.findViewById(R.id.btnPrevious_btn);
         layout_desc_below = (LinearLayout) view.findViewById(R.id.layoutdesc);
         noSongsFound = (TextView)view.findViewById(R.id.nosongs);
-        downloadState = (TextView) view.findViewById(R.id.downloadState);
+        downloadState = (LinearLayout) view.findViewById(R.id.downloadState);
 
     }
 
@@ -549,6 +549,7 @@ public class DownloadsFragmentNew extends Fragment implements Downloads_audio_li
     public void onResume() {
         super.onResume();
         setListItems();
+        Constant.currentTab = 2;
         if (Constant.downloadCount > 0){
             if (downloadState != null && listView_song!= null) {
              //   listView_song.setVisibility(View.GONE);

@@ -359,6 +359,7 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
                                             Constant.downloadCompleted = true;
                                             if (Constant.downloadCount == 0 && isDownloadUpdated) {
                                                 Constant.downloadCompleted = true;
+                                                notifyDataSetChanged();
                                             }
 
                                         }
@@ -427,6 +428,8 @@ public class Lectures_audio_list_adapter extends BaseAdapter {
 
                             if (Constant.downloadCount == 0 && isDownloadUpdated) {
                                 Constant.downloadCompleted = true;
+                                notifyDataSetChanged();
+
                             }
 
                         }

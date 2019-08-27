@@ -9,14 +9,15 @@ android {
         applicationId "com.sastra.im037.sastraprakasika"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 41
-        versionName "4.1"
+        versionCode 48
+        versionName "4.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
 
     buildTypes {
         release {
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
@@ -81,6 +82,7 @@ dependencies {
     implementation 'com.android.billingclient:billing:1.2.2'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.mindorks.android:prdownloader:0.5.0'
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
 }
 

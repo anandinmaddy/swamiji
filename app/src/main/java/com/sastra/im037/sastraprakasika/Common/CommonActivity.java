@@ -500,7 +500,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 10){
+                if (Constant.downloadCount > 0){
                     callAlert();
                 }else {
 
@@ -529,7 +529,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 10){
+                if (Constant.downloadCount > 0){
                     callAlert();
                 }else {
 
@@ -554,7 +554,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 10){
+                if (Constant.downloadCount > 0){
                     callAlert();
                 }else {
 
@@ -579,7 +579,7 @@ public class CommonActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
 
-                if (Constant.downloadCount > 10){
+                if (Constant.downloadCount > 0){
                     callAlert();
                 }else {
 
@@ -605,7 +605,7 @@ public class CommonActivity extends AppCompatActivity   {
 
     private void callAlert() {
         final AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-        alertbox.setMessage("Please wait till the download gets complete.");
+        alertbox.setMessage("Please wait till the download gets completed.");
         alertbox.setTitle("Download In-Progress");
 
         alertbox.setNegativeButton("Close",
