@@ -1,11 +1,8 @@
 package com.sastra.im037.sastraprakasika.Adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +16,12 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.sastra.im037.sastraprakasika.Common.CommonActivity;
 import com.sastra.im037.sastraprakasika.Model.VolumeDetailsModel;
 import com.sastra.im037.sastraprakasika.R;
 import com.sastra.im037.sastraprakasika.Session;
@@ -35,16 +33,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter extends BaseExpandableListAdapter implements PurchasesUpdatedListener  {
     Context context;
     ArrayList<VolumeDetailsModel> arrayList;
     public static final String TAG = ExpandableListAdapter.class.getSimpleName();
-    BillingClient billingClient;
+    private BillingClient billingClient;
     SkuDetails skuDetails;
     Activity activity;
-
+    List<String> skuList = new ArrayList<> ();
+    boolean test = false;
     private int lastPosition = -1;
 
     public ExpandableListAdapter(Activity activity, Context context, ArrayList<VolumeDetailsModel> arrayList, BillingClient billingAppClient) {
@@ -102,29 +100,40 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView volumeValue = convertView.findViewById(R.id.volumevalues);
         TextView classesValue=convertView.findViewById(R.id.classesvalue);
         final ImageView arrow = convertView.findViewById(R.id.arrow);
-        Button priceBtn = convertView.findViewById(R.id.price);
+        final Button priceBtn = convertView.findViewById(R.id.price);
         // hypen code static
         String volume = arrayList.get(groupPosition).getTitle();
         //commented below anand
         title.setText(volume);
 
-//
-
-
-
-
-        List<String> skuList = new ArrayList<> ();
         skuList.add("purchase_free");
+
+     /*   Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
+        for (Purchase sourcePurchase : purchasesResult.getPurchasesList()) {
+            if(sourcePurchase != null){
+
+                ConsumeResponseListener listener = new ConsumeResponseListener() {
+                    @Override
+                    public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
+
+                    }
+
+                };
+                billingClient.consumeAsync(ConsumeParams.newBuilder().build(), listener);
+            }else{
+                System.out.println("null");
+            }
+        }*/
+
 
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
         params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
         billingClient.querySkuDetailsAsync(params.build(),
                 new SkuDetailsResponseListener() {
                     @Override
-                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                    public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
                         if (skuDetailsList != null && skuDetailsList.size() > 0){
-                            skuDetails = skuDetailsList.get(0);
-
+                            skuDetails = skuDetailsList.get(groupPosition);
                         }
                     }
                 });
@@ -149,17 +158,30 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
 
+
                 if (arrayList.get(groupPosition).isPurchase()){
                     //Already Purchasedoa
                     Toast.makeText(context, "Already purchased / Not available currently", Toast.LENGTH_LONG).show();
                 }else {
+
+
+
                     BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                             .setSkuDetails(skuDetails)
+
                             .build();
-                    int responseCode = billingClient.launchBillingFlow(activity,flowParams);
-                    if (responseCode == 0){
+                    BillingResult response = billingClient.launchBillingFlow(activity,flowParams);
+
+                    if (response.getResponseCode() == BillingClient.BillingResponseCode.OK){
+                        priceBtn.setVisibility(View.INVISIBLE);
                         callwebservice(arrayList.get(groupPosition).getPostid());
+                    }else {
+                        if (response != null && response.getDebugMessage() != null){
+                            Toast.makeText(context, response.getDebugMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
+
 
 
                 }
@@ -264,6 +286,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+
+    @Override
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+
+        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                && purchases != null) {
+            for (Purchase purchase : purchases) {
+
+                // handlePurchase(purchase);
+            }
+        } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            // Handle any other error codes.
+        }
     }
 
 }

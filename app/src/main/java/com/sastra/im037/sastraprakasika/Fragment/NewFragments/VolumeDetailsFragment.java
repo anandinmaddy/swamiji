@@ -21,6 +21,9 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.sastra.im037.sastraprakasika.Activity.VolumeDetailsActivity;
@@ -51,7 +54,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VolumeDetailsFragment extends Fragment implements NetworkStateReceiverListener, BillingClientStateListener,PurchasesUpdatedListener {
+public class VolumeDetailsFragment extends Fragment implements NetworkStateReceiverListener, BillingClientStateListener,PurchasesUpdatedListener, ConsumeResponseListener {
 
     Context context;
     ImageView image;
@@ -71,6 +74,7 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
     TextView offlineLink;
     private BillingClient billingClient;
     PurchasesUpdatedListener listener;
+    ConsumeResponseListener consumeResponseListener;
 
     public VolumeDetailsFragment() {
         // Required empty public constructor
@@ -94,21 +98,38 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
         mShimmerViewContainer.startShimmer();
         offlineViewer = (LinearLayout) view.findViewById(R.id.offlineViewer);
         offlineLink = view.findViewById(R.id.offlineLectureLink);
+
         listener = new PurchasesUpdatedListener() {
             @Override
-            public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
+            public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+                if (purchases != null && purchases.size() > 0){
+                    for (Purchase purchase : purchases){
+                        ConsumeParams consumeParams = ConsumeParams.newBuilder() .setPurchaseToken(purchase.getPurchaseToken()) .build();
+                        billingClient.consumeAsync(consumeParams,consumeResponseListener);
+                    }
+                }
+
+
+            }
+
+        };
+
+        consumeResponseListener = new ConsumeResponseListener() {
+            @Override
+            public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
 
             }
         };
 
-        billingClient = BillingClient.newBuilder(context).setListener(listener).build();
+        billingClient = BillingClient.newBuilder(context).enablePendingPurchases().setListener(listener).build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(int billingResponseCode) {
-                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (0 == BillingClient.BillingResponseCode.OK) {
 
                     // The BillingClient is ready. You can query purchases here.
                 }
+
             }
 
             @Override
@@ -117,7 +138,8 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
 
                 billingClient.startConnection(new BillingClientStateListener() {
                     @Override
-                    public void onBillingSetupFinished(int responseCode) {
+                    public void onBillingSetupFinished(BillingResult billingResult) {
+
                     }
 
                     @Override
@@ -267,19 +289,7 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
         });
     }
 
-    @Override
-    public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
-        if (responseCode == BillingClient.BillingResponse.OK
-                && purchases != null) {
-            for (Purchase purchase : purchases) {
-                //handlePurchase(purchase);
-            }
-        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
-            // Handle an error caused by a user cancelling the purchase flow.
-        } else {
-            // Handle any other error codes.
-        }
-    }
+
 
     @Override
     public void networkAvailable() {
@@ -301,13 +311,33 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
         getActivity().registerReceiver(connectivityReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
+
     @Override
-    public void onBillingSetupFinished(int responseCode) {
+    public void onBillingSetupFinished(BillingResult billingResult) {
 
     }
 
     @Override
     public void onBillingServiceDisconnected() {
+
+    }
+
+    @Override
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+        if (0 == BillingClient.BillingResponseCode.OK
+                && purchases != null) {
+            for (Purchase purchase : purchases) {
+                //handlePurchase(purchase);
+            }
+        } else if (0 == BillingClient.BillingResponseCode.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            // Handle any other error codes.
+        }
+    }
+
+    @Override
+    public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
 
     }
 }
