@@ -72,9 +72,11 @@ public class Session {
     public boolean getIsLogin() {
         return pref.getBoolean(IS_LOGIN, false);
     }
+
     public  String getUserId() {
         return pref.getString(userId,"");
     }
+
     public String getProfile_UpdateName() {
         return pref.getString(profile_UpdateName,"");
     }

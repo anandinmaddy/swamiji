@@ -9,6 +9,7 @@ import com.sastra.im037.sastraprakasika.OnlinePlayer.ItemSong;
 
 @Database(entities = {DiscoursesModel.class,VolumeModel.class,DiscoursesNewModel.class,ItemSong.class,ListOfTopicsModels.class,ListOfTopicsDetailed.class,PlayList.class,SearchModel.class},exportSchema = true,version = 1)
 public abstract class DiscousesAppDatabase extends RoomDatabase {
+
     public abstract DiscoursesModelDao userDao();
 
     public abstract VolumeModelDao volumeModel();

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.sastra.im037.sastraprakasika.Model.ListOfTopicsDetailed;
 import com.sastra.im037.sastraprakasika.Model.PlayList;
+import com.sastra.im037.sastraprakasika.Model.VolumeDetailsModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ public class Constant {
     public static ArrayList<ItemSong> wholeMediaList = new ArrayList<>();
     public static int downloadCount = 0;
     public static boolean refreshed = false;
+    public static int purchaseKey = 0;
+    public static ArrayList<VolumeDetailsModel> arrayListPurchase;
 
     private static String SERVER_URL = "";
 

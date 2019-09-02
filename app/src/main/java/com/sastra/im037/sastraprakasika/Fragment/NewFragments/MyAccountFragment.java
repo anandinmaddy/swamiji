@@ -2,6 +2,7 @@ package com.sastra.im037.sastraprakasika.Fragment.NewFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -33,6 +34,7 @@ import com.sastra.im037.sastraprakasika.Common.CommonMethod;
 import com.sastra.im037.sastraprakasika.Fragment.HelpSupportFragment;
 import com.sastra.im037.sastraprakasika.Fragment.NotificationSettingFragment;
 import com.sastra.im037.sastraprakasika.Fragment.PrivacyPolicyFragment;
+import com.sastra.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.sastra.im037.sastraprakasika.Model.ProfileModel;
 import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.sastra.im037.sastraprakasika.R;
@@ -81,6 +83,7 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
     SlidingUpPanelLayout sliding_layout;
     RelativeLayout rl_min_header;
     LinearLayout bottomLayoutblank;
+    DiscousesAppDatabase db;
 
     LinearLayout notificationLayout,helpSupportLayout,privacypolicyLayout;
     @Override
@@ -98,7 +101,8 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
 
         CommonActivity.setSelected( Selected.MYACCOUNT );
 
-
+        db = Room.databaseBuilder(getActivity().getApplicationContext(),
+                DiscousesAppDatabase.class, "ListOfTopicDetailed").allowMainThreadQueries().build();
         profileHeading = (TextView) view.findViewById(R.id.profile_heading);
         title = (TextView) getActivity().findViewById(R.id.title);
         viewId = (View) view.findViewById(R.id.viewId);
@@ -158,7 +162,16 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
                 @Override
                 public void onClick(View v) {
                     CommonActivity.setSelected( Selected.DISCOURSES );
-
+                    Constant.arrayListLectureslineSongs.clear();
+                    Constant.arrayList_play.clear();
+                    db.itemSongDao().deleteAll();
+                    db.clearAllTables();
+                    db.volumeModel().deleteAll();
+                    db.listOfTopicsDetailed().deleteAll();
+                    db.itemSongDao().deleteAll();
+                    db.discoursesNewModel().deleteAll();
+                    db.listOfTopicsModels().deleteAll();
+                    db.userDao().deleteAll();
                     DashBoardNewFragment fragment2 = new DashBoardNewFragment();
                     FragmentManager fragmentManager = getFragmentManager();
                     back.setVisibility(View.GONE);

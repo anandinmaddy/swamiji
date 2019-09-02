@@ -297,9 +297,10 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
         //   callWebservice();
         if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
             //  callWebservice();
+            callWebservice();
 
 
-            if(db.itemSongDao().getAll().size() > 0){
+        /*    if(db.itemSongDao().getAll().size() > 0){
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
                 Constant.arrayList_play.clear();
@@ -308,7 +309,7 @@ public class LecturesFragment_Audioplay extends Fragment implements Lectures_aud
 
             }else {
                 callWebservice();
-            }
+            }*/
 
 
        /*     if (PlayerConstants.SONGS_LIST.size() <= 0) {

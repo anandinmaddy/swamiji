@@ -106,6 +106,16 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
                     for (Purchase purchase : purchases){
                         ConsumeParams consumeParams = ConsumeParams.newBuilder() .setPurchaseToken(purchase.getPurchaseToken()) .build();
                         billingClient.consumeAsync(consumeParams,consumeResponseListener);
+                        if (Constant.arrayListPurchase != null && Constant.arrayListPurchase.size() > 0){
+                            callwebservice(Constant.arrayListPurchase.get(Constant.purchaseKey).getPostid());
+                        }
+                        FragmentManager fm = getFragmentManager();
+                        if (fm.getBackStackEntryCount() > 0) {
+                            Log.i("MainActivity", "popping backstack");
+                            fm.popBackStack();
+                        } else {
+                            Log.i("MainActivity", "nothing on backstack, calling super");
+                        }
                     }
                 }
 
@@ -340,4 +350,19 @@ public class VolumeDetailsFragment extends Fragment implements NetworkStateRecei
     public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
 
     }
+
+    private void callwebservice(String postid) {
+        new WebServices(context, TAG).getPayment_list(Session.getInstance(context, TAG).getUserId(),postid, new VolleyResponseListerner() {
+            @Override
+            public void onResponse(JSONObject response) throws JSONException {
+
+            }
+
+            @Override
+            public void onError(String message, String title) {
+
+            }
+        });
+    }
+
 }

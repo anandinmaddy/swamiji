@@ -15,14 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.sastra.im037.sastraprakasika.Model.VolumeDetailsModel;
+import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.sastra.im037.sastraprakasika.R;
 import com.sastra.im037.sastraprakasika.Session;
 import com.sastra.im037.sastraprakasika.VolleyResponseListerner;
@@ -34,7 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter implements PurchasesUpdatedListener  {
+public class ExpandableListAdapter extends BaseExpandableListAdapter implements BillingClientStateListener, PurchasesUpdatedListener {
     Context context;
     ArrayList<VolumeDetailsModel> arrayList;
     public static final String TAG = ExpandableListAdapter.class.getSimpleName();
@@ -103,6 +107,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         final Button priceBtn = convertView.findViewById(R.id.price);
         // hypen code static
         String volume = arrayList.get(groupPosition).getTitle();
+        Constant.arrayListPurchase = arrayList;
         //commented below anand
         title.setText(volume);
 
@@ -164,26 +169,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     Toast.makeText(context, "Already purchased / Not available currently", Toast.LENGTH_LONG).show();
                 }else {
 
-
-
                     BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                             .setSkuDetails(skuDetails)
-
                             .build();
                     BillingResult response = billingClient.launchBillingFlow(activity,flowParams);
 
                     if (response.getResponseCode() == BillingClient.BillingResponseCode.OK){
-                        priceBtn.setVisibility(View.INVISIBLE);
-                        callwebservice(arrayList.get(groupPosition).getPostid());
+                        //priceBtn.setVisibility(View.INVISIBLE);
+                      //  callwebservice(arrayList.get(groupPosition).getPostid());
+                        Constant.purchaseKey = groupPosition;
                     }else {
-                        if (response != null && response.getDebugMessage() != null){
-                            Toast.makeText(context, response.getDebugMessage(), Toast.LENGTH_SHORT).show();
-                        }
-
+                        Toast.makeText(context, response.getDebugMessage(), Toast.LENGTH_LONG).show();
                     }
-
-
-
                 }
 
                /* AlertDialog.Builder alertbox = new AlertDialog.Builder(v.getRootView().getContext());
@@ -288,6 +285,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return true;
     }
 
+    @Override
+    public void onBillingSetupFinished(BillingResult billingResult) {
+
+    }
+
+
+    @Override
+    public void onBillingServiceDisconnected() {
+
+    }
 
     @Override
     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
@@ -295,7 +302,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
                 && purchases != null) {
             for (Purchase purchase : purchases) {
-
                 // handlePurchase(purchase);
             }
         } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {

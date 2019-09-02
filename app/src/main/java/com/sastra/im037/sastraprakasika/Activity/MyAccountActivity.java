@@ -17,6 +17,7 @@ import com.sastra.im037.sastraprakasika.Common.CommonActivity;
 import com.sastra.im037.sastraprakasika.Common.CommonMethod;
 import com.sastra.im037.sastraprakasika.Model.DiscousesAppDatabase;
 import com.sastra.im037.sastraprakasika.Model.ProfileModel;
+import com.sastra.im037.sastraprakasika.OnlinePlayer.Constant;
 import com.sastra.im037.sastraprakasika.R;
 import com.sastra.im037.sastraprakasika.Session;
 import com.sastra.im037.sastraprakasika.VolleyResponseListerner;
@@ -101,6 +102,9 @@ public class MyAccountActivity extends CommonActivity {
         logout.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Constant.arrayListLectureslineSongs.clear();
+                Constant.arrayList_play.clear();
+                db.clearAllTables();
                 db.volumeModel().deleteAll();
                 db.listOfTopicsDetailed().deleteAll();
                 db.itemSongDao().deleteAll();
