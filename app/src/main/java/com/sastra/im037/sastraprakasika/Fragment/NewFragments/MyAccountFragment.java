@@ -1,13 +1,13 @@
 package com.sastra.im037.sastraprakasika.Fragment.NewFragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -49,6 +48,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MyAccountFragment extends Fragment implements NetworkStateReceiverListener {
@@ -161,6 +161,16 @@ public class MyAccountFragment extends Fragment implements NetworkStateReceiverL
             logout.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+            File dir = Environment.getExternalStoragePublicDirectory("Swamiji");
+            if (dir != null && dir.isDirectory())
+                {
+                    String[] children = dir.list();
+                    for (int i = 0; i < children.length; i++)
+                    {
+                        new File(dir, children[i]).delete();
+                    }
+                }
+
                     CommonActivity.setSelected( Selected.DISCOURSES );
                     Constant.arrayListLectureslineSongs.clear();
                     Constant.arrayList_play.clear();
